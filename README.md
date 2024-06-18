@@ -287,7 +287,7 @@ while x < 5 {
 
 ## Data Types
 
-### Numbers
+### Number
 
 Numbers in Rune can be of type `int` or `float64`. They are used in mathematical expressions and comparisons.
 
@@ -299,7 +299,7 @@ b = 3.14
 result = a * b
 ```
 
-### Strings
+### String
 
 Strings in Rune are sequences of characters enclosed in double quotes `"`.
 
@@ -308,6 +308,16 @@ Example:
 ```rune
 greeting = "Hello, World!";
 print(greeting);
+```
+
+### Bool
+
+Booleans in Rune can have one of two values: `true` and `false`.
+
+```rune
+runeIsAwesome = true
+
+if runeIsAwesome then println("Rune is awesome!") else println("This should never print! ;)")
 ```
 
 ## Falsy Values
@@ -340,6 +350,24 @@ if false {
     println("false is falsy ;)")
 }
 
+```
+
+## Short-hand with `if` `then` and `elif` `then`
+The `if`-statement can be written on one line with the `then` keyword:
+
+Both if statements are the same:
+```rune
+runeIsAwesome = true;
+
+if runeIsAwesome then println("Rune is awesome") elif runeIsAwesome != true then println("Oh to bad") else println("This should never print! :)");
+
+if runeIsAwesome {
+    println("Rune is awesome")
+}elif runeIsAwesome != true {
+    println("Oh to bad")
+} else {
+    println("This should never print! :)")
+}
 ```
 
 ## Builin Functions

@@ -12,9 +12,9 @@ elif myvar == 11 then
     printer("elif 11")
 else printer("else");
 
-while myvar > 0 do {
+while myvar > 0 {
     myvar = myvar  -1;
-    printer(myvar)
+    printer(myvar);
 };
 
 if myvar < 0 {
@@ -26,3 +26,15 @@ if myvar < 0 {
 };
 
 if true then printer("Nice") else printer("Also nice");
+
+runeIsAwesome = true;
+
+if runeIsAwesome then println("Rune is awesome") elif runeIsAwesome != true then println("Oh to bad") else println("This should never print! :)");
+
+if runeIsAwesome {
+    println("Rune is awesome")
+}elif runeIsAwesome != true {
+    println("Oh to bad")
+} else {
+    println("This should never print! :)")
+}

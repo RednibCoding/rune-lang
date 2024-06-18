@@ -201,9 +201,9 @@ func (p *Parser) parseWhile() *Expr {
 	p.skipKw("while")
 	cond := p.parseExpression()
 	if p.isPunc("{") == nil {
-		p.skipKw("do")
+		p.input.Error(p.input.current, fmt.Sprintf("Expecting token '{', bot got: \"%s\"", p.input.current.Value))
 	}
-	body := p.parseExpression()
+	body := p.parseProg()
 	return &Expr{
 		Type: While,
 		Cond: cond,
