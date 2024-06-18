@@ -1,7 +1,11 @@
 myvar = 12
-printer = fun(toPrint) {
-    println(toPrint)
+
+toPrint = "I am the toPrint variable"
+
+printer = fun(printme) {
+    println(printme)
 }
+
 if myvar == 10 then
     printer("then")
 elif myvar == 12 then
@@ -42,4 +46,3 @@ println(typeof(1)) # int
 println(typeof(10.1)) # float
 println(typeof("Hello")) # "string"
 println(typeof(false)) # bool
-println(typeof(haha)) #lollo

@@ -22,6 +22,20 @@ func main() {
 	}
 
 	filepath := args[1]
+	
 	vm := runevm.NewRuneVM()
 	vm.Run(string(source), filepath)
+
+	printerFunc, err := vm.GetFun("printer")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	toPrint, err := vm.GetString("toPrint")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	printerFunc(toPrint)
 }

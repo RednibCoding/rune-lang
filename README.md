@@ -110,7 +110,7 @@ func main() {
 
 ### Custom Functions
 
-Custom functions can be defined and added to the VM using the `RegisterFunction` method. Custom functions must have the following signature:
+Custom functions can be defined and added to the VM using the `Set` method. Custom functions must have the following signature:
 
 ```go
 func(args ...interface{}) interface{}
@@ -136,7 +136,7 @@ func customPrintFunction(args ...interface{}) interface{} {
     return nil
 }
 
-vm.RegisterFunction("print", customPrintFunction)
+vm.Set("print", customPrintFunction)
 
 ```
 >**Note:** It is important to always check the number of arguments and their types, as you don't know what errors users might make in their scripts:
@@ -166,12 +166,12 @@ func customPrintFunction(args ...interface{}) interface{} {
 
 ### Custom Variables
 
-Custom variables can be defined and added to the VM using the `RegisterVariable` method. Variables can be of type `string`, `int`, `float64` or `bool`.
+Custom variables can be defined and added to the VM using the `Set` method. Variables can be of type `string`, `int`, `float64` or `bool`.
 
 Example:
 
 ```go
-vm.RegisterVariable("greetings", "Hello from VM!")
+vm.Set("greetings", "Hello from VM!")
 ```
 
 ## Error Handling
@@ -201,6 +201,103 @@ output:
 ```
 error (example.rune:1:6): Error in function call: 'intentional panic triggered'
 ```
+
+## Using Functions and Variables defined in Rune from Go
+You can get function defined in `Rune` via the `GetFun` function:
+
+Let's say in rune you have the following function named "printer"
+```
+printer = fun(printme) {
+    println(printme)
+}
+```
+
+You can get this function by first, running the script and then call `GetFun` afterwards:
+```go
+vm := runevm.NewRuneVM()
+vm.Run(string(source), filepath)
+
+printerFunc, err := vm.GetFun("printer")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+
+// call the function
+printerFunc("Hello From PrinterFunc")
+```
+
+Output:
+```
+Hello From PrinterFunc
+```
+
+Similarely you can retrieve the value of variables.
+
+Lets say we have a string variable defined in rune like so:
+
+```
+toPrint = "I am the toPrint variable"
+```
+
+Then you can get the value of it by calling `GetString`:
+
+```go
+toPrint, err := vm.GetString("toPrint")
+if err != nil {
+    fmt.Println(err)
+}
+
+fmt.Println(toPrint)
+```
+
+output:
+```
+I am the toPrint variable
+```
+
+You can also execute a function defined in rune with a variable defined in rune as argument.
+
+Lets combine the above:
+
+```
+toPrint = "I am the toPrint variable"
+
+printer = fun(printme) {
+    println(printme)
+}
+```
+
+And in go we can do:
+```go
+vm := runevm.NewRuneVM()
+vm.Run(string(source), filepath)
+
+// Get the printer function from rune
+printerFunc, err := vm.GetFun("printer")
+if err != nil {
+    fmt.Println(err)
+    return
+}
+
+// Get the 'toPrint' variable from rune
+toPrint, err := vm.GetString("toPrint")
+if err != nil {
+    fmt.Println(err)
+}
+
+// Use both
+printerFunc(toPrint)
+```
+
+output:
+```
+I am the toPrint variable
+```
+
+Analogous to `GetString` are the functions: `GetInt`, `GetFloat` and `GetBool`.
+
+
 
 # Rune Language Specification
 
