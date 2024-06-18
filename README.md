@@ -234,7 +234,7 @@ Hello From PrinterFunc
 
 Similarely you can retrieve the value of variables.
 
-Lets say we have a string variable defined in rune like so:
+Lets say you have a string variable defined in rune like so:
 
 ```
 toPrint = "I am the toPrint variable"
