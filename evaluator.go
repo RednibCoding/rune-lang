@@ -17,7 +17,7 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 
 	case Assign:
 		if exp.Left.Type != Var {
-			Error(exp, "Cannot assign to %v", exp.Left)
+			Error(exp, "Cannot assign to '%v'", exp.Left)
 		}
 		return env.Set(exp.Left.Value.(string), evaluate(exp.Right, env), exp)
 
@@ -81,7 +81,7 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		return ret
 
 	default:
-		Error(exp, "I don't know how to evaluate %v", exp.Type)
+		Error(exp, "Invalid expression: '%v'", exp.Type)
 		return nil
 	}
 }
@@ -100,18 +100,18 @@ func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 			if strings.Contains(v, ".") {
 				f, err := strconv.ParseFloat(v, 64)
 				if err != nil {
-					Error(exp, "Expected number but got %T", x)
+					Error(exp, "Expected number but got '%T'", x)
 				}
 				return f
 			} else {
 				i, err := strconv.Atoi(v)
 				if err != nil {
-					Error(exp, "Expected number but got %T", x)
+					Error(exp, "Expected number but got '%T'", x)
 				}
 				return float64(i)
 			}
 		default:
-			Error(exp, "Expected number but got %T", x)
+			Error(exp, "Expected number but got '%T'", x)
 			return 0
 		}
 	}
@@ -132,10 +132,10 @@ func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 			if v == "false" {
 				return false
 			}
-			Error(exp, "Expected bool but got %v", x)
+			Error(exp, "Expected bool but got '%v'", x)
 			return false
 		default:
-			Error(exp, "Expected bool but got %T", x)
+			Error(exp, "Expected bool but got '%T'", x)
 			return false
 		}
 	}
@@ -167,7 +167,7 @@ func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 	case "!=":
 		return a != b
 	default:
-		Error(exp, "Can't apply operator %s", op)
+		Error(exp, "Can't apply operator '%s'", op)
 		return nil
 	}
 }
