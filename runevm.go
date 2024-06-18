@@ -12,6 +12,9 @@ func NewRuneVM() *RuneVM {
 	vm.env = NewEnvironment(nil)
 	vm.env.Def("print", builtin_Print)
 	vm.env.Def("println", builtin_Println)
+	vm.env.Def("wait", builtin_Wait)
+	vm.env.Def("exit", builtin_Exit)
+	vm.env.Def("typeof", builtin_TypeOf)
 
 	return vm
 }

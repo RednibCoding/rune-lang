@@ -9,7 +9,10 @@ import (
 
 func evaluate(exp *Expr, env *Environment) interface{} {
 	switch exp.Type {
-	case Num, Str, Bool:
+	case Num:
+		return parseNumber(exp.Value.(string), exp)
+
+	case Str, Bool:
 		return exp.Value
 
 	case Var:
@@ -17,7 +20,7 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 
 	case Assign:
 		if exp.Left.Type != Var {
-			Error(exp, "Cannot assign to '%v'", exp.Left)
+			Error(exp, "Cannot assign to %v", exp.Left)
 		}
 		return env.Set(exp.Left.Value.(string), evaluate(exp.Right, env), exp)
 
@@ -53,7 +56,11 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		return false
 
 	case While:
-		for evaluate(exp.Cond, env).(bool) {
+		for {
+			cond := evaluate(exp.Cond, env)
+			if !cond.(bool) {
+				break
+			}
 			evaluate(exp.Body, env)
 		}
 		return false
@@ -81,37 +88,37 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		return ret
 
 	default:
-		Error(exp, "Invalid expression: '%v'", exp.Type)
+		Error(exp, "I don't know how to evaluate %v", exp.Type)
 		return nil
 	}
+}
+
+func parseNumber(val string, exp *Expr) interface{} {
+	if strings.Contains(val, ".") {
+		f, err := strconv.ParseFloat(val, 64)
+		if err != nil {
+			Error(exp, "Expected number but got %T", val)
+		}
+		return f
+	}
+	i, err := strconv.Atoi(val)
+	if err != nil {
+		Error(exp, "Expected number but got %T", val)
+	}
+	return i
 }
 
 func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 	num := func(x interface{}) float64 {
 		switch v := x.(type) {
-		case nil:
-			Error(exp, "Expected number but got null")
-			return 0
-		case float64:
-			return v
+		case string:
+			return parseNumber(v, exp).(float64)
 		case int:
 			return float64(v)
-		case string:
-			if strings.Contains(v, ".") {
-				f, err := strconv.ParseFloat(v, 64)
-				if err != nil {
-					Error(exp, "Expected number but got '%T'", x)
-				}
-				return f
-			} else {
-				i, err := strconv.Atoi(v)
-				if err != nil {
-					Error(exp, "Expected number but got '%T'", x)
-				}
-				return float64(i)
-			}
+		case float64:
+			return v
 		default:
-			Error(exp, "Expected number but got '%T'", x)
+			Error(exp, "Expected number but got %T", x)
 			return 0
 		}
 	}
@@ -126,18 +133,17 @@ func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 		case bool:
 			return v
 		case string:
-			if v == "true" {
-				return true
+			if b, err := strconv.ParseBool(v); err == nil {
+				return b
 			}
-			if v == "false" {
-				return false
-			}
-			Error(exp, "Expected bool but got '%v'", x)
-			return false
+		case int:
+			return v != 0
+		case float64:
+			return v != 0
 		default:
-			Error(exp, "Expected bool but got '%T'", x)
-			return false
+			Error(exp, "Expected bool but got %v", x)
 		}
+		return false
 	}
 	switch op {
 	case "+":
@@ -167,7 +173,7 @@ func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 	case "!=":
 		return a != b
 	default:
-		Error(exp, "Can't apply operator '%s'", op)
+		Error(exp, "Can't apply operator %s", op)
 		return nil
 	}
 }

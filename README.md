@@ -387,6 +387,16 @@ if runeIsAwesome {
 - **Description**: Waits the given amout of milliseconds
 - **Example**: `wait(2000)`
 
+### exit
+- **Syntax**: `exit()`
+- **Description**: Exits the execution immediately
+- **Example**: `exit()`
+
+### typeof
+- **Syntax**: `typeof(<arg>)`
+- **Description**: Returns the type name as a string of the given argument. Possible types are: `int`, `float`, `string`, `bool` and`unknown`.
+- **Example**: `typeof(10) # returns "int"`
+
 ## Editor Plugins
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):
  - [VS Code](https://code.visualstudio.com/)

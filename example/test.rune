@@ -1,9 +1,7 @@
 myvar = 12
-
 printer = fun(toPrint) {
     println(toPrint)
 }
-
 if myvar == 10 then
     printer("then")
 elif myvar == 12 then
@@ -34,8 +32,14 @@ if runeIsAwesome then println("Rune is awesome") elif runeIsAwesome != true then
 
 if runeIsAwesome {
     println("Rune is awesome")
-}elif runeIsAwesome != true {
+} elif runeIsAwesome != true {
     println("Oh to bad")
 } else {
     println("This should never print! :)")
 }
+
+println(typeof(1)) # int
+println(typeof(10.1)) # float
+println(typeof("Hello")) # "string"
+println(typeof(false)) # bool
+println(typeof(haha)) #lollo
