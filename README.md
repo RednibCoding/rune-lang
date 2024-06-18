@@ -160,6 +160,25 @@ func customPrintFunction(args ...interface{}) interface{} {
 }
 ```
 
+### Returning an Error
+When the custom function returns an error, the vm will stop and print the error message including where the error occured.
+
+```go
+
+func myFunc(args ...interface{}) interface{} {
+    return fmt.Errorf("An error from myFunc")
+}
+```
+
+```
+# in rune call myFunc
+myFunc()
+```
+output:
+```
+error (example.rune:1:6): Error in function call: An error from myFunc
+```
+
 ### Custom Variables
 
 Custom variables can be defined and added to the VM using the `RegisterVariable` method. Variables can be of type `string`, `int` or `float64`.

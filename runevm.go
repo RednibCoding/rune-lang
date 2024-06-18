@@ -31,3 +31,7 @@ func (r *RuneVM) Run(source string, filepath string) {
 func (r *RuneVM) RegisterFunction(name string, fn func(args ...interface{}) interface{}) {
 	r.env.Def(name, fn)
 }
+
+func (r *RuneVM) RegisterVariable(name string, value interface{}) {
+	r.env.Def(name, value)
+}
