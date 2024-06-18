@@ -19,52 +19,34 @@ Rune is:
 Rune scripts have the `.rune` extension. Here is a sample script (`test.rune`):
 
 ```rune
-; the following line would import the file "bye.rune"
-; an import is just a copy what is in the file and replace
-; the import statement with the content of the file
-; so no namespacing or double import check
-; in rune it is ideomatic to have a main.rune that import everything once
-#import bye
-def demo {
-    a = "math expressions "
-    b = (10 + 1*2 + (4 + 5)*2 )*3 - 111
-    print "Test " + a + b, "\n"
-    if 0 or 5 > -2 or 0 print "True\n" else print "False\n"
-    x=0 
-    while x<20 {
-        if !x<10 break
-        print "." x=x+1
-    }
-    print "\n"
+myvar = 12;
 
-    if 10 == 20 {
-        print "10 is 20\n"
-    } else if 10 != 20 {
-        print "10 is not 20\n"
-    } else {
-        print "i am confused\n"
-    }
-}
+printer = fun(toPrint) {
+    println(toPrint)
+};
 
-def testReturn {
-    print "Before return \n"
-    return
-    print "after return \n"
-}
+if myvar == 10 then
+    printer("then")
+elif myvar == 12 then
+    printer("elif 12\n")
+elif myvar == 11 then
+    printer("elif 11")
+else printer("else");
 
+while myvar > 0 do {
+    myvar = myvar  -1;
+    printer(myvar)
+};
 
+if myvar < 0 {
+    printer("Is smaller than 0")
+} elif myvar > 0 {
+    printer("Is biger or than 0")
+} else {
+    printer("Is exactly 0")
+};
 
-print "Hello, World!\n"     ; program entry point
-
-pi = 3.14
-print pi , "\n"
-
-pi2 = pi * pi
-print pi2, "\n"
-
-call demo
-call testReturn
-call printBye
+if true then printer("Nice") else printer("Also nice");
 ```
 
 ### Running Scripts

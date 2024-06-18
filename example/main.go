@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/RednibCoding/runevm"
 )
 
 func main() {
@@ -22,14 +24,4 @@ func main() {
 	filepath := args[1]
 	vm := runevm.NewRuneVM()
 	vm.Run(string(source), filepath)
-
-	// stream := NewInputStream(string(source), filepath)
-	// tokenStream := NewTokenStream(stream)
-	// parser := NewParser(tokenStream)
-	// ast := parser.parseToplevel()
-
-	// globalEnv := NewEnvironment(nil)
-	// globalEnv.Def("println", builtin_Println)
-
-	// evaluate(ast, globalEnv)
 }

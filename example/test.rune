@@ -1,18 +1,28 @@
-koffar = 12;
+myvar = 12;
 
 printer = fun(toPrint) {
-    print(toPrint, " \n")
+    println(toPrint)
 };
 
-if koffar == 10 then
+if myvar == 10 then
     printer("then")
-elif koffar == 12 then
+elif myvar == 12 then
     printer("elif 12\n")
-elif koffar == 11 then
+elif myvar == 11 then
     printer("elif 11")
 else printer("else");
 
-while koffar > 0 do {
-    koffar = koffar  -1;
-    printer(koffar)
-}
+while myvar > 0 do {
+    myvar = myvar  -1;
+    printer(myvar)
+};
+
+if myvar < 0 {
+    printer("Is smaller than 0")
+} elif myvar > 0 {
+    printer("Is biger or than 0")
+} else {
+    printer("Is exactly 0")
+};
+
+if true then printer("Nice") else printer("Also nice");
