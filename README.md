@@ -81,6 +81,7 @@ package main
 import (
 	"fmt"
 	"os"
+
 	"github.com/RednibCoding/runevm"
 )
 
@@ -96,8 +97,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	vm := runevm.New()
-	vm.Run(string(source), args[1])
+	filepath := args[1]
+	vm := runevm.NewRuneVM()
+	vm.Run(string(source), filepath)
 }
 ```
 
