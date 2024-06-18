@@ -14,7 +14,6 @@ type InputStream struct {
 }
 
 func NewInputStream(source string, filepath string) *InputStream {
-	// src := source + "\000"
 	p := &InputStream{
 		filepath: filepath,
 		source:   source,
@@ -26,6 +25,9 @@ func NewInputStream(source string, filepath string) *InputStream {
 }
 
 func (p *InputStream) Next() byte {
+	if p.Pos >= len(p.source) {
+		return 0
+	}
 	ch := p.source[p.Pos]
 	p.Pos++
 	if ch == '\n' {
