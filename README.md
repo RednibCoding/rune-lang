@@ -1,6 +1,6 @@
 
 # RuneVM: A Runey Scripting Language
-![](editor\vscode\rune\logo.png)
+![](editor/vscode/rune/logo.png)
 
 RuneVM is an interpreter for the custom scripting language "rune".
 
@@ -360,24 +360,24 @@ if false {
 ## Builin Functions
 
 ### print
-- **Syntax**: `print <arg1>, <arg2>, ...`
+- **Syntax**: `print(<arg1>, <arg2>, ...)`
 - **Description**: Prints the given arguments to the standard out
-- **Example**: `print: "Hello, World times ", 10, \n"`
+- **Example**: `print("Hello, World times ", 10)`
 
 ### println
-- **Syntax**: `println <arg1>, <arg2>, ...`
+- **Syntax**: `println(<arg1>, <arg2>, ...)`
 - **Description**: Prints the given arguments to the standard out and adds a newline character at the end
-- **Example**: `print: "Hello, World times ", 10"`
+- **Example**: `print("Hello, World times ", 10)`
 
 ### wait
-- **Syntax**: `wait <milliseconds>`
+- **Syntax**: `wait(<milliseconds>)`
 - **Description**: Waits the given amout of milliseconds
-- **Example**: `wait 2000`
+- **Example**: `wait(2000)`
 
 ## Editor Plugins
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):
  - [VS Code](https://code.visualstudio.com/)
- 
-    ![](editor\vscode\rune\installed.png)
+
+    ![](editor/vscode/rune/installed.png)
 
  The `readme.md` in each directory explains how to install them.
