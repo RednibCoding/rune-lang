@@ -76,7 +76,7 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		ret := fn(args...)
 		if err, ok := ret.(error); ok {
-			Error(exp, "Error in function call: %v", err)
+			Error(exp, "Error in function call: '%v'", err)
 		}
 		return ret
 

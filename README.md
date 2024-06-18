@@ -170,13 +170,13 @@ func myFunc(args ...interface{}) interface{} {
 }
 ```
 
+in the rune script, call myFunc:
 ```
-# in rune call myFunc
 myFunc()
 ```
 output:
 ```
-error (example.rune:1:6): Error in function call: An error from myFunc
+error (example.rune:1:6): Error in function call: 'An error from myFunc'
 ```
 
 ### Custom Variables
