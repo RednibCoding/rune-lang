@@ -3,6 +3,7 @@
   "displayName": "Rune language",
   "description": "Syntax highlighting for the Rune programming language",
   "publisher": "RednibCoding",
+  "repository": "https://github.com/RednibCoding/runevm",
   "version": "1.0.0",
   "engines": {
     "vscode": "^1.90.0"
