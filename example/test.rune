@@ -59,7 +59,23 @@ println(len(myArr))
 myStr = "Hi "
 myStr = append(myStr, " you")
 println(myStr)
-myStr = remove(myStr, 10)
-println(myStr)
 
+myMap = map{"key1": 1, "key1": false}
 
+second = myMap["pennor2"]
+println(second)
+println(typeof(myMap))
+
+println(myMap)
+myMap = append(myMap, "penno3", 10.3)
+println(myMap)
+myMap = append(myMap, "penno3", "hey")
+println(myMap)
+
+if (haskey(myMap, "penno3")) {
+    println("haskey")
+} else {
+    println("has not key")
+}
+myMap = remove(myMap, "penno3")
+println(myMap)

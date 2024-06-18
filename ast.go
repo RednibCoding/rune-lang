@@ -2,6 +2,11 @@ package runevm
 
 type ExprType string
 
+type KeyValuePair struct {
+	Key   *Expr
+	Value *Expr
+}
+
 const (
 	Num    ExprType = "num"
 	Str    ExprType = "str"
@@ -15,6 +20,9 @@ const (
 	Call   ExprType = "call"
 	While  ExprType = "while"
 	Array  ExprType = "array"
+	Map    ExprType = "map"
+	Pair   ExprType = "pair"
+	Index  ExprType = "Index"
 )
 
 type Expr struct {

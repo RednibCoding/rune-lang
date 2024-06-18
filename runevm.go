@@ -22,6 +22,7 @@ func NewRuneVM() *RuneVM {
 	vm.set("typeof", builtin_TypeOf)
 	vm.set("append", builtin_append)
 	vm.set("remove", builtin_remove)
+	vm.set("haskey", builtin_hasKey)
 	vm.set("len", builtin_len)
 
 	return vm

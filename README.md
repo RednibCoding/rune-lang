@@ -470,6 +470,27 @@ first = myArr[0]
 println(first) # output: "hello"
 ```
 
+## Maps
+In rune you can define a map by bidnig it to a name:
+```
+myMap = map{"key1": 1, "key2": false}
+```
+Maps can have values of different types, but keys must be of type `string`.
+
+To access an map by key you can use the name followed by an key enclosed in square brackts:
+```
+second = myMap["key2"]
+println(second) # output: false
+```
+
+>**Note**: keys are unique, this means adding a value with a key that already exists, the **existing value get overriden**:
+```
+myMap = map{"uid": "10"}
+println(myMap) # output: {"uid": 10}
+myMap = append(myMap, "uid", "Hello World")
+println(myMap) # output: {"uid": "Hello World"}
+```
+
 ## Short-hand with `if` `then` and `elif` `then`
 The `if`-statement can be written on one line with the `then` keyword:
 
@@ -516,18 +537,23 @@ if runeIsAwesome {
 - **Example**: `typeof(10) # returns "int"`
 
 ### append
-- **Syntax**: `append(<array-name> or <string>, <value>)`
-- **Description**: Appends the given value to the given array or string. Returns the new array or string.
+- **Syntax**: `append(<array/map> or <string>, <value>)`
+- **Description**: Appends the given value to the given array, map or string. Returns the new array, map or string.
 - **Example**: `myArr = append(myArr, 10)`
 
 ### remove
-- **Syntax**: `remove(<array-name> or <string>, <index>)`
-- **Description**: Removed the given index from the given array or string. Returns the new array or string.
+- **Syntax**: `remove(<array/map> or <string>, <index>)`
+- **Description**: Removed the given index from the given array, map or string. Returns the new array, map or string.
 - **Example**: `myArr = remove(myArr, 2)`
 
+### haskey
+- **Syntax**: `haskey(<map>, <key>)`
+- **Description**: Returns true if the given map has the given key, otherwise false.
+- **Example**: `hasTheKey = haskey(myMap, "TheKey")`
+
 ### len
-- **Syntax**: `len(<array-name> or <string>)`
-- **Description**: Returns the lenght of the given array or string.
+- **Syntax**: `len(<array/map> or <string>)`
+- **Description**: Returns the lenght of the given array, map or string.
 - **Example**: `arrLen = len(myArr)`
 
 ## Editor Plugins

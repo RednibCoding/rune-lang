@@ -18,15 +18,23 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 	case Var:
 		value := env.Get(exp.Value.(string), exp)
 		if exp.Index != nil {
-			array, ok := value.([]interface{})
-			if !ok {
-				Error(exp, "Variable %v is not an array", exp.Value)
+			switch v := value.(type) {
+			case []interface{}:
+				index := evaluate(exp.Index, env).(int)
+				if index < 0 || index >= len(v) {
+					Error(exp, "Index '%d' out of bounds for array '%v[%d]'", index, exp.Value, len(v))
+				}
+				return v[index]
+			case map[string]interface{}:
+				key := evaluate(exp.Index, env).(string)
+				val, ok := v[key]
+				if !ok {
+					Error(exp, "Key '%s' not found in map '%v'", key, exp.Value)
+				}
+				return val
+			default:
+				Error(exp, "Variable %v is not an array or map", exp.Value)
 			}
-			index := evaluate(exp.Index, env).(int)
-			if index < 0 || index >= len(array) {
-				Error(exp, "Index '%d' out of bounds for array '%v[%d]'", index, exp.Value, len(array))
-			}
-			return array[index]
 		}
 		return value
 
@@ -83,6 +91,15 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 			arr = append(arr, evaluate(element, env))
 		}
 		return arr
+
+	case Map:
+		m := make(map[string]interface{})
+		for _, pair := range exp.Prog {
+			key := evaluate(pair.Left, env)
+			value := evaluate(pair.Right, env)
+			m[fmt.Sprint(key)] = value
+		}
+		return m
 
 	case Prog:
 		var val interface{} = false

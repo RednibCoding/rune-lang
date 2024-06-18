@@ -277,27 +277,59 @@ func (p *Parser) parseArray() *Expr {
 	}
 }
 
+func (p *Parser) parseMap() *Expr {
+	tok := p.input.Peek()
+	pairs := p.parseDelimited("{", "}", ",", p.parsePair)
+	return &Expr{
+		Type: Map,
+		Prog: pairs,
+		File: tok.File,
+		Line: tok.Line,
+		Col:  tok.Col,
+	}
+}
+
+func (p *Parser) parsePair() *Expr {
+	key := p.parseExpression()
+	_, ok := key.Value.(string)
+	if !ok {
+		Error(key, "key must be of type string, but got: '%v'", key.Value)
+	}
+	p.skipPunc(":")
+	value := p.parseExpression()
+	tok := p.input.Peek()
+	return &Expr{
+		Type:  Pair,
+		Left:  key,
+		Right: value,
+		File:  tok.File,
+		Line:  tok.Line,
+		Col:   tok.Col,
+	}
+}
+
 func (p *Parser) maybeCall(expr func() *Expr) *Expr {
 	exprNode := expr()
 	// Function call
 	if p.isPunc("(") != nil {
 		return p.parseCall(exprNode)
 	}
-	// Array access
+	// Array/map access
 	if p.isPunc("[") != nil {
 		return p.parseIndex(exprNode)
 	}
 	return exprNode
 }
 
-func (p *Parser) parseIndex(arrayExpr *Expr) *Expr {
-	tok := p.input.Next() // skip the '['
+func (p *Parser) parseIndex(expr *Expr) *Expr {
+	tok := p.input.Peek()
+	p.skipPunc("[")
 	indexExpr := p.parseExpression()
 	p.skipPunc("]")
 
 	return &Expr{
 		Type:  Var, // We use Var type to represent variable or array access
-		Value: arrayExpr.Value,
+		Value: expr.Value,
 		Index: indexExpr,
 		File:  tok.File,
 		Line:  tok.Line,
@@ -331,6 +363,10 @@ func (p *Parser) parseAtom() *Expr {
 		}
 		if p.isKw("array") != nil {
 			return p.parseArray()
+		}
+		if p.isKw("map") != nil {
+			p.input.Next()
+			return p.parseMap()
 		}
 		tok := p.input.Next()
 		if tok.Type == "var" || tok.Type == "num" || tok.Type == "str" {
