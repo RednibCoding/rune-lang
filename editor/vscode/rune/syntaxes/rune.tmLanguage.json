@@ -1,0 +1,122 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Rune",
+	"patterns": [
+	  {
+		"include": "#comments"
+	  },
+	  {
+		"include": "#keywords"
+	  },
+	  {
+		"include": "#strings"
+	  },
+	  {
+		"include": "#numbers"
+	  },
+	  {
+		"include": "#functions"
+	  },
+	  {
+		"include": "#user-defined-functions"
+	  },
+	  {
+		"include": "#function-calls"
+	  },
+	  {
+		"include": "#variables"
+	  }
+	],
+	"repository": {
+	  "comments": {
+		"patterns": [
+		  {
+			"name": "comment.line.hash.rune",
+			"begin": "#",
+			"end": "$"
+		  }
+		]
+	  },
+	  "keywords": {
+		"patterns": [
+		  {
+			"name": "keyword.control.rune",
+			"match": "\\b(if|then|elif|else|while|do|fun|true|false)\\b"
+		  }
+		]
+	  },
+	  "strings": {
+		"patterns": [
+		  {
+			"name": "string.quoted.double.rune",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+			  {
+				"name": "constant.character.escape.rune",
+				"match": "\\\\."
+			  }
+			]
+		  }
+		]
+	  },
+	  "numbers": {
+		"patterns": [
+		  {
+			"name": "constant.numeric.rune",
+			"match": "\\b\\d+(\\.\\d+)?\\b"
+		  }
+		]
+	  },
+	  "functions": {
+		"patterns": [
+		  {
+			"name": "entity.name.function.rune",
+			"match": "\\b(fun)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+		  }
+		]
+	  },
+	  "user-defined-functions": {
+		"patterns": [
+		  {
+			"name": "entity.name.function.user-defined.rune",
+			"begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b\\s*=\\s*\\b(fun)\\b",
+			"beginCaptures": {
+			  "1": { "name": "entity.name.function.rune" },
+			  "2": { "name": "keyword.control.rune" }
+			},
+			"end": "(?={|;)",
+			"patterns": [
+			  {
+				"include": "#strings"
+			  },
+			  {
+				"include": "#numbers"
+			  },
+			  {
+				"include": "#variables"
+			  }
+			]
+		  }
+		]
+	  },
+	  "function-calls": {
+		"patterns": [
+		  {
+			"name": "entity.name.function.call.rune",
+			"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?=\\()"
+		  }
+		]
+	  },
+	  "variables": {
+		"patterns": [
+		  {
+			"name": "variable.other.rune",
+			"match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+		  }
+		]
+	  }
+	},
+	"scopeName": "source.rune"
+  }
+  

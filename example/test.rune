@@ -1,0 +1,18 @@
+koffar = 12;
+
+printer = fun(toPrint) {
+    print(toPrint, " \n")
+};
+
+if koffar == 10 then
+    printer("then")
+elif koffar == 12 then
+    printer("elif 12\n")
+elif koffar == 11 then
+    printer("elif 11")
+else printer("else");
+
+while koffar > 0 do {
+    koffar = koffar  -1;
+    printer(koffar)
+}

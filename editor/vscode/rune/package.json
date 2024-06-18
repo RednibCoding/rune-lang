@@ -1,0 +1,27 @@
+{
+  "name": "rune",
+  "displayName": "Rune language",
+  "description": "Syntax highlighting for the Rune programming language",
+  "publisher": "RednibCoding",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "icon": "icon-128.png",
+  "contributes": {
+    "languages": [{
+      "id": "rune",
+      "aliases": ["rune", "rune"],
+      "extensions": [".rune"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "rune",
+      "scopeName": "source.rune",
+      "path": "./syntaxes/rune.tmLanguage.json"
+    }]
+  }
+}
