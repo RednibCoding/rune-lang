@@ -537,12 +537,12 @@ if runeIsAwesome {
 - **Example**: `typeof(10) # returns "int"`
 
 ### append
-- **Syntax**: `append(<array/map> or <string>, <value>)`
+- **Syntax**: `append(<array|map|string>, <value>)`
 - **Description**: Appends the given value to the given array, map or string. Returns the new array, map or string.
 - **Example**: `myArr = append(myArr, 10)`
 
 ### remove
-- **Syntax**: `remove(<array/map> or <string>, <index>)`
+- **Syntax**: `remove(<array|map|string>, <index>)`
 - **Description**: Removed the given index from the given array, map or string. Returns the new array, map or string.
 - **Example**: `myArr = remove(myArr, 2)`
 
@@ -551,8 +551,23 @@ if runeIsAwesome {
 - **Description**: Returns true if the given map has the given key, otherwise false.
 - **Example**: `hasTheKey = haskey(myMap, "TheKey")`
 
+### slice
+- **Syntax**: `slice(<array|map|string>, <start>, <end>)`
+- **Description**: Returns a slice of the given array, map, or string from the start index to the end index.
+- **Example**: `slicedArray = slice(myArray, 1, 3)`
+
+### slicefirst
+- **Syntax**: `slicefirst(<array|map|string>, <end>)`
+- **Description**: Returns a slice of the given array, map, or string from the start to the given end index.
+- **Example**: `slicedArray = slicefirst(myArray, 2)`
+
+### slicelast
+- **Syntax**: `slicelast(<array|map|string>, <start>)`
+- **Description**: Returns a slice of the given array, map, or string from the given start index to the end.
+- **Example**: `slicedArray = sliceLast(myArray, 3)`
+
 ### len
-- **Syntax**: `len(<array/map> or <string>)`
+- **Syntax**: `len(<array|map|string>)`
 - **Description**: Returns the lenght of the given array, map or string.
 - **Example**: `arrLen = len(myArr)`
 

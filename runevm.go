@@ -23,6 +23,9 @@ func NewRuneVM() *RuneVM {
 	vm.set("append", builtin_append)
 	vm.set("remove", builtin_remove)
 	vm.set("haskey", builtin_hasKey)
+	vm.set("slice", builtin_slice)
+	vm.set("slicefirst", builtin_sliceFirst)
+	vm.set("slicelast", builtin_sliceLast)
 	vm.set("len", builtin_len)
 
 	return vm

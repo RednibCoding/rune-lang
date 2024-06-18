@@ -173,6 +173,128 @@ func builtin_hasKey(args ...interface{}) interface{} {
 	return exists
 }
 
+func builtin_slice(args ...interface{}) interface{} {
+	if len(args) != 3 {
+		return fmt.Errorf("slice requires exactly 3 arguments")
+	}
+
+	start, ok := args[1].(int)
+	if !ok {
+		return fmt.Errorf("second argument must be a valid start index")
+	}
+
+	end, ok := args[2].(int)
+	if !ok {
+		return fmt.Errorf("third argument must be a valid end index")
+	}
+
+	switch arg := args[0].(type) {
+	case []interface{}:
+		if start < 0 || end > len(arg) || start > end {
+			return fmt.Errorf("index out of bounds for array slice")
+		}
+		return arg[start:end]
+	case map[string]interface{}:
+		keys := make([]string, 0, len(arg))
+		for k := range arg {
+			keys = append(keys, k)
+		}
+		if start < 0 || end > len(keys) || start > end {
+			return fmt.Errorf("index out of bounds for map slice")
+		}
+		slicedMap := make(map[string]interface{})
+		for _, k := range keys[start:end] {
+			slicedMap[k] = arg[k]
+		}
+		return slicedMap
+	case string:
+		if start < 0 || end > len(arg) || start > end {
+			return fmt.Errorf("index out of bounds for string slice")
+		}
+		return arg[start:end]
+	default:
+		return fmt.Errorf("first argument must be an array, map, or string, got %T", args[0])
+	}
+}
+
+func builtin_sliceFirst(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("sliceFirst requires exactly 2 arguments")
+	}
+
+	end, ok := args[1].(int)
+	if !ok {
+		return fmt.Errorf("second argument must be a valid end index")
+	}
+
+	switch arg := args[0].(type) {
+	case []interface{}:
+		if end > len(arg) || end < 0 {
+			return fmt.Errorf("index out of bounds for array slice")
+		}
+		return arg[:end]
+	case map[string]interface{}:
+		keys := make([]string, 0, len(arg))
+		for k := range arg {
+			keys = append(keys, k)
+		}
+		if end > len(keys) || end < 0 {
+			return fmt.Errorf("index out of bounds for map slice")
+		}
+		slicedMap := make(map[string]interface{})
+		for _, k := range keys[:end] {
+			slicedMap[k] = arg[k]
+		}
+		return slicedMap
+	case string:
+		if end > len(arg) || end < 0 {
+			return fmt.Errorf("index out of bounds for string slice")
+		}
+		return arg[:end]
+	default:
+		return fmt.Errorf("first argument must be an array, map, or string, got %T", args[0])
+	}
+}
+
+func builtin_sliceLast(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("sliceLast requires exactly 2 arguments")
+	}
+
+	start, ok := args[1].(int)
+	if !ok {
+		return fmt.Errorf("second argument must be a valid start index")
+	}
+
+	switch arg := args[0].(type) {
+	case []interface{}:
+		if start < 0 || start > len(arg) {
+			return fmt.Errorf("index out of bounds for array slice")
+		}
+		return arg[start:]
+	case map[string]interface{}:
+		keys := make([]string, 0, len(arg))
+		for k := range arg {
+			keys = append(keys, k)
+		}
+		if start < 0 || start > len(keys) {
+			return fmt.Errorf("index out of bounds for map slice")
+		}
+		slicedMap := make(map[string]interface{})
+		for _, k := range keys[start:] {
+			slicedMap[k] = arg[k]
+		}
+		return slicedMap
+	case string:
+		if start < 0 || start > len(arg) {
+			return fmt.Errorf("index out of bounds for string slice")
+		}
+		return arg[start:]
+	default:
+		return fmt.Errorf("first argument must be an array, map, or string, got %T", args[0])
+	}
+}
+
 func builtin_len(args ...interface{}) interface{} {
 	if len(args) != 1 {
 		return fmt.Errorf("len requires exactly 1 argument")
