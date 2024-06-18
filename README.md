@@ -160,24 +160,6 @@ func customPrintFunction(args ...interface{}) interface{} {
 }
 ```
 
-### Returning an Error
-When the custom function returns an error, the vm will stop and print the error message including where the error occured.
-
-```go
-
-func myFunc(args ...interface{}) interface{} {
-    return fmt.Errorf("An error from myFunc")
-}
-```
-
-in the rune script, call myFunc:
-```
-myFunc()
-```
-output:
-```
-error (example.rune:1:6): Error in function call: 'An error from myFunc'
-```
 
 ### Custom Variables
 
@@ -196,7 +178,7 @@ If a custom function returns an error, the interpreter will report it with the l
 Example:
 
 ```go
-func customPrintFunction(args []interface{}) error {
+func customPanicPrinter(args []interface{}) error {
     for _, arg := range args {
         if arg == "panic" {
             return fmt.Errorf("intentional panic triggered")
@@ -207,14 +189,14 @@ func customPrintFunction(args []interface{}) error {
 }
 ```
 
-If the `print` function encounters the string `"panic"`, it will return an error, and the interpreter will handle and report it.
+If the `customPanicPrinter` function encounters the string `"panic"`, it will return an error, and the interpreter will handle and report it.
 
 ```
-print "panic"
+customPanicPrinter("panic")
 ```
 output:
 ```
-ERROR error in custom function 'print': intentional panic triggered in line 1: '_print "panic"'
+error (example.rune:1:6): Error in function call: 'intentional panic triggered'
 ```
 
 # Rune Language Specification
