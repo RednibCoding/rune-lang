@@ -20,6 +20,9 @@ func NewRuneVM() *RuneVM {
 	vm.set("wait", builtin_Wait)
 	vm.set("exit", builtin_Exit)
 	vm.set("typeof", builtin_TypeOf)
+	vm.set("append", builtin_append)
+	vm.set("remove", builtin_remove)
+	vm.set("len", builtin_len)
 
 	return vm
 }

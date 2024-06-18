@@ -515,6 +515,21 @@ if runeIsAwesome {
 - **Description**: Returns the type name as a string of the given argument. Possible types are: `int`, `float`, `string`, `bool` and`unknown`.
 - **Example**: `typeof(10) # returns "int"`
 
+### append
+- **Syntax**: `append(<array-name> or <string>, <value>)`
+- **Description**: Appends the given value to the given array or string. Returns the new array or string.
+- **Example**: `append(myArr, 10)`
+
+### remove
+- **Syntax**: `remove(<array-name> or <string>, <index>)`
+- **Description**: Removed the given index from the given array or string. Returns the new array or string.
+- **Example**: `remove(myArr, 2)`
+
+### len
+- **Syntax**: `len(<array-name> or <string>)`
+- **Description**: Returns the lenght of the given array or string.
+- **Example**: `len(myArr)`
+
 ## Editor Plugins
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):
  - [VS Code](https://code.visualstudio.com/)

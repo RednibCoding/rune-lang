@@ -55,5 +55,11 @@ println(myArr[2])
 println(myArr[3])
 println(myArr[4])
 
-println("Now the array:")
-println("testArr: ", testArr[3])
+println(len(myArr))
+myStr = "Hi "
+myStr = append(myStr, " you")
+println(myStr)
+myStr = remove(myStr, 10)
+println(myStr)
+
+
