@@ -14,6 +14,7 @@ const (
 	Prog   ExprType = "prog"
 	Call   ExprType = "call"
 	While  ExprType = "while"
+	Array  ExprType = "array"
 )
 
 type Expr struct {
@@ -34,4 +35,5 @@ type Expr struct {
 	Line     int
 	Col      int
 	Length   int
+	Index    *Expr
 }

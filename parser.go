@@ -264,12 +264,45 @@ func (p *Parser) parseBool() *Expr {
 	}
 }
 
+func (p *Parser) parseArray() *Expr {
+	tok := p.input.Peek()
+	p.skipKw("array")
+	values := p.parseDelimited("{", "}", ",", p.parseExpression)
+	return &Expr{
+		Type: Array,
+		Prog: values,
+		File: tok.File,
+		Line: tok.Line,
+		Col:  tok.Col,
+	}
+}
+
 func (p *Parser) maybeCall(expr func() *Expr) *Expr {
 	exprNode := expr()
+	// Function call
 	if p.isPunc("(") != nil {
 		return p.parseCall(exprNode)
 	}
+	// Array access
+	if p.isPunc("[") != nil {
+		return p.parseIndex(exprNode)
+	}
 	return exprNode
+}
+
+func (p *Parser) parseIndex(arrayExpr *Expr) *Expr {
+	tok := p.input.Next() // skip the '['
+	indexExpr := p.parseExpression()
+	p.skipPunc("]")
+
+	return &Expr{
+		Type:  Var, // We use Var type to represent variable or array access
+		Value: arrayExpr.Value,
+		Index: indexExpr,
+		File:  tok.File,
+		Line:  tok.Line,
+		Col:   tok.Col,
+	}
 }
 
 func (p *Parser) parseAtom() *Expr {
@@ -295,6 +328,9 @@ func (p *Parser) parseAtom() *Expr {
 		if p.isKw("fun") != nil {
 			p.input.Next()
 			return p.parseFun()
+		}
+		if p.isKw("array") != nil {
+			return p.parseArray()
 		}
 		tok := p.input.Next()
 		if tok.Type == "var" || tok.Type == "num" || tok.Type == "str" {

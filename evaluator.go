@@ -16,7 +16,19 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		return exp.Value
 
 	case Var:
-		return env.Get(exp.Value.(string), exp)
+		value := env.Get(exp.Value.(string), exp)
+		if exp.Index != nil {
+			array, ok := value.([]interface{})
+			if !ok {
+				Error(exp, "Variable %v is not an array", exp.Value)
+			}
+			index := evaluate(exp.Index, env).(int)
+			if index < 0 || index >= len(array) {
+				Error(exp, "Index '%d' out of bounds for array '%v[%d]'", index, exp.Value, len(array))
+			}
+			return array[index]
+		}
+		return value
 
 	case Assign:
 		if exp.Left.Type != Var {
@@ -64,6 +76,13 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 			evaluate(exp.Body, env)
 		}
 		return false
+
+	case Array:
+		var arr []interface{}
+		for _, element := range exp.Prog {
+			arr = append(arr, evaluate(element, env))
+		}
+		return arr
 
 	case Prog:
 		var val interface{} = false

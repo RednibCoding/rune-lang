@@ -46,3 +46,14 @@ println(typeof(1)) # int
 println(typeof(10.1)) # float
 println(typeof("Hello")) # "string"
 println(typeof(false)) # bool
+
+myArr = array{"hello", 10, false, 20, 30}
+first = myArr[0]
+println(myArr[0])
+println(myArr[1])
+println(myArr[2])
+println(myArr[3])
+println(myArr[4])
+
+println("Now the array:")
+println("testArr: ", testArr[3])

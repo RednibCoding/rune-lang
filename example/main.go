@@ -22,8 +22,11 @@ func main() {
 	}
 
 	filepath := args[1]
-	
+
 	vm := runevm.NewRuneVM()
+
+	vm.SetArray("testArr", []interface{}{"Hello", 2, false})
+
 	vm.Run(string(source), filepath)
 
 	printerFunc, err := vm.GetFun("printer")
@@ -38,4 +41,11 @@ func main() {
 	}
 
 	printerFunc(toPrint)
+
+	myArr, err := vm.GetArray("myArr")
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println("myArr: ", myArr[1])
+	}
 }

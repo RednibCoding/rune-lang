@@ -15,11 +15,11 @@ func NewRuneVM() *RuneVM {
 	vm := &RuneVM{}
 
 	vm.env = NewEnvironment(nil)
-	vm.Set("print", builtin_Print)
-	vm.Set("println", builtin_Println)
-	vm.Set("wait", builtin_Wait)
-	vm.Set("exit", builtin_Exit)
-	vm.Set("typeof", builtin_TypeOf)
+	vm.set("print", builtin_Print)
+	vm.set("println", builtin_Println)
+	vm.set("wait", builtin_Wait)
+	vm.set("exit", builtin_Exit)
+	vm.set("typeof", builtin_TypeOf)
 
 	return vm
 }
@@ -36,12 +36,36 @@ func (r *RuneVM) Run(source string, filepath string) {
 	evaluate(ast, r.env)
 }
 
-func (r *RuneVM) Set(name string, value interface{}) {
+func (r *RuneVM) set(name string, value interface{}) {
 	r.env.Def(name, value)
 }
 
 func (r *RuneVM) get(name string) interface{} {
 	return r.env.Get(name, nil)
+}
+
+func (r *RuneVM) SetFun(name string, value func(...interface{}) interface{}) {
+	r.set(name, value)
+}
+
+func (r *RuneVM) SetBool(name string, value bool) {
+	r.set(name, value)
+}
+
+func (r *RuneVM) SetInt(name string, value int) {
+	r.set(name, value)
+}
+
+func (r *RuneVM) SetFloat(name string, value float64) {
+	r.set(name, value)
+}
+
+func (r *RuneVM) SetString(name string, value string) {
+	r.set(name, value)
+}
+
+func (r *RuneVM) SetArray(name string, value []interface{}) {
+	r.set(name, value)
 }
 
 func (r *RuneVM) GetFun(name string) (func(...interface{}) interface{}, error) {
@@ -96,4 +120,12 @@ func (r *RuneVM) GetFloat(name string) (float64, error) {
 		}
 	}
 	return 0, fmt.Errorf("'%s' is not a float", name)
+}
+
+func (r *RuneVM) GetArray(name string) ([]interface{}, error) {
+	val := r.get(name)
+	if arr, ok := val.([]interface{}); ok {
+		return arr, nil
+	}
+	return nil, fmt.Errorf("variable '%s' is not an array", name)
 }

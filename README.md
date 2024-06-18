@@ -166,12 +166,17 @@ func customPrintFunction(args ...interface{}) interface{} {
 
 ### Custom Variables
 
-Custom variables can be defined and added to the VM using the `Set` method. Variables can be of type `string`, `int`, `float64` or `bool`.
+Custom variables can be defined and added to the VM using the `SetXXX` methods: `SetInt`, `SetFloat`, `SetString`, `SetBool` and `SetArray`.
+
+Variables can be of type `int`, `float64`, `string`, `bool` or `array`.
 
 Example:
 
 ```go
-vm.Set("greetings", "Hello from VM!")
+vm.SetString("greetings", "Hello from VM!")
+vm.SetInt("myInt", 10)
+vm.SetArray("myArr", []string{"One", "Two", "Three"})
+vm.SetArray("myArr2", []interface{}{"One", 10, false})
 ```
 
 ## Error Handling
@@ -295,7 +300,7 @@ output:
 I am the toPrint variable
 ```
 
-Analogous to `GetString` are the functions: `GetInt`, `GetFloat` and `GetBool`.
+Analogous to `GetString` are the functions: `GetInt`, `GetFloat`, `GetBool` and `GetArray`.
 
 
 
@@ -450,6 +455,19 @@ if false {
     println("false is falsy ;)")
 }
 
+```
+
+## Arrays
+In rune you can define an array by binding it to a name:
+```
+myArr = array{"hello", 10, false, 20, 30}
+```
+Arrays can have values of different types.
+
+To access an array by index you can use the name followed by an index enclosed in square brackts (arrays are zero based):
+```
+first = myArr[0]
+println(first) # output: "hello"
 ```
 
 ## Short-hand with `if` `then` and `elif` `then`
