@@ -470,7 +470,7 @@ first = myArr[0]
 println(first) # output: "hello"
 ```
 
-## Maps
+## Maps / Type
 In rune you can define a map by bidnig it to a name:
 ```
 myMap = map{"key1": 1, "key2": false}
@@ -490,6 +490,23 @@ println(myMap) # output: {"uid": 10}
 myMap = append(myMap, "uid", "Hello World")
 println(myMap) # output: {"uid": "Hello World"}
 ```
+
+### Field Access
+It is possible to access the fields of a map via the `.`.
+Both expressions are the same under the hood:
+```
+myMap = map{"uid": "10"}
+println(myMap["uid"]) # output: 10
+println(myMap.uid) # output: 10
+```
+
+Syntactic suger is you can write `type` instead of `map` to make it the usecase more clear.
+Both expressions are the same under the hood:
+```
+myMap = map{"uid": "10"}
+myMap = type{"uid": "10"}
+```
+
 
 ## Short-hand with `if` `then` and `elif` `then`
 The `if`-statement can be written on one line with the `then` keyword:
