@@ -2,19 +2,21 @@
 # RuneVM: A Runey Scripting Language
 ![](editor/vscode/rune/logo.png)
 
-RuneVM is an interpreter for the custom scripting language "rune".
+RuneVM is an interpreter for the versatile scripting language "Rune".
 
-Rune is written in pure Go in less than 1000 lines of code.
+Rune is a dynamically typed scripting language designed to be easy to use and implement while remaining practical for real-world tasks. While performance isn't its primary focus, Rune excels in simplicity and flexibility.
 
-Rune is:
-- runey
-- easy
-- embeddable
-- extendable via custom functions and variables
+Rune is crafted in pure Go, spanning less than 1000 lines of code.
+
+Rune stands out for being:
+- **Intuitive:** Designed to be user-friendly and straightforward.
+- **Embeddable:** Seamlessly integrates into your Go projects.
+- **Extensible:** Easily extendable with custom functions and variables.
+- **Portable:** Simple to port to other languages.
 
 ## Using the Language
 
-### Wriruneg Scripts
+### Writing Scripts
 
 Rune scripts have the `.rune` extension. Here is a sample script (`test.rune`):
 
