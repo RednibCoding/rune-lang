@@ -1,8 +1,8 @@
-myvar = 12;
+myvar = 12
 
 printer = fun(toPrint) {
     println(toPrint)
-};
+}
 
 if myvar == 10 then
     printer("then")
@@ -10,12 +10,12 @@ elif myvar == 12 then
     printer("elif 12\n")
 elif myvar == 11 then
     printer("elif 11")
-else printer("else");
+else printer("else")
 
 while myvar > 0 {
-    myvar = myvar  -1;
-    printer(myvar);
-};
+    myvar = myvar  -1
+    printer(myvar)
+}
 
 if myvar < 0 {
     printer("Is smaller than 0")
@@ -23,13 +23,14 @@ if myvar < 0 {
     printer("Is biger or than 0")
 } else {
     printer("Is exactly 0")
-};
+    printer("Is exactly 0 the second time")
+}
 
-if true then printer("Nice") else printer("Also nice");
+if true then printer("Nice") else printer("Also nice")
 
-runeIsAwesome = true;
+runeIsAwesome = true
 
-if runeIsAwesome then println("Rune is awesome") elif runeIsAwesome != true then println("Oh to bad") else println("This should never print! :)");
+if runeIsAwesome then println("Rune is awesome") elif runeIsAwesome != true then println("Oh to bad") else println("This should never print! :)")
 
 if runeIsAwesome {
     println("Rune is awesome")

@@ -98,7 +98,7 @@ func (p *Parser) maybeBinary(left *Expr, myPrec int) *Expr {
 	return left
 }
 
-func (p *Parser) delimited(start, stop, separator string, parser func() *Expr) []*Expr {
+func (p *Parser) parseDelimited(start, stop, separator string, parser func() *Expr) []*Expr {
 	var a []*Expr
 	first := true
 	p.skipPunc(start)
@@ -119,12 +119,28 @@ func (p *Parser) delimited(start, stop, separator string, parser func() *Expr) [
 	return a
 }
 
+func (p *Parser) parseEnclosed(start string, stop string, parser func() *Expr) []*Expr {
+	var a []*Expr
+	p.skipPunc(start)
+	for !p.input.Eof() {
+		if p.isPunc(stop) != nil {
+			break
+		}
+		if p.isPunc(stop) != nil {
+			break
+		}
+		a = append(a, parser())
+	}
+	p.skipPunc(stop)
+	return a
+}
+
 func (p *Parser) parseCall(funcExpr *Expr) *Expr {
 	tok := p.input.Peek()
 	return &Expr{
 		Type: Call,
 		Func: funcExpr,
-		Args: p.delimited("(", ")", ",", p.parseExpression),
+		Args: p.parseDelimited("(", ")", ",", p.parseExpression),
 		File: tok.File,
 		Line: tok.Line,
 		Col:  tok.Col,
@@ -216,7 +232,7 @@ func (p *Parser) parseWhile() *Expr {
 
 func (p *Parser) parseFun() *Expr {
 	tok := p.input.Peek()
-	varNames := p.delimited("(", ")", ",", func() *Expr {
+	varNames := p.parseDelimited("(", ")", ",", func() *Expr {
 		return &Expr{
 			Type:  Var,
 			Value: p.parseVarname(),
@@ -301,10 +317,10 @@ func (p *Parser) parseToplevel() *Expr {
 	var prog []*Expr
 	for !p.input.Eof() {
 		prog = append(prog, p.parseExpression())
-		if !p.input.Eof() {
-			p.skipPunc(";")
+		// if !p.input.Eof() {
+		// p.skipPunc(";")
 
-		}
+		// }
 	}
 	return &Expr{
 		Type: Prog,
@@ -313,7 +329,7 @@ func (p *Parser) parseToplevel() *Expr {
 }
 
 func (p *Parser) parseProg() *Expr {
-	prog := p.delimited("{", "}", ";", p.parseExpression)
+	prog := p.parseEnclosed("{", "}", p.parseExpression)
 	if len(prog) == 0 {
 		return FALSE
 	}
