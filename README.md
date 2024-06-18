@@ -13,6 +13,7 @@ Rune stands out for being:
 - **Embeddable:** Seamlessly integrates into your Go projects.
 - **Extensible:** Easily extendable with custom functions and variables.
 - **Portable:** Simple to port to other languages.
+- **Versatile:** Can be used standalone as a script runner with the [rune](dist/main.go) binary or embedded as a scripting language within your project.
 
 ## Using the Language
 
