@@ -518,17 +518,17 @@ if runeIsAwesome {
 ### append
 - **Syntax**: `append(<array-name> or <string>, <value>)`
 - **Description**: Appends the given value to the given array or string. Returns the new array or string.
-- **Example**: `append(myArr, 10)`
+- **Example**: `myArr = append(myArr, 10)`
 
 ### remove
 - **Syntax**: `remove(<array-name> or <string>, <index>)`
 - **Description**: Removed the given index from the given array or string. Returns the new array or string.
-- **Example**: `remove(myArr, 2)`
+- **Example**: `myArr = remove(myArr, 2)`
 
 ### len
 - **Syntax**: `len(<array-name> or <string>)`
 - **Description**: Returns the lenght of the given array or string.
-- **Example**: `len(myArr)`
+- **Example**: `arrLen = len(myArr)`
 
 ## Editor Plugins
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):
