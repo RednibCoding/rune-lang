@@ -181,7 +181,7 @@ error (example.rune:1:6): Error in function call: 'An error from myFunc'
 
 ### Custom Variables
 
-Custom variables can be defined and added to the VM using the `RegisterVariable` method. Variables can be of type `string`, `int` or `float64`.
+Custom variables can be defined and added to the VM using the `RegisterVariable` method. Variables can be of type `string`, `int`, `float64` or `bool`.
 
 Example:
 
