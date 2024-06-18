@@ -277,8 +277,9 @@ func (p *Parser) parseArray() *Expr {
 	}
 }
 
-func (p *Parser) parseMap() *Expr {
+func (p *Parser) parseMap(mapOrType string) *Expr {
 	tok := p.input.Peek()
+	p.skipKw(mapOrType)
 	pairs := p.parseDelimited("{", "}", ",", p.parsePair)
 	return &Expr{
 		Type: Map,
@@ -318,7 +319,32 @@ func (p *Parser) maybeCall(expr func() *Expr) *Expr {
 	if p.isPunc("[") != nil {
 		return p.parseIndex(exprNode)
 	}
+	// Field access
+	if p.isPunc(".") != nil {
+		return p.parseFieldAccess(exprNode)
+	}
 	return exprNode
+}
+
+func (p *Parser) parseFieldAccess(expr *Expr) *Expr {
+	tok := p.input.Peek()
+	p.skipPunc(".")
+	field := p.parseVarname()
+	return &Expr{
+		Type:  Var, // We use Var type to represent field access
+		Value: expr.Value,
+		Left:  expr,
+		Index: &Expr{
+			Type:  Str, // Field name as a string
+			Value: field,
+			File:  tok.File,
+			Line:  tok.Line,
+			Col:   tok.Col,
+		},
+		File: tok.File,
+		Line: tok.Line,
+		Col:  tok.Col,
+	}
 }
 
 func (p *Parser) parseIndex(expr *Expr) *Expr {
@@ -330,6 +356,7 @@ func (p *Parser) parseIndex(expr *Expr) *Expr {
 	return &Expr{
 		Type:  Var, // We use Var type to represent variable or array access
 		Value: expr.Value,
+		Left:  expr,
 		Index: indexExpr,
 		File:  tok.File,
 		Line:  tok.Line,
@@ -365,8 +392,10 @@ func (p *Parser) parseAtom() *Expr {
 			return p.parseArray()
 		}
 		if p.isKw("map") != nil {
-			p.input.Next()
-			return p.parseMap()
+			return p.parseMap("map")
+		}
+		if p.isKw("type") != nil {
+			return p.parseMap("type")
 		}
 		tok := p.input.Next()
 		if tok.Type == "var" || tok.Type == "num" || tok.Type == "str" {

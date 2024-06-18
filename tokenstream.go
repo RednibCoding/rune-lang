@@ -24,7 +24,7 @@ type TokenStream struct {
 func NewTokenStream(input *InputStream) *TokenStream {
 	keywords := map[string]bool{
 		"if": true, "then": true, "elif": true, "else": true, "while": true, "fun": true,
-		"true": true, "false": true, "array": true, "map": true,
+		"true": true, "false": true, "array": true, "map": true, "type": true,
 	}
 	return &TokenStream{input: input, keywords: keywords}
 }
@@ -50,7 +50,7 @@ func (ts *TokenStream) isOpChar(ch byte) bool {
 }
 
 func (ts *TokenStream) isPunc(ch byte) bool {
-	return strings.ContainsRune(",:;(){}[]", rune(ch))
+	return strings.ContainsRune(".,:;(){}[]", rune(ch))
 }
 
 func (ts *TokenStream) isWhitespace(ch byte) bool {

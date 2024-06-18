@@ -8,6 +8,10 @@ import (
 )
 
 func evaluate(exp *Expr, env *Environment) interface{} {
+	if exp == nil {
+		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
+		return nil
+	}
 	switch exp.Type {
 	case Num:
 		return parseNumber(exp.Value.(string), exp)
@@ -39,6 +43,59 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		return value
 
 	case Assign:
+		fmt.Printf("Assigning: %v\n", exp)
+		if exp.Left.Type == Var && exp.Left.Index != nil {
+			arrayOrMap := evaluate(exp.Left.Left, env)
+			if arrayOrMap == nil {
+				Error(exp, "Cannot assign to an index on a null expression")
+				return nil
+			}
+			index := evaluate(exp.Left.Index, env)
+			value := evaluate(exp.Right, env)
+
+			switch arr := arrayOrMap.(type) {
+			case []interface{}:
+				idx, ok := index.(int)
+				if !ok {
+					Error(exp, "Array index must be an integer")
+					return nil
+				}
+				if idx < 0 || idx >= len(arr) {
+					Error(exp, "Array index out of bounds")
+					return nil
+				}
+				arr[idx] = value
+				return value
+			case map[string]interface{}:
+				key, ok := index.(string)
+				if !ok {
+					Error(exp, "Map key must be a string")
+					return nil
+				}
+				arr[key] = value
+				return value
+			default:
+				Error(exp, "Cannot index into type %T", arrayOrMap)
+				return nil
+			}
+		} else if exp.Left.Type == Var && exp.Left.Value != nil {
+			if exp.Left.Left != nil {
+				// Handle field assignment
+				obj := evaluate(exp.Left.Left, env)
+				field := exp.Left.Value.(string)
+				value := evaluate(exp.Right, env)
+				if m, ok := obj.(map[string]interface{}); ok {
+					m[field] = value
+					return value
+				} else {
+					Error(exp, "Cannot assign to field %v on non-map object", field)
+					return nil
+				}
+			}
+			// Handle variable assignment
+			return env.Set(exp.Left.Value.(string), evaluate(exp.Right, env), exp)
+		}
+
 		if exp.Left.Type != Var {
 			Error(exp, "Cannot assign to %v", exp.Left)
 		}

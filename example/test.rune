@@ -1,60 +1,15 @@
-myvar = 12
 
-toPrint = "I am the toPrint variable"
 
-printer = fun(printme) {
-    println(printme)
-}
-
-if myvar == 10 then
-    printer("then")
-elif myvar == 12 then
-    printer("elif 12\n")
-elif myvar == 11 then
-    printer("elif 11")
-else printer("else")
-
-while myvar > 0 {
-    myvar = myvar  -1
-    printer(myvar)
-}
-
-if myvar < 0 {
-    printer("Is smaller than 0")
-} elif myvar > 0 {
-    printer("Is biger or than 0")
-} else {
-    printer("Is exactly 0")
-    printer("Is exactly 0 the second time")
-}
-
-if true then printer("Nice") else printer("Also nice")
-
-runeIsAwesome = true
-
-if runeIsAwesome then println("Rune is awesome") elif runeIsAwesome != true then println("Oh to bad") else println("This should never print! :)")
-
-if runeIsAwesome {
-    println("Rune is awesome")
-} elif runeIsAwesome != true {
-    println("Oh to bad")
-} else {
-    println("This should never print! :)")
-}
-
-println(typeof(1)) # int
-println(typeof(10.1)) # float
-println(typeof("Hello")) # "string"
-println(typeof(false)) # bool
-
-myArr = array{"hello", 10, false, 20, 30}
+myArr = array{"hello"}
+println(typeof(myArr), " ", myArr) # array [hello]
 first = myArr[0]
-println(myArr[0])
-println(myArr[1])
-println(myArr[2])
-println(myArr[3])
-println(myArr[4])
+println(first) # "hello"
+myArr[0] = "world"
+println(typeof(myArr), " ", myArr) # array [hello]
 
-println(myArr)
-myArr = slicefirst(myArr, 10)
-println("sliced: ", myArr)
+person = type{"age": 10}
+person2 = person
+println(typeof(person), " " , person) # map {age: 10}
+println(typeof(person2), " " , person2) # map {age: 10}
+person2.age = 20
+println(typeof(person2), " " , person2) # int 20
