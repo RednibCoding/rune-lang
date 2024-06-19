@@ -23,6 +23,7 @@ Rune stands out for being:
 - **Dictionaries/Maps**: `table`
 - **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
 - **Builtin functions**: Look at the [builtin functions](#builin-functions) for more info
+- **Simple interop between Rune and Go**
 
 
 ## Pre compiled binaries
