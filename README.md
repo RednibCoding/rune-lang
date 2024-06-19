@@ -1,6 +1,6 @@
 
 # RuneVM: A Runey Scripting Language
-![](editor/vscode/Rune/logo.png)
+![](editor/vscode/rune/logo.png)
 
 RuneVM is an interpreter for the versatile scripting language "Rune".
 
@@ -717,6 +717,6 @@ if RuneIsAwesome {
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):
  - [VS Code](https://code.visualstudio.com/)
 
-    ![](editor/vscode/Rune/installed.png)
+    ![](editor/vscode/rune/installed.png)
 
  The `readme.md` in each directory explains how to install them.
