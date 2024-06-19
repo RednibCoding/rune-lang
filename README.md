@@ -1,6 +1,6 @@
 
 # RuneVM: A Runey Scripting Language
-![](editor/vscode/rune/logo.png)
+![](editor/vscode/Rune/logo.png)
 
 RuneVM is an interpreter for the versatile scripting language "Rune".
 
@@ -13,15 +13,15 @@ Rune stands out for being:
 - **Embeddable:** Seamlessly integrates into your Go projects.
 - **Extensible:** Easily extendable with custom functions and variables.
 - **Portable:** Simple to port to other languages.
-- **Versatile:** Can be used standalone as a script runner with the [rune](dist/main.go) binary or embedded as a scripting language within your project.
+- **Versatile:** Can be used standalone as a script runner with the [Rune](dist/main.go) binary or embedded as a scripting language within your project.
 
 ## Using the Language
 
 ### Writing Scripts
 
-Rune scripts have the `.rune` extension. Here is a sample script (`test.rune`):
+Rune scripts have the `.Rune` extension. Here is a sample script (`test.rune`):
 
-```rune
+```js
 myvar = 12;
 
 printer = fun(toPrint) {
@@ -79,21 +79,21 @@ println(mytable["key2"]) # prints: 12
 To run a script, use the following command:
 
 ```
-./rune.exe path/to/your/script.rune
+./Rune.exe path/to/your/script.Rune
 ```
 
 ## Embedding RuneVM in Your Project
 
 To embed RuneVM in your own Go project, follow these steps:
 
-1. Add `runevm` to your project:
+1. Add `Runevm` to your project:
     ```
-    go get github.com/RednibCoding/runevm
+    go get github.com/RednibCoding/Runevm
     ```
 
 2. Import RuneVM in your Go code:
     ```go
-    import "github.com/RednibCoding/runevm"
+    import "github.com/RednibCoding/Runevm"
     ```
 
 ### Example Usage
@@ -107,13 +107,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/RednibCoding/runevm"
+	"github.com/RednibCoding/Runevm"
 )
 
 func main() {
 	args := os.Args
 	if len(args) < 2 {
-		fmt.Println("USAGE: rune <sourcefile>")
+		fmt.Println("USAGE: Rune <sourcefile>")
 		os.Exit(1)
 	}
 	source, err := os.ReadFile(args[1])
@@ -123,7 +123,7 @@ func main() {
 	}
 
 	filepath := args[1]
-	vm := runevm.NewRuneVM()
+	vm := Runevm.NewRuneVM()
 	vm.Run(string(source), filepath)
 }
 ```
@@ -226,13 +226,13 @@ customPanicPrinter("panic")
 ```
 output:
 ```
-error (example.rune:1:6): Error in function call: 'intentional panic triggered'
+error (example.Rune:1:6): Error in function call: 'intentional panic triggered'
 ```
 
 ## Using Functions and Variables defined in Rune from Go
 You can get function defined in `Rune` via the `GetFun` function:
 
-Let's say in rune you have the following function named "printer"
+Let's say in Rune you have the following function named "printer"
 ```
 printer = fun(printme) {
     println(printme)
@@ -241,7 +241,7 @@ printer = fun(printme) {
 
 You can get this function by first, running the script and then call `GetFun` afterwards:
 ```go
-vm := runevm.NewRuneVM()
+vm := Runevm.NewRuneVM()
 vm.Run(string(source), filepath)
 
 printerFunc, err := vm.GetFun("printer")
@@ -261,7 +261,7 @@ Hello From PrinterFunc
 
 Similarely you can retrieve the value of variables.
 
-Lets say you have a string variable defined in rune like so:
+Lets say you have a string variable defined in Rune like so:
 
 ```
 toPrint = "I am the toPrint variable"
@@ -283,11 +283,11 @@ output:
 I am the toPrint variable
 ```
 
-You can also execute a function defined in rune with a variable defined in rune as argument.
+You can also execute a function defined in Rune with a variable defined in Rune as argument.
 
 Lets combine the above:
 
-```
+```js
 toPrint = "I am the toPrint variable"
 
 printer = fun(printme) {
@@ -297,17 +297,17 @@ printer = fun(printme) {
 
 And in go we can do:
 ```go
-vm := runevm.NewRuneVM()
+vm := Runevm.NewRuneVM()
 vm.Run(string(source), filepath)
 
-// Get the printer function from rune
+// Get the printer function from Rune
 printerFunc, err := vm.GetFun("printer")
 if err != nil {
     fmt.Println(err)
     return
 }
 
-// Get the 'toPrint' variable from rune
+// Get the 'toPrint' variable from Rune
 toPrint, err := vm.GetString("toPrint")
 if err != nil {
     fmt.Println(err)
@@ -326,7 +326,7 @@ Analogous to `GetString` are the functions: `GetInt`, `GetFloat`, `GetBool` and 
 
 ### Getting Tables defined in Rune
 Image you have the following Rune code:
-```
+```js
 person = table{}
 person.name = "John"
 person.sayHello = fun(self) {
@@ -336,7 +336,7 @@ person.sayHello = fun(self) {
 
 You can get the `person` table in go by using the `GetTable` function:
 ```go
-vm := runevm.NewRuneVM()
+vm := Runevm.NewRuneVM()
 vm.Run(string(source), filepath)
 
 person, err := vm.GetTable("person")
@@ -353,8 +353,8 @@ if err != nil {
 ```
 Now you have the reference to the sayHello function defined on the person object.
 
-In order to call it, you have to pass the person object to the function (this acts as the self parameter). In Rune, this happens automatically, but since we call the function manually in go, we have to pass the self argument manually (otherwise you would get a rune error: `Variable self is not an array or map`):
-```
+In order to call it, you have to pass the person object to the function (this acts as the self parameter). In Rune, this happens automatically, but since we call the function manually in go, we have to pass the self argument manually (otherwise you would get a Rune error: `Variable self is not an array or map`):
+```js
 sayHello(person)
 ```
 
@@ -371,7 +371,7 @@ Functions in Rune are defined by assigning a function to a name.
 
 Example:
 
-```rune
+```js
 greet = func() {
     print("Greetings")
 }
@@ -383,7 +383,7 @@ Functions are called using the name followed by parentheses and optional argumen
 
 Example:
 
-```rune
+```js
 greet()
 ```
 
@@ -395,7 +395,7 @@ Variables in Rune are defined by assigning a value to a name using the `=` opera
 
 Example:
 
-```rune
+```js
 message = "Hello, World!";
 count = 42;
 pi = 3.14;
@@ -408,7 +408,7 @@ Variables can be used in expressions and statements.
 
 Example:
 
-```rune
+```js
 println(message)
 print("The count is: ", count)
 ```
@@ -421,7 +421,7 @@ The `if` statement is used to execute a block of code conditionally. The `else` 
 
 Example:
 
-```rune
+```js
 if count > 10 {
     print "Count is greater than 10\n"
 } elif count == 10 {
@@ -437,7 +437,7 @@ The `while` statement is used to execute a block of code repeatedly as long as a
 
 Example:
 
-```rune
+```js
 x = 0
 while x < 5 {
     print "x is ", x, "\n"
@@ -453,7 +453,7 @@ Numbers in Rune can be of type `int` or `float64`. They are used in mathematical
 
 Example:
 
-```rune
+```js
 a = 10
 b = 3.14
 result = a * b
@@ -465,7 +465,7 @@ Strings in Rune are sequences of characters enclosed in double quotes `"`.
 
 Example:
 
-```rune
+```js
 greeting = "Hello, World!";
 print(greeting);
 ```
@@ -474,10 +474,10 @@ print(greeting);
 
 Booleans in Rune can have one of two values: `true` and `false`.
 
-```rune
-runeIsAwesome = true
+```js
+RuneIsAwesome = true
 
-if runeIsAwesome then println("Rune is awesome!") else println("This should never print! ;)")
+if RuneIsAwesome then println("Rune is awesome!") else println("This should never print! ;)")
 ```
 
 ## Falsy Values
@@ -491,7 +491,7 @@ Any other value is considered truthy.
 
 ### Example of Falsy Values
 
-```rune
+```js
 if 0 {
     println("This will not print")
 } else {
@@ -513,7 +513,7 @@ if false {
 ```
 
 ## Arrays
-In rune you can define an array by binding it to a name:
+In Rune you can define an array by binding it to a name:
 ```
 myArr = array{"hello", 10, false, 20, 30}
 ```
@@ -526,21 +526,21 @@ println(first) # output: "hello"
 ```
 
 ## Tables
-Tables in rune are similar to hash maps or dictionaries in other language with some added features.
-In rune you can define a table by binding it to a name:
+Tables in Rune are similar to hash maps or dictionaries in other languages with some added features.
+In Rune you can define a table by binding it to a name:
 ```
 myTable = table{"key1": 1, "key2": false}
 ```
 Tables can have values of different types, but keys must be of type `string`.
 
 To access a table field by key you can use the name followed by an key enclosed in square brackts:
-```
+```js
 second = myTable["key2"]
 println(second) # output: false
 ```
 
 >**Note**: keys are unique, this means adding a value with a key that already exists, the **existing value get overriden**:
-```
+```js
 myTable = table{"uid": "10"}
 println(myTable) # output: {"uid": 10}
 myTable = append(myTable, "uid", "Hello World")
@@ -550,7 +550,7 @@ println(myTable) # output: {"uid": "Hello World"}
 ### Field Access
 It is possible to access the fields of a table also via the `.`.
 Both expressions are the same under the hood:
-```
+```js
 myTable = table{"uid": "10"}
 println(myTable["uid"]) # output: 10
 println(myTable.uid) # output: 10
@@ -558,7 +558,7 @@ println(myTable.uid) # output: 10
 
 ### Whitespaces in keys
 Whitespace in keys will be removed automatically to ensure they are accessable via the field access operator `.`.
-```
+```js
 mytable = table{"key 1": false, "key 2": 10, "key 3": 3.14}
 println(mytable) # prints: {"key1": false, "key2": 10, "key3": 3.14}
 println(mytable.key3) # prints: 3.14
@@ -567,7 +567,7 @@ println(mytable.key3) # prints: 3.14
 ### The 'self' argument
 When defining a function on a table, a 'self' argument will be injected automatically.
 'self' always refers to the table where the function was defined and called on.
-```
+```js
 person = table{}
 person.name = "John"
 person.sayHello = fun(self) {
@@ -582,7 +582,7 @@ person2.sayHello() # prints: "Hello Jenny"
 ```
 
 >**Copies vs References:** Remember that assigning a table to a variable creates a reference of it. Calling new however, creates a copy.
-```
+```js
 person = table{}
 person.name = "John"
 person.sayHello = func(self) {
@@ -602,7 +602,7 @@ person.sayHello() # ALSO PRINTS: "Hello Jenny"
 In the above example, both variables `person` and `person2` refer to the **same underlying table**.
 
 If you want to create a new copy of it and therefore get the (in this case) expected behavior, you can use the builtin `new` function:
-```
+```js
 person = table{}
 person.name = "John"
 person.sayHello = func(self) {
@@ -626,14 +626,14 @@ person.sayHello() # NOW CORRECTLY PRINTS: "Hello John"
 The `if`-statement can be written on one line with the `then` keyword:
 
 Both if statements are the same:
-```rune
-runeIsAwesome = true;
+```js
+RuneIsAwesome = true;
 
-if runeIsAwesome then println("Rune is awesome") elif runeIsAwesome != true then println("Oh to bad") else println("This should never print! :)");
+if RuneIsAwesome then println("Rune is awesome") elif RuneIsAwesome != true then println("Oh to bad") else println("This should never print! :)");
 
-if runeIsAwesome {
+if RuneIsAwesome {
     println("Rune is awesome")
-}elif runeIsAwesome != true {
+}elif RuneIsAwesome != true {
     println("Oh to bad")
 } else {
     println("This should never print! :)")
@@ -711,6 +711,6 @@ if runeIsAwesome {
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):
  - [VS Code](https://code.visualstudio.com/)
 
-    ![](editor/vscode/rune/installed.png)
+    ![](editor/vscode/Rune/installed.png)
 
  The `readme.md` in each directory explains how to install them.
