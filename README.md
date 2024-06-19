@@ -172,7 +172,7 @@ To embed RuneVM in your own Go project, follow these steps:
 
 1. Add `runevm` to your project:
     ```
-    go get github.com/RednibCoding/Runevm
+    go get github.com/RednibCoding/runevm
     ```
 
 2. Import RuneVM in your Go code:
