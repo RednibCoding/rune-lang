@@ -137,3 +137,11 @@ func (r *RuneVM) GetArray(name string) ([]interface{}, error) {
 	}
 	return nil, fmt.Errorf("variable '%s' is not an array", name)
 }
+
+func (r *RuneVM) GetTable(name string) (map[string]interface{}, error) {
+	val := r.get(name)
+	if arr, ok := val.(map[string]interface{}); ok {
+		return arr, nil
+	}
+	return nil, fmt.Errorf("variable '%s' is not a table", name)
+}
