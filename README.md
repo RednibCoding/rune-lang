@@ -15,7 +15,7 @@ Rune stands out for being:
 - **Portable:** Simple to port to other languages.
 - **Versatile:** Can be used standalone as a script runner with the [Rune](dist/) binary or embedded as a scripting language within your project.
 
-Rune has everything one would definetely need, but not more and not less:
+## Everything you would definetely need, but not more and not less:
 - **Datatypes:** int, float, string, bool
 - **Branching:** if elif else
 - **Looping:** while
