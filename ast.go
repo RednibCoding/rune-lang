@@ -2,11 +2,6 @@ package runevm
 
 type ExprType string
 
-type KeyValuePair struct {
-	Key   *Expr
-	Value *Expr
-}
-
 const (
 	Num    ExprType = "num"
 	Str    ExprType = "str"
