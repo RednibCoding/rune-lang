@@ -129,7 +129,7 @@ println("This is the imported script.")
 ```
 
 When you run `main.rune`, the output will be:
-```js
+```
 This is the imported script.
 This is the main script.
 ```
@@ -146,7 +146,20 @@ else
 
 println("This is the main script.")
 ```
+
 In this example, depending on the value of `condition`, either `test2.rune` or `test3.rune` will be imported and executed.
+
+Or this works also:
+```js
+toImport = "test2"
+
+if true then toImport = "test3"
+
+import toImport
+
+println("This is the main script.")
+```
+In this example, `test3.rune` will be imported and executed.
 
 ### Notes
 - All imports share the same global scope, meaning variables and functions defined in the imported script are accessible in the main script and vice versa.
