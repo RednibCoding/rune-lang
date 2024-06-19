@@ -65,7 +65,7 @@ person2.name = "Jenny"
 person1.sayHello() # prints: "John"
 person2.sayHello() # prints: "Jenny"
 
-mytable = table{"key1": false, "key2": 10, "key3": 12.4}
+mytable = table{"key 1": false, "key 2": 10, "key 3": 12.4} # spaces in keys will be removed automatically
 println(mytable) # prints: {"key1": false, "key2": 10, "key3": 12.4}
 println(mytable["key2"]) # prints: 10
 mytable["key2"] = 11
@@ -521,6 +521,14 @@ Both expressions are the same under the hood:
 myTable = table{"uid": "10"}
 println(myTable["uid"]) # output: 10
 println(myTable.uid) # output: 10
+```
+
+### Whitespaces in keys
+Whitespace in keys will be removed automatically to ensure they are accessable via the field access operator `.`.
+```
+mytable = table{"key 1": false, "key 2": 10, "key 3": 3.14}
+println(mytable) # prints: {"key1": false, "key2": 10, "key3": 3.14}
+println(mytable.key3) # prints: 3.14
 ```
 
 ### The 'self' argument
