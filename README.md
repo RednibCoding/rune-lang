@@ -25,7 +25,7 @@ Rune stands out for being:
 - **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
 - **Builtin functions**: Look at the [builtin functions](#builin-functions) for more info
 - **Editor plugins**: See: [editor plugins](#editor-plugins)
-- **Simple interop between Rune and Go**
+- **Simple interop between Rune and Go**: See [interop](#interop-between-rune-and-go)
 
 
 ## Pre compiled binaries
@@ -147,11 +147,11 @@ func main() {
 }
 ```
 
-## Defining Custom Functions and Variables
+## Interop between Rune and Go
 
-### Custom Functions
+### Functions
 
-Custom functions can be defined and added to the VM using the `Set` method. Custom functions must have the following signature:
+Functions can be defined and added to the VM using the `Set` method. Functions must have the following signature:
 
 ```go
 func(args ...interface{}) interface{}
@@ -205,11 +205,11 @@ func customPrintFunction(args ...interface{}) interface{} {
 ```
 
 
-### Custom Variables
+### Variables
 
 Custom variables can be defined and added to the VM using the `SetXXX` methods: `SetInt`, `SetFloat`, `SetString`, `SetBool` and `SetArray`.
 
-Variables can be of type `int`, `float64`, `string`, `bool` or `array`.
+Variables can be of type `int`, `float64`, `string`, `bool`, `array` or `table`.
 
 Example:
 
