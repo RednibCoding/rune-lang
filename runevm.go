@@ -40,8 +40,9 @@ func (r *RuneVM) Run(source string, filepath string) {
 	tokenStream := NewTokenStream(stream)
 	parser := NewParser(tokenStream)
 	ast := parser.parseToplevel()
+	evaluator := NewEvaluator()
 
-	evaluate(ast, r.env)
+	evaluator.evaluate(ast, r.env)
 }
 
 func (r *RuneVM) set(name string, value interface{}) {

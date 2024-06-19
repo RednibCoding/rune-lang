@@ -6,8 +6,6 @@ RuneVM is an interpreter for the versatile scripting language "Rune".
 
 Rune is a dynamically typed scripting language designed to be easy to use and implement while remaining practical for real-world tasks. While performance isn't its primary focus, Rune excels in simplicity and flexibility.
 
-Rune is crafted in pure Go, spanning less than 1000 lines of code.
-
 Rune stands out for being:
 - **Intuitive:** Designed to be user-friendly and straightforward.
 - **Embeddable:** Seamlessly integrates into your Go projects.
@@ -166,6 +164,7 @@ In this example, `test3.rune` will be imported and executed.
 - The imported script is executed immediately at the point of the import statement, and any side effects (such as variable assignments or function definitions) will affect the global environment.
 - Import paths are relative to the location of the script file executing the import.
 - It is idiomatic in Rune to have a single main.rune script that imports all necessary files, rather than scattering import statements throughout various Rune scripts. This approach ensures a clear and organized entry point for the program.
+- Cyclic imports will produce an error
 
 ## Embedding RuneVM in Your Project
 

@@ -1,9 +1,4 @@
 
-condition = 1
-
-if condition == 2 then
-    import "test2"
-else
-    import "test3"
+import "test2"
 
 println("This is the main script.")

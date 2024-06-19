@@ -7,7 +7,16 @@ import (
 	"strings"
 )
 
-func evaluate(exp *Expr, env *Environment) interface{} {
+type Evaluator struct {
+	importedPaths map[string]bool
+}
+
+func NewEvaluator() *Evaluator {
+	e := &Evaluator{importedPaths: make(map[string]bool)}
+	return e
+}
+
+func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	if exp == nil {
 		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
 		return nil
@@ -24,13 +33,13 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		if exp.Index != nil {
 			switch v := value.(type) {
 			case []interface{}:
-				index := evaluate(exp.Index, env).(int)
+				index := e.evaluate(exp.Index, env).(int)
 				if index < 0 || index >= len(v) {
 					Error(exp, "Index '%d' out of bounds for array '%v[%d]'", index, exp.Value, len(v))
 				}
 				return v[index]
 			case map[string]interface{}:
-				key := evaluate(exp.Index, env).(string)
+				key := e.evaluate(exp.Index, env).(string)
 				val, ok := v[key]
 				if !ok {
 					Error(exp, "Key '%s' not found in table '%v'", key, exp.Value)
@@ -44,13 +53,13 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 
 	case Assign:
 		if exp.Left.Type == Var && exp.Left.Index != nil {
-			arrayOrTable := evaluate(exp.Left.Left, env)
+			arrayOrTable := e.evaluate(exp.Left.Left, env)
 			if arrayOrTable == nil {
 				Error(exp, "Cannot assign to an index on a null expression")
 				return nil
 			}
-			index := evaluate(exp.Left.Index, env)
-			value := evaluate(exp.Right, env)
+			index := e.evaluate(exp.Left.Index, env)
+			value := e.evaluate(exp.Right, env)
 
 			switch arr := arrayOrTable.(type) {
 			case []interface{}:
@@ -80,9 +89,9 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		} else if exp.Left.Type == Var && exp.Left.Value != nil {
 			if exp.Left.Left != nil {
 				// Handle field assignment
-				obj := evaluate(exp.Left.Left, env)
+				obj := e.evaluate(exp.Left.Left, env)
 				field := exp.Left.Value.(string)
-				value := evaluate(exp.Right, env)
+				value := e.evaluate(exp.Right, env)
 				if m, ok := obj.(map[string]interface{}); ok {
 					m[field] = value
 					return value
@@ -92,80 +101,80 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 				}
 			}
 			// Handle variable assignment
-			return env.Set(exp.Left.Value.(string), evaluate(exp.Right, env), exp)
+			return env.Set(exp.Left.Value.(string), e.evaluate(exp.Right, env), exp)
 		}
 
 		if exp.Left.Type != Var {
 			Error(exp, "Cannot assign to %v", exp.Left)
 		}
-		return env.Set(exp.Left.Value.(string), evaluate(exp.Right, env), exp)
+		return env.Set(exp.Left.Value.(string), e.evaluate(exp.Right, env), exp)
 
 	case Binary:
 		return applyOp(exp.Operator,
-			evaluate(exp.Left, env),
-			evaluate(exp.Right, env), exp)
+			e.evaluate(exp.Left, env),
+			e.evaluate(exp.Right, env), exp)
 
 	case Fun:
-		return makeFun(env, exp)
+		return e.makeFun(env, exp)
 
 	case If:
-		cond := evaluate(exp.Cond, env)
+		cond := e.evaluate(exp.Cond, env)
 		if cond != false {
-			return evaluate(exp.Then, env)
+			return e.evaluate(exp.Then, env)
 		}
 		if exp.Else != nil {
 			if exp.Else.Type == Prog {
 				for _, elif := range exp.Else.Prog {
 					if elif.Type == If {
-						elifCond := evaluate(elif.Cond, env)
+						elifCond := e.evaluate(elif.Cond, env)
 						if elifCond != false {
-							return evaluate(elif.Then, env)
+							return e.evaluate(elif.Then, env)
 						}
 					} else {
-						return evaluate(elif, env)
+						return e.evaluate(elif, env)
 					}
 				}
 			} else {
-				return evaluate(exp.Else, env)
+				return e.evaluate(exp.Else, env)
 			}
 		}
 		return false
 
 	case While:
 		for {
-			cond := evaluate(exp.Cond, env)
+			cond := e.evaluate(exp.Cond, env)
 			if !cond.(bool) {
 				break
 			}
-			evaluate(exp.Body, env)
+			e.evaluate(exp.Body, env)
 		}
 		return false
 
 	case Array:
 		var arr []interface{}
 		for _, element := range exp.Prog {
-			arr = append(arr, evaluate(element, env))
+			arr = append(arr, e.evaluate(element, env))
 		}
 		return arr
 
 	case Table:
 		m := make(map[string]interface{})
 		for _, pair := range exp.Prog {
-			key := evaluate(pair.Left, env)
-			value := evaluate(pair.Right, env)
+			key := e.evaluate(pair.Left, env)
+			value := e.evaluate(pair.Right, env)
 			m[fmt.Sprint(key)] = value
 		}
 		return m
 
 	case Prog:
 		var val interface{} = false
-		for _, e := range exp.Prog {
-			val = evaluate(e, env)
+		for _, ex := range exp.Prog {
+			val = e.evaluate(ex, env)
 		}
 		return val
 
 	case Call:
-		fn, ok := evaluate(exp.Func, env).(func(args ...interface{}) interface{})
+		fn, ok := e.evaluate(exp.Func, env).(func(args ...interface{}) interface{})
 		if !ok {
 			Error(exp, "'%s' is not a function", exp.Func.Value)
 		}
@@ -182,7 +191,7 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		}
 
 		for _, arg := range exp.Args {
-			args = append(args, evaluate(arg, env))
+			args = append(args, e.evaluate(arg, env))
 		}
 
 		ret := fn(args...)
@@ -192,16 +201,24 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		return ret
 
 	case Import:
-		filePath := evaluate(exp.Left, env).(string) + ".rune"
-		fileContent, err := os.ReadFile(filePath)
-		if err != nil {
-			Error(exp, "Failed to import file '%s': %v", filePath, err)
+		path := e.evaluate(exp.Left, env).(string) + ".rune"
+		if _, alreadyImported := e.importedPaths[path]; alreadyImported {
+			Error(exp, "Cyclic import detected: '%s' is already imported", path)
 		}
-		stream := NewInputStream(string(fileContent), filePath)
-		tokenStream := NewTokenStream(stream)
-		parser := NewParser(tokenStream)
-		ast := parser.parseToplevel()
-		evaluate(ast, env)
+
+		e.importedPaths[path] = true
+
+		importedSource, err := os.ReadFile(path)
+		if err != nil {
+			Error(exp, "Failed to import file '%s': %v", path, err)
+		}
+
+		importStream := NewInputStream(string(importedSource), path)
+		importTokenStream := NewTokenStream(importStream)
+		importParser := NewParser(importTokenStream)
+		importAST := importParser.parseToplevel()
+
+		e.evaluate(importAST, env)
 		return nil
 
 	default:
@@ -295,7 +312,7 @@ func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 	}
 }
 
-func makeFun(env *Environment, exp *Expr) func(args ...interface{}) interface{} {
+func (e *Evaluator) makeFun(env *Environment, exp *Expr) func(args ...interface{}) interface{} {
 	return func(args ...interface{}) interface{} {
 		scope := env.Extend()
 		for i, name := range exp.Vars {
@@ -306,7 +323,7 @@ func makeFun(env *Environment, exp *Expr) func(args ...interface{}) interface{} 
 			}
 		}
 
-		return evaluate(exp.Body, scope)
+		return e.evaluate(exp.Body, scope)
 	}
 }
 
