@@ -33,26 +33,26 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 				key := evaluate(exp.Index, env).(string)
 				val, ok := v[key]
 				if !ok {
-					Error(exp, "Key '%s' not found in map '%v'", key, exp.Value)
+					Error(exp, "Key '%s' not found in table '%v'", key, exp.Value)
 				}
 				return val
 			default:
-				Error(exp, "Variable %v is not an array or map", exp.Value)
+				Error(exp, "Variable %v is not an array or table", exp.Value)
 			}
 		}
 		return value
 
 	case Assign:
 		if exp.Left.Type == Var && exp.Left.Index != nil {
-			arrayOrMap := evaluate(exp.Left.Left, env)
-			if arrayOrMap == nil {
+			arrayOrTable := evaluate(exp.Left.Left, env)
+			if arrayOrTable == nil {
 				Error(exp, "Cannot assign to an index on a null expression")
 				return nil
 			}
 			index := evaluate(exp.Left.Index, env)
 			value := evaluate(exp.Right, env)
 
-			switch arr := arrayOrMap.(type) {
+			switch arr := arrayOrTable.(type) {
 			case []interface{}:
 				idx, ok := index.(int)
 				if !ok {
@@ -68,13 +68,13 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 			case map[string]interface{}:
 				key, ok := index.(string)
 				if !ok {
-					Error(exp, "Map key must be a string")
+					Error(exp, "Table key must be a string")
 					return nil
 				}
 				arr[key] = value
 				return value
 			default:
-				Error(exp, "Cannot index into type %T", arrayOrMap)
+				Error(exp, "Cannot index into type %T", arrayOrTable)
 				return nil
 			}
 		} else if exp.Left.Type == Var && exp.Left.Value != nil {
@@ -87,7 +87,7 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 					m[field] = value
 					return value
 				} else {
-					Error(exp, "Cannot assign to field %v on non-map object", field)
+					Error(exp, "Cannot assign to field %v on non-table object", field)
 					return nil
 				}
 			}
