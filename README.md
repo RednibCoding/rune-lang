@@ -24,6 +24,7 @@ Rune stands out for being:
 - **Dictionaries/Maps**: `table`
 - **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
 - **Builtin functions**: Look at the [builtin functions](#builin-functions) for more info
+- **Editor plugins**: See: [editor plugins](#editor-plugins)
 - **Simple interop between Rune and Go**
 
 
@@ -97,21 +98,21 @@ println(mytable["key2"]) # prints: 12
 To run a script, use the following command:
 
 ```
-rune path/to/your/script.Rune
+rune path/to/your/script.rune
 ```
 
 ## Embedding RuneVM in Your Project
 
 To embed RuneVM in your own Go project, follow these steps:
 
-1. Add `Runevm` to your project:
+1. Add `runevm` to your project:
     ```
     go get github.com/RednibCoding/Runevm
     ```
 
 2. Import RuneVM in your Go code:
     ```go
-    import "github.com/RednibCoding/Runevm"
+    import "github.com/RednibCoding/runevm"
     ```
 
 ### Example Usage
@@ -125,13 +126,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/RednibCoding/Runevm"
+	"github.com/RednibCoding/runevm"
 )
 
 func main() {
 	args := os.Args
 	if len(args) < 2 {
-		fmt.Println("USAGE: Rune <sourcefile>")
+		fmt.Println("USAGE: rune <sourcefile>")
 		os.Exit(1)
 	}
 	source, err := os.ReadFile(args[1])
