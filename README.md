@@ -50,6 +50,28 @@ if myvar < 0 {
 };
 
 if true then printer("Nice") else printer("Also nice");
+
+person1 = table{}
+person1.name = "John"
+
+person1.sayHello = fun(self) {
+    println(self.name)
+}
+person1.sayHello() # prints: "John"
+
+person2 = new(person1)
+person2.name = "Jenny"
+
+person1.sayHello() # prints: "John"
+person2.sayHello() # prints: "Jenny"
+
+mytable = table{"key1": false, "key2": 10, "key3": 12.4}
+println(mytable) # prints: {"key1": false, "key2": 10, "key3": 12.4}
+println(mytable["key2"]) # prints: 10
+mytable["key2"] = 11
+println(mytable["key2"]) # prints: 11
+mytable.key2 = 12
+println(mytable["key2"]) # prints: 12
 ```
 
 ### Running Scripts
