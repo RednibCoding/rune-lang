@@ -15,6 +15,16 @@ Rune stands out for being:
 - **Portable:** Simple to port to other languages.
 - **Versatile:** Can be used standalone as a script runner with the [Rune](dist/) binary or embedded as a scripting language within your project.
 
+Rune has everything one would definetely need, but not more and not less:
+- **Datatypes:** int, float, string, bool
+- **Branching:** if elif else
+- **Looping:** while
+- **Arrays**: array
+- **Dictionaries/Maps**: table
+- **Compount literals and field access**: e.g. person1 = new(person) person1.name = "John" ....
+- **Builtin functions**: Look at the [builtin functions](#builin-functions) for more info
+
+
 ## Pre compiled binaries
 In the [dist directory](dist/), you will find pre compiled binaries for the three major platforms.
 
