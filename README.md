@@ -23,6 +23,7 @@ Rune stands out for being:
 - **Arrays**: `array`
 - **Dictionaries/Maps**: `table`
 - **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
+- **Import:** See: [Code modularization](#code-modularization)
 - **Builtin functions**: Look at the [builtin functions](#builin-functions) for more info
 - **Editor plugins**: See: [editor plugins](#editor-plugins)
 - **Simple interop between Rune and Go**: See [interop](#interop-between-rune-and-go)
@@ -101,7 +102,7 @@ To run a script, use the following command:
 rune path/to/your/script.rune
 ```
 
-## Importing Scripts
+## Code modularization
 
 Rune supports an `import` statement to include and execute other Rune scripts within the current script. This allows for better modularization and reuse of code. The `import` statement takes a file path (without the `.rune` extension) and imports the contents of the specified file into the current script.
 
