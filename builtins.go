@@ -295,7 +295,7 @@ func builtin_sliceLast(args ...interface{}) interface{} {
 	}
 }
 
-func builtin_len(args ...interface{}) interface{} {
+func builtin_Len(args ...interface{}) interface{} {
 	if len(args) != 1 {
 		return fmt.Errorf("len requires exactly 1 argument")
 	}
@@ -323,14 +323,15 @@ func builtin_New(args ...interface{}) interface{} {
 	case map[string]interface{}:
 		return deepCopyMap(v)
 	default:
-		return fmt.Errorf("new can only create copies of arrays or maps, got %T", args[0])
+		return fmt.Errorf("new can only create copies of arrays or tables, got %T", args[0])
 	}
 }
 
 // //////////////////////////////////////////////////////////////////////////////
 // Helper Functions
 // //////////////////////////////////////////////////////////////////////////////
-// Helper function to format arrays
+
+// Helper function to format arrays for pretty printing
 func formatArray(arr []interface{}) string {
 	var sb strings.Builder
 	sb.WriteString("[")
@@ -344,7 +345,7 @@ func formatArray(arr []interface{}) string {
 	return sb.String()
 }
 
-// Helper function to format maps
+// Helper function to format maps for pretty printing
 func formatMap(m map[string]interface{}) string {
 	var sb strings.Builder
 	sb.WriteString("{")
