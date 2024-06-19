@@ -470,42 +470,93 @@ first = myArr[0]
 println(first) # output: "hello"
 ```
 
-## Maps / Type
-In rune you can define a map by binding it to a name:
+## Tables
+Tables in rune are similar to hash maps or dictionaries in other language with some added features.
+In rune you can define a table by binding it to a name:
 ```
-myMap = map{"key1": 1, "key2": false}
+myTable = table{"key1": 1, "key2": false}
 ```
-Maps can have values of different types, but keys must be of type `string`.
+Tables can have values of different types, but keys must be of type `string`.
 
-To access a map field by key you can use the name followed by an key enclosed in square brackts:
+To access a table field by key you can use the name followed by an key enclosed in square brackts:
 ```
-second = myMap["key2"]
+second = myTable["key2"]
 println(second) # output: false
 ```
 
 >**Note**: keys are unique, this means adding a value with a key that already exists, the **existing value get overriden**:
 ```
-myMap = map{"uid": "10"}
-println(myMap) # output: {"uid": 10}
-myMap = append(myMap, "uid", "Hello World")
-println(myMap) # output: {"uid": "Hello World"}
+myTable = table{"uid": "10"}
+println(myTable) # output: {"uid": 10}
+myTable = append(myTable, "uid", "Hello World")
+println(myTable) # output: {"uid": "Hello World"}
 ```
 
 ### Field Access
-It is possible to access the fields of a map also via the `.`.
+It is possible to access the fields of a table also via the `.`.
 Both expressions are the same under the hood:
 ```
-myMap = map{"uid": "10"}
-println(myMap["uid"]) # output: 10
-println(myMap.uid) # output: 10
+myTable = table{"uid": "10"}
+println(myTable["uid"]) # output: 10
+println(myTable.uid) # output: 10
 ```
 
-Syntactic suger is you can write `type` instead of `map` to make the usecase more clear.
-Both expressions are the same under the hood:
+### The 'self' argument
+When defining a function on a table, a 'self' argument will be injected automatically.
+'self' always refers to the table where the function was defined and called on.
 ```
-myMap = map{"uid": "10"}
-myMap = type{"uid": "10"}
+person = table{}
+person.name = "John"
+person.sayHello = func(self) {
+    prinln("Hello ", self.name)
+}
+
+person.sayHello() # prints: "Hello John"
+
+person2 = new(person)
+person2.name = "Jenny"
+person2.sayHello() # prints: "Hello Jenny"
 ```
+
+>**Copies vs References:** Remember that assigning a table to a variable creates a reference of it. Calling new however, creates a copy.
+```
+person = table{}
+person.name = "John"
+person.sayHello = func(self) {
+    prinln("Hello ", self.name)
+}
+
+person.sayHello() # prints: "Hello John"
+
+person2 = person
+person2.name = "Jenny"
+
+person2.sayHello() # prints: "Hello Jenny"
+
+person.sayHello() # ALSO PRINTS: "Hello Jenny"
+```
+
+In the above example, both variables `person` and `person2` refer to the **same underlying table**.
+
+If you want to create a new copy of it and therefore get the (in this case) expected behavior, you can use the builtin `new` function:
+```
+person = table{}
+person.name = "John"
+person.sayHello = func(self) {
+    prinln("Hello ", self.name)
+}
+
+person.sayHello() # prints: "Hello John"
+
+person2 = new(person) # create a copy of `person`
+person2.name = "Jenny"
+
+person2.sayHello() # prints: "Hello Jenny"
+
+person.sayHello() # NOW CORRECTLY PRINTS: "Hello John"
+```
+
+>**Side note:** Arrays have the same behavior in terms of references, so the function `new` also works on arrays. 
 
 
 ## Short-hand with `if` `then` and `elif` `then`
@@ -554,44 +605,44 @@ if runeIsAwesome {
 - **Example**: `typeof(10) # returns "int"`
 
 ### append
-- **Syntax**: `append(<array|map|string>, <value>)`
-- **Description**: Appends the given value to the given array, map or string. Returns the new array, map or string.
+- **Syntax**: `append(<array|table|string>, <value>)`
+- **Description**: Appends the given value to the given array, table or string. Returns the new array, table or string.
 - **Example**: `myArr = append(myArr, 10)`
 
 ### remove
-- **Syntax**: `remove(<array|map|string>, <index>)`
-- **Description**: Removed the given index from the given array, map or string. Returns the new array, map or string.
+- **Syntax**: `remove(<array|table|string>, <index>)`
+- **Description**: Removed the given index from the given array, table or string. Returns the new array, table or string.
 - **Example**: `myArr = remove(myArr, 2)`
 
 ### haskey
-- **Syntax**: `haskey(<map>, <key>)`
-- **Description**: Returns true if the given map has the given key, otherwise false.
-- **Example**: `hasTheKey = haskey(myMap, "TheKey")`
+- **Syntax**: `haskey(<table>, <key>)`
+- **Description**: Returns true if the given table has the given key, otherwise false.
+- **Example**: `hasTheKey = haskey(myTable, "TheKey")`
 
 ### slice
-- **Syntax**: `slice(<array|map|string>, <start>, <end>)`
-- **Description**: Returns a slice of the given array, map, or string from the start index to the end index.
+- **Syntax**: `slice(<array|table|string>, <start>, <end>)`
+- **Description**: Returns a slice of the given array, table, or string from the start index to the end index.
 - **Example**: `slicedArray = slice(myArray, 1, 3)`
 
 ### slicefirst
-- **Syntax**: `slicefirst(<array|map|string>, <end>)`
-- **Description**: Returns a slice of the given array, map, or string from the start to the given end index.
+- **Syntax**: `slicefirst(<array|table|string>, <end>)`
+- **Description**: Returns a slice of the given array, table, or string from the start to the given end index.
 - **Example**: `slicedArray = slicefirst(myArray, 2)`
 
 ### slicelast
-- **Syntax**: `slicelast(<array|map|string>, <start>)`
-- **Description**: Returns a slice of the given array, map, or string from the given start index to the end.
+- **Syntax**: `slicelast(<array|table|string>, <start>)`
+- **Description**: Returns a slice of the given array, table, or string from the given start index to the end.
 - **Example**: `slicedArray = sliceLast(myArray, 3)`
 
 ### len
-- **Syntax**: `len(<array|map|string>)`
-- **Description**: Returns the lenght of the given array, map or string.
+- **Syntax**: `len(<array|table|string>)`
+- **Description**: Returns the lenght of the given array, table or string.
 - **Example**: `arrLen = len(myArr)`
 
 ### new
-- **Syntax**: `new(<array|map>)`
-- **Description**: Returns a deep copy of the given array or map.
-- **Example**: `map2 = new(map1)`
+- **Syntax**: `new(<array|table>)`
+- **Description**: Returns a deep copy of the given array or table.
+- **Example**: `table2 = new(table1)`
 
 ## Editor Plugins
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):

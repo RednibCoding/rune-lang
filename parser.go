@@ -277,12 +277,12 @@ func (p *Parser) parseArray() *Expr {
 	}
 }
 
-func (p *Parser) parseMap(mapOrType string) *Expr {
+func (p *Parser) parseTable() *Expr {
 	tok := p.input.Peek()
-	p.skipKw(mapOrType)
+	p.skipKw("table")
 	pairs := p.parseDelimited("{", "}", ",", p.parsePair)
 	return &Expr{
-		Type: Map,
+		Type: Table,
 		Prog: pairs,
 		File: tok.File,
 		Line: tok.Line,
@@ -391,11 +391,8 @@ func (p *Parser) parseAtom() *Expr {
 		if p.isKw("array") != nil {
 			return p.parseArray()
 		}
-		if p.isKw("map") != nil {
-			return p.parseMap("map")
-		}
-		if p.isKw("type") != nil {
-			return p.parseMap("type")
+		if p.isKw("table") != nil {
+			return p.parseTable()
 		}
 		tok := p.input.Next()
 		if tok.Type == "var" || tok.Type == "num" || tok.Type == "str" {

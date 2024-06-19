@@ -20,7 +20,7 @@ const (
 	Call   ExprType = "call"
 	While  ExprType = "while"
 	Array  ExprType = "array"
-	Map    ExprType = "map"
+	Table  ExprType = "table"
 	Pair   ExprType = "pair"
 	Index  ExprType = "Index"
 )

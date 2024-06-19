@@ -148,7 +148,7 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		return arr
 
-	case Map:
+	case Table:
 		m := make(map[string]interface{})
 		for _, pair := range exp.Prog {
 			key := evaluate(pair.Left, env)
@@ -169,10 +169,22 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		if !ok {
 			Error(exp, "'%s' is not a function", exp.Func.Value)
 		}
+
 		var args []interface{}
+
+		// Check if caller is a go-map/rune-table ...
+		callerName := exp.Func.Value
+		caller, ok := env.Get(callerName.(string), exp).(map[string]interface{})
+		// if so:
+		if ok {
+			// inject its reference as the first argument (similar to pythons 'self' argument on methods)
+			args = append(args, caller)
+		}
+
 		for _, arg := range exp.Args {
 			args = append(args, evaluate(arg, env))
 		}
+
 		ret := fn(args...)
 		if err, ok := ret.(error); ok {
 			Error(exp, "Error in function call: '%v'", err)
@@ -280,6 +292,7 @@ func makeFun(env *Environment, exp *Expr) func(args ...interface{}) interface{} 
 				scope.Def(name, false)
 			}
 		}
+
 		return evaluate(exp.Body, scope)
 	}
 }
