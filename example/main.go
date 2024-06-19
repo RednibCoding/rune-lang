@@ -26,13 +26,14 @@ func main() {
 	vm := runevm.NewRuneVM()
 	vm.Run(string(source), filepath)
 
-	person, err := vm.GetTable("person")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
+	// person, err := vm.GetTable("person")
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
 
-	if fun, ok := person["sayHello"].(func(args ...interface{}) interface{}); ok {
-		fun(person)
+	person, sayHello, err := vm.GetTableFun("person", "sayHello")
+	if err != nil {
+		panic(err.Error())
 	}
+	sayHello(person)
 }

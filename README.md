@@ -324,6 +324,39 @@ I am the toPrint variable
 
 Analogous to `GetString` are the functions: `GetInt`, `GetFloat`, `GetBool` and `GetArray`.
 
+### Getting Tables defined in Rune
+Image you have the following Rune code:
+```
+person = table{}
+person.name = "John"
+person.sayHello = fun(self) {
+    println("Hello ", self.name)
+}
+```
+
+You can get the `person` table in go by using the `GetTable` function:
+```go
+vm := runevm.NewRuneVM()
+vm.Run(string(source), filepath)
+
+person, err := vm.GetTable("person")
+if err != nil {
+    panic(err.Error())
+}
+```
+To get the function `sayHello` from person, you can use the `GetTableFun` function:
+```go
+person, sayHello, err := vm.GetTableFun("person", "sayHello")
+if err != nil {
+    panic(err.Error())
+}
+```
+Now you have the reference to the sayHello function defined on the person object.
+
+In order to call it, you have to pass the person object to the function (this acts as the self parameter). In Rune, this happens automatically, but since we call the function manually in go, we have to pass the self argument manually (otherwise you would get a rune error: `Variable self is not an array or map`):
+```
+sayHello(person)
+```
 
 
 # Rune Language Specification

@@ -76,14 +76,6 @@ func (r *RuneVM) SetArray(name string, value []interface{}) {
 	r.set(name, value)
 }
 
-func (r *RuneVM) GetFun(name string) (func(...interface{}) interface{}, error) {
-	fn, ok := r.get(name).(func(...interface{}) interface{})
-	if !ok {
-		return nil, fmt.Errorf("'%s' is not a function", name)
-	}
-	return fn, nil
-}
-
 func (r *RuneVM) GetBool(name string) (bool, error) {
 	value := r.get(name)
 	if b, ok := value.(bool); ok {
@@ -144,4 +136,25 @@ func (r *RuneVM) GetTable(name string) (map[string]interface{}, error) {
 		return arr, nil
 	}
 	return nil, fmt.Errorf("variable '%s' is not a table", name)
+}
+
+func (r *RuneVM) GetFun(name string) (func(...interface{}) interface{}, error) {
+	fn, ok := r.get(name).(func(...interface{}) interface{})
+	if !ok {
+		return nil, fmt.Errorf("'%s' is not a function", name)
+	}
+	return fn, nil
+}
+
+func (r *RuneVM) GetTableFun(tableName string, funName string) (map[string]interface{}, func(...interface{}) interface{}, error) {
+	table, err := r.GetTable(tableName)
+	if err != nil {
+		return nil, nil, fmt.Errorf(tableName, " is not a rune table")
+	}
+
+	fun, ok := table[funName].(func(args ...interface{}) interface{})
+	if !ok {
+		return nil, nil, fmt.Errorf(funName, " is not a function on table ", tableName)
+	}
+	return table, fun, nil
 }
