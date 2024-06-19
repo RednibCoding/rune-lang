@@ -1,13 +1,3 @@
-person1 = table{}
-person1.name = "John"
-
-person1.sayHello = fun(self) {
-    println(self.name)
-}
-person1.sayHello() # prints: "John"
-
-person2 = new(person1)
-person2.name = "Jenny"
-
-person1.sayHello() # prints: "John"
-person2.sayHello() # prints: "Jenny"
+tabl = table{"key 1": 10}
+println(tabl)
+println(tabl.key1)

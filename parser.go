@@ -2,6 +2,7 @@ package runevm
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Parser struct {
@@ -296,6 +297,8 @@ func (p *Parser) parsePair() *Expr {
 	if !ok {
 		Error(key, "key must be of type string, but got: '%v'", key.Value)
 	}
+	// remove any occurences of whitespaces including space, tabs and newlines
+	key.Value = strings.Join(strings.Fields(key.Value.(string)), "")
 	p.skipPunc(":")
 	value := p.parseExpression()
 	tok := p.input.Peek()
