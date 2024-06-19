@@ -796,7 +796,7 @@ if RuneIsAwesome {
 - **Example**: `table2 = new(table1)`
 
 ## Editor Plugins
-In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):
+In the `editor` directory you will find plugins for different editors. Currently for _(help is welcome)_:
  - [VS Code](https://code.visualstudio.com/)
 
     ![](editor/vscode/rune/installed.png)
