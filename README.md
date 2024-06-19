@@ -628,7 +628,7 @@ second = myTable["key2"]
 println(second) # output: false
 ```
 
->**Note**: keys are unique, this means adding a value with a key that already exists, the **existing value get overriden**:
+>**Note**: keys are unique, this means adding a value with a key that already exists, the **existing value gets overriden**:
 ```js
 myTable = table{"uid": "10"}
 println(myTable) # output: {"uid": 10}
@@ -647,7 +647,7 @@ println(myTable.uid) # output: 10
 
 ### The **`self`** argument
 When defining a function on a table, a 'self' argument will be injected automatically.
-'self' always refers to the table where the function was defined and called on.
+'self' always refers to the table where the function was called on.
 ```js
 person = table{}
 person.name = "John"
@@ -655,14 +655,14 @@ person.sayHello = fun(self) {
     println("Hello ", self.name)
 }
 
-person.sayHello() # prints: "Hello John"
+person.sayHello()               # prints: "Hello John"
 
 person2 = new(person)
 person2.name = "Jenny"
-person2.sayHello() # prints: "Hello Jenny"
+person2.sayHello()              # prints: "Hello Jenny"
 ```
 
->**Copies vs References:** Remember that assigning a table to a variable creates a reference of it. Calling new however, creates a copy.
+>**Copies vs References:** Remember that assigning a table to a variable creates a reference of it.
 ```js
 person = table{}
 person.name = "John"
@@ -670,19 +670,19 @@ person.sayHello = func(self) {
     prinln("Hello ", self.name)
 }
 
-person.sayHello() # prints: "Hello John"
+person.sayHello()            # prints: "Hello John"
 
-person2 = person
+person2 = person             # creates another reference
 person2.name = "Jenny"
 
-person2.sayHello() # prints: "Hello Jenny"
+person2.sayHello()           # prints: "Hello Jenny"
 
-person.sayHello() # ALSO PRINTS: "Hello Jenny"
+person.sayHello()            # ALSO PRINTS: "Hello Jenny"
 ```
 
 In the above example, both variables `person` and `person2` refer to the **same underlying table**.
 
-If you want to create a new copy of it and therefore get the (in this case) expected behavior, you can use the builtin `new` function:
+If you want to create a copy of it and therefore, get the (in this case) expected behavior, you can use the builtin `new` function:
 ```js
 person = table{}
 person.name = "John"
@@ -690,14 +690,14 @@ person.sayHello = func(self) {
     prinln("Hello ", self.name)
 }
 
-person.sayHello() # prints: "Hello John"
+person.sayHello()          # prints: "Hello John"
 
-person2 = new(person) # create a copy of `person`
+person2 = new(person)      # create a copy of `person`
 person2.name = "Jenny"
 
-person2.sayHello() # prints: "Hello Jenny"
+person2.sayHello()         # prints: "Hello Jenny"
 
-person.sayHello() # NOW CORRECTLY PRINTS: "Hello John"
+person.sayHello()          # NOW CORRECTLY PRINTS: "Hello John"
 ```
 
 >**Side note:** Arrays have the same behavior in terms of references, so the function `new` also works on arrays. 
