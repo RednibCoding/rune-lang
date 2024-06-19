@@ -16,12 +16,12 @@ Rune stands out for being:
 - **Versatile:** Can be used standalone as a script runner with the [Rune](dist/) binary or embedded as a scripting language within your project.
 
 ## Everything you would definetely need, but not more and not less:
-- **Datatypes:** int, float, string, bool
-- **Branching:** if elif else
-- **Looping:** while
-- **Arrays**: array
-- **Dictionaries/Maps**: table
-- **Compount literals and field access**: e.g. person1 = new(person) person1.name = "John" ....
+- **Datatypes:** `int`, `float`, `string`, `bool`
+- **Branching:** `if`, `elif`, `else` and optional `then`
+- **Looping:** `while`
+- **Arrays**: `array`
+- **Dictionaries/Maps**: `table`
+- **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
 - **Builtin functions**: Look at the [builtin functions](#builin-functions) for more info
 
 
@@ -572,14 +572,6 @@ println(myTable["uid"]) # output: 10
 println(myTable.uid) # output: 10
 ```
 
-### Whitespaces in keys
-Whitespace in keys will be removed automatically to ensure they are accessable via the field access operator `.`.
-```js
-mytable = table{"key 1": false, "key 2": 10, "key 3": 3.14}
-println(mytable) # prints: {"key1": false, "key2": 10, "key3": 3.14}
-println(mytable.key3) # prints: 3.14
-```
-
 ### The 'self' argument
 When defining a function on a table, a 'self' argument will be injected automatically.
 'self' always refers to the table where the function was defined and called on.
@@ -637,6 +629,13 @@ person.sayHello() # NOW CORRECTLY PRINTS: "Hello John"
 
 >**Side note:** Arrays have the same behavior in terms of references, so the function `new` also works on arrays. 
 
+### Whitespaces in keys
+Whitespace in keys will be removed automatically to ensure they are accessable via the field access operator `.`.
+```js
+mytable = table{"key 1": false, "key 2": 10, "key 3": 3.14}
+println(mytable) # prints: {"key1": false, "key2": 10, "key3": 3.14}
+println(mytable.key3) # prints: 3.14
+```
 
 ## Short-hand with `if` `then` and `elif` `then`
 The `if`-statement can be written on one line with the `then` keyword:
