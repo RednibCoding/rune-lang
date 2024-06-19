@@ -445,7 +445,7 @@ sayHello(person)
 
 # Rune Language Specification
 
-The Rune language is a simple, dynamic scripting language. The following chapter describes the syntax and features of the Rune language, including how to define and call functions, use variables, control flow with `if` and `while` statements, data types and falsy values.
+The Rune language is a simple, dynamic scripting language. The following chapter describes the syntax and features of the Rune language, including how to define and call functions, use variables, control flow with `if` and `while` statements, data types, arrays, tables and more.
 
 ## Defining and Calling Functions
 
@@ -496,6 +496,11 @@ Example:
 println(message)
 print("The count is: ", count)
 ```
+
+## Operators
+Supported operators are: `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`
+
+They do what you would expect. I guess no further explaination is needed.
 
 ## Control Flow
 
@@ -640,7 +645,7 @@ println(myTable["uid"]) # output: 10
 println(myTable.uid) # output: 10
 ```
 
-### The 'self' argument
+### The **`self`** argument
 When defining a function on a table, a 'self' argument will be injected automatically.
 'self' always refers to the table where the function was defined and called on.
 ```js
