@@ -1,15 +1,9 @@
+person = type{}
+person.name = "person"
+person2 = new(person)
+println(typeof(person), " " , person) # map {name: person}
+println(typeof(person2), " " , person2) # map {name: person}
 
-
-myArr = array{"hello"}
-println(typeof(myArr), " ", myArr) # array [hello]
-first = myArr[0]
-println(first) # "hello"
-myArr[0] = "world"
-println(typeof(myArr), " ", myArr) # array [hello]
-
-person = type{"age": 10}
-person2 = person
-println(typeof(person), " " , person) # map {age: 10}
-println(typeof(person2), " " , person2) # map {age: 10}
-person2.age = 20
-println(typeof(person2), " " , person2) # int 20
+person2.name = "person2"
+println(typeof(person), " " , person) # map {name: person2}
+println(typeof(person2), " " , person2) # map {name: person2}

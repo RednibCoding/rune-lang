@@ -312,6 +312,21 @@ func builtin_len(args ...interface{}) interface{} {
 	}
 }
 
+func builtin_New(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("new requires exactly 1 argument")
+	}
+
+	switch v := args[0].(type) {
+	case []interface{}:
+		return deepCopyArray(v)
+	case map[string]interface{}:
+		return deepCopyMap(v)
+	default:
+		return fmt.Errorf("new can only create copies of arrays or maps, got %T", args[0])
+	}
+}
+
 // //////////////////////////////////////////////////////////////////////////////
 // Helper Functions
 // //////////////////////////////////////////////////////////////////////////////
@@ -343,4 +358,31 @@ func formatMap(m map[string]interface{}) string {
 	}
 	sb.WriteString("}")
 	return sb.String()
+}
+
+func deepCopyArray(arr []interface{}) []interface{} {
+	newArr := make([]interface{}, len(arr))
+	for i, v := range arr {
+		newArr[i] = deepCopyValue(v)
+	}
+	return newArr
+}
+
+func deepCopyMap(m map[string]interface{}) map[string]interface{} {
+	newMap := make(map[string]interface{})
+	for k, v := range m {
+		newMap[k] = deepCopyValue(v)
+	}
+	return newMap
+}
+
+func deepCopyValue(value interface{}) interface{} {
+	switch v := value.(type) {
+	case []interface{}:
+		return deepCopyArray(v)
+	case map[string]interface{}:
+		return deepCopyMap(v)
+	default:
+		return v
+	}
 }

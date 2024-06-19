@@ -471,13 +471,13 @@ println(first) # output: "hello"
 ```
 
 ## Maps / Type
-In rune you can define a map by bidnig it to a name:
+In rune you can define a map by binding it to a name:
 ```
 myMap = map{"key1": 1, "key2": false}
 ```
 Maps can have values of different types, but keys must be of type `string`.
 
-To access an map by key you can use the name followed by an key enclosed in square brackts:
+To access a map field by key you can use the name followed by an key enclosed in square brackts:
 ```
 second = myMap["key2"]
 println(second) # output: false
@@ -492,7 +492,7 @@ println(myMap) # output: {"uid": "Hello World"}
 ```
 
 ### Field Access
-It is possible to access the fields of a map via the `.`.
+It is possible to access the fields of a map also via the `.`.
 Both expressions are the same under the hood:
 ```
 myMap = map{"uid": "10"}
@@ -500,7 +500,7 @@ println(myMap["uid"]) # output: 10
 println(myMap.uid) # output: 10
 ```
 
-Syntactic suger is you can write `type` instead of `map` to make it the usecase more clear.
+Syntactic suger is you can write `type` instead of `map` to make the usecase more clear.
 Both expressions are the same under the hood:
 ```
 myMap = map{"uid": "10"}
@@ -587,6 +587,11 @@ if runeIsAwesome {
 - **Syntax**: `len(<array|map|string>)`
 - **Description**: Returns the lenght of the given array, map or string.
 - **Example**: `arrLen = len(myArr)`
+
+### new
+- **Syntax**: `new(<array|map>)`
+- **Description**: Returns a deep copy of the given array or map.
+- **Example**: `map2 = new(map1)`
 
 ## Editor Plugins
 In the `editor` directory you will find plugins for different editors. Currently for (help is welcome):

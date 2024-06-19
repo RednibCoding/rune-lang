@@ -43,7 +43,6 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		return value
 
 	case Assign:
-		fmt.Printf("Assigning: %v\n", exp)
 		if exp.Left.Type == Var && exp.Left.Index != nil {
 			arrayOrMap := evaluate(exp.Left.Left, env)
 			if arrayOrMap == nil {
