@@ -221,7 +221,7 @@ func customPanicPrinter(args []interface{}) error {
 
 If the `customPanicPrinter` function encounters the string `"panic"`, it will return an error, and the interpreter will handle and report it.
 
-```
+```js
 customPanicPrinter("panic")
 ```
 output:
@@ -233,7 +233,7 @@ error (example.Rune:1:6): Error in function call: 'intentional panic triggered'
 You can get function defined in `Rune` via the `GetFun` function:
 
 Let's say in Rune you have the following function named "printer"
-```
+```js
 printer = fun(printme) {
     println(printme)
 }
@@ -263,7 +263,7 @@ Similarely you can retrieve the value of variables.
 
 Lets say you have a string variable defined in Rune like so:
 
-```
+```js
 toPrint = "I am the toPrint variable"
 ```
 
@@ -514,13 +514,13 @@ if false {
 
 ## Arrays
 In Rune you can define an array by binding it to a name:
-```
+```js
 myArr = array{"hello", 10, false, 20, 30}
 ```
 Arrays can have values of different types.
 
 To access an array by index you can use the name followed by an index enclosed in square brackts (arrays are zero based):
-```
+```js
 first = myArr[0]
 println(first) # output: "hello"
 ```
@@ -528,7 +528,7 @@ println(first) # output: "hello"
 ## Tables
 Tables in Rune are similar to hash maps or dictionaries in other languages with some added features.
 In Rune you can define a table by binding it to a name:
-```
+```js
 myTable = table{"key1": 1, "key2": false}
 ```
 Tables can have values of different types, but keys must be of type `string`.
