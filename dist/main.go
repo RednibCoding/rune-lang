@@ -9,10 +9,11 @@ import (
 
 /*********************************************************
 *
-* To build the rune binary: navigate to this directory (cd ./dist/) and run:
-*     go build -ldflags="-s -w" .
+* To build the rune binary: use the build.bat on windows or build.sh on linux
 *
 **********************************************************/
+
+
 
 func main() {
 	args := os.Args

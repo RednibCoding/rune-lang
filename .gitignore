@@ -8,6 +8,9 @@
 *.so
 *.dylib
 
+# Exception for .exe files in the dist/win/ directory
+!dist/win/*.exe
+
 # Test binary, built with `go test -c`
 *.test
 

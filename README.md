@@ -13,7 +13,13 @@ Rune stands out for being:
 - **Embeddable:** Seamlessly integrates into your Go projects.
 - **Extensible:** Easily extendable with custom functions and variables.
 - **Portable:** Simple to port to other languages.
-- **Versatile:** Can be used standalone as a script runner with the [Rune](dist/main.go) binary or embedded as a scripting language within your project.
+- **Versatile:** Can be used standalone as a script runner with the [Rune](dist/) binary or embedded as a scripting language within your project.
+
+## Pre compiled binaries
+In the [dist directory](dist/), you will find pre compiled binaries for the three major platforms.
+
+## Build from source
+Simple run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the [dist directory](dist/). This will build the Rune binary for all three platforms in there respective directories.
 
 ## Using the Language
 
