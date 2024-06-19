@@ -25,4 +25,14 @@ func main() {
 
 	vm := runevm.NewRuneVM()
 	vm.Run(string(source), filepath)
+
+	person, err := vm.GetTable("person")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+
+	if fun, ok := person["sayHello"].(func(args ...interface{}) interface{}); ok {
+		fun(person)
+	}
 }

@@ -1,7 +1,7 @@
-mytable = table{"key 1": false, "key 2": 10, "key 3": 12.4}
-println(mytable) # prints: {"key1": false, "key2": 10, "key3": 12.4}
-println(mytable["key2"]) # prints: 10
-mytable["key2"] = 11
-println(mytable["key2"]) # prints: 11
-mytable.key2 = 12
-println(mytable["key2"]) # prints: 12
+person = table{}
+person.name = "John"
+person.sayHello = fun(self) {
+    println("Hello ", self.name)
+}
+
+# person.sayHello()
