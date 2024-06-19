@@ -537,8 +537,8 @@ When defining a function on a table, a 'self' argument will be injected automati
 ```
 person = table{}
 person.name = "John"
-person.sayHello = func(self) {
-    prinln("Hello ", self.name)
+person.sayHello = fun(self) {
+    println("Hello ", self.name)
 }
 
 person.sayHello() # prints: "Hello John"
