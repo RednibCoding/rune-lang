@@ -101,6 +101,58 @@ To run a script, use the following command:
 rune path/to/your/script.rune
 ```
 
+## Importing Scripts
+
+Rune supports an `import` statement to include and execute other Rune scripts within the current script. This allows for better modularization and reuse of code. The `import` statement takes a file path (without the `.rune` extension) and imports the contents of the specified file into the current script.
+
+### Syntax
+
+```js
+import "path/to/script"
+```
+
+- The `import` statement should be followed by a string literal that specifies the path to the script file.
+- The `.rune` extension is automatically added by the parser.
+
+### Example
+Assume we have two Rune scripts:
+1. `main.rune`
+```js
+import "other"
+
+println("This is the main script.")
+```
+2. `other.rune`
+```js
+println("This is the imported script.")
+```
+
+When you run `main.rune`, the output will be:
+```js
+This is the imported script.
+This is the main script.
+```
+
+## Conditional Imports
+Since `import` is an expression in Rune, it can be used conditionally within the script:
+```js
+condition = 1
+
+if condition == 2 then
+    import "test2"
+else
+    import "test3"
+
+println("This is the main script.")
+```
+In this example, depending on the value of `condition`, either `test2.rune` or `test3.rune` will be imported and executed.
+
+### Notes
+- All imports share the same global scope, meaning variables and functions defined in the imported script are accessible in the main script and vice versa.
+- The imported script is executed immediately at the point of the import statement, and any side effects (such as variable assignments or function definitions) will affect the global environment.
+- Import paths are relative to the location of the script file executing the import.
+- It is idiomatic in Rune to have a single main.rune script that imports all necessary files, rather than scattering import statements throughout various Rune scripts. This approach ensures a clear and organized entry point for the program.
+
 ## Embedding RuneVM in Your Project
 
 To embed RuneVM in your own Go project, follow these steps:

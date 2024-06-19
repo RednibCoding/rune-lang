@@ -191,6 +191,19 @@ func evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		return ret
 
+	case Import:
+		filePath := evaluate(exp.Left, env).(string) + ".rune"
+		fileContent, err := os.ReadFile(filePath)
+		if err != nil {
+			Error(exp, "Failed to import file '%s': %v", filePath, err)
+		}
+		stream := NewInputStream(string(fileContent), filePath)
+		tokenStream := NewTokenStream(stream)
+		parser := NewParser(tokenStream)
+		ast := parser.parseToplevel()
+		evaluate(ast, env)
+		return nil
+
 	default:
 		Error(exp, "I don't know how to evaluate %v", exp.Type)
 		return nil

@@ -25,15 +25,4 @@ func main() {
 
 	vm := runevm.NewRuneVM()
 	vm.Run(string(source), filepath)
-
-	// person, err := vm.GetTable("person")
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
-
-	person, sayHello, err := vm.GetTableFun("person", "sayHello")
-	if err != nil {
-		panic(err.Error())
-	}
-	sayHello(person)
 }

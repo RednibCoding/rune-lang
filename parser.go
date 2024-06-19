@@ -397,6 +397,9 @@ func (p *Parser) parseAtom() *Expr {
 		if p.isKw("table") != nil {
 			return p.parseTable()
 		}
+		if p.isKw("import") != nil {
+			return p.parseImport()
+		}
 		tok := p.input.Next()
 		if tok.Type == "var" || tok.Type == "num" || tok.Type == "str" {
 			return &Expr{
@@ -426,6 +429,18 @@ func (p *Parser) parseToplevel() *Expr {
 	return &Expr{
 		Type: Prog,
 		Prog: prog,
+	}
+}
+
+func (p *Parser) parseImport() *Expr {
+	tok := p.input.Next()
+	path := p.parseExpression()
+	return &Expr{
+		Type: Import,
+		Left: path,
+		File: tok.File,
+		Line: tok.Line,
+		Col:  tok.Col,
 	}
 }
 

@@ -1,7 +1,9 @@
-person = table{}
-person.name = "John"
-person.sayHello = fun(self) {
-    println("Hello ", self.name)
-}
 
-# person.sayHello()
+condition = 1
+
+if condition == 2 then
+    import "test2"
+else
+    import "test3"
+
+println("This is the main script.")

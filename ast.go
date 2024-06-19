@@ -23,6 +23,7 @@ const (
 	Table  ExprType = "table"
 	Pair   ExprType = "pair"
 	Index  ExprType = "Index"
+	Import ExprType = "import"
 )
 
 type Expr struct {
