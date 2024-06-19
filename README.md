@@ -406,7 +406,7 @@ output:
 I am the toPrint variable
 ```
 
-Analogous to `GetString` are the functions: `GetInt`, `GetFloat`, `GetBool` and `GetArray`.
+Analogous to `GetString` are the functions: `GetInt`, `GetFloat`, `GetBool`, `GetArray` and `GetTable`.
 
 ### Getting Tables defined in Rune
 Image you have the following Rune code:
