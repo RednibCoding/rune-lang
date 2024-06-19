@@ -15,10 +15,11 @@ Rune stands out for being:
 - **Portable:** Simple to port to other languages.
 - **Versatile:** Can be used standalone as a script runner with the [Rune](dist/) binary or embedded as a scripting language within your project.
 
-## Everything you would definetely need, but not more and not less:
+## Everything you would definetely need for scripting, but not more and not less:
 - **Datatypes:** `int`, `float`, `string`, `bool`
 - **Branching:** `if`, `elif`, `else` and optional `then`
 - **Looping:** `while`
+- **Operators:** `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`
 - **Arrays**: `array`
 - **Dictionaries/Maps**: `table`
 - **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
