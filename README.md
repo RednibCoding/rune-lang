@@ -19,7 +19,7 @@ Rune stands out for being:
 In the [dist directory](dist/), you will find pre compiled binaries for the three major platforms.
 
 ## Build from source
-Simple run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the [dist directory](dist/). This will build the Rune binary for all three platforms in there respective directories.
+Simply run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the [dist directory](dist/). This will build the Rune binary for all three platforms in there respective directories.
 
 ## Using the Language
 
