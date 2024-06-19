@@ -25,7 +25,7 @@ Simply run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the
 
 ### Writing Scripts
 
-Rune scripts have the `.Rune` extension. Here is a sample script (`test.rune`):
+Rune scripts have the `.rune` extension. Here is a sample script (`test.rune`):
 
 ```js
 myvar = 12;
@@ -85,7 +85,7 @@ println(mytable["key2"]) # prints: 12
 To run a script, use the following command:
 
 ```
-./Rune.exe path/to/your/script.Rune
+rune path/to/your/script.Rune
 ```
 
 ## Embedding RuneVM in Your Project
