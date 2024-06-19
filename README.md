@@ -112,7 +112,7 @@ Rune supports an `import` statement to include and execute other Rune scripts wi
 import "path/to/script"
 ```
 
-- The `import` statement should be followed by a string literal that specifies the path to the script file.
+- `import` is an expression which should evaluate to a string that specifies the path to the script file.
 - The `.rune` extension is automatically added by the parser.
 
 ### Example
