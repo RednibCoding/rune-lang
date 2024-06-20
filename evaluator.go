@@ -8,6 +8,7 @@ import (
 )
 
 type Evaluator struct {
+	// Keep track of file path that have been imported by the import statement.
 	importedPaths map[string]bool
 }
 
@@ -203,7 +204,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	case Import:
 		path := e.evaluate(exp.Left, env).(string) + ".rune"
 		if _, alreadyImported := e.importedPaths[path]; alreadyImported {
-			Error(exp, "Cyclic import detected: '%s' is already imported", path)
+			Error(exp, "Duplicate import detected: '%s' was already imported", path)
 		}
 
 		e.importedPaths[path] = true
