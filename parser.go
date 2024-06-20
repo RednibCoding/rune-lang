@@ -73,14 +73,26 @@ func (p *Parser) unexpected(tok *Token) {
 	}
 }
 
-func (p *Parser) maybeBinary(left *Expr, thisPrec int) *Expr {
-	for tok := p.isOp(""); tok != nil; tok = p.isOp("") {
-		otherPrec := PRECEDENCE[tok.Value]
-		if otherPrec <= thisPrec {
+func (p *Parser) parseBinaryExpression(left *Expr, prec int) *Expr {
+	for {
+		tok := p.isOp("")
+		if tok == nil {
+			break
+		}
+		opPrec := PRECEDENCE[tok.Value]
+		if opPrec <= prec {
 			break
 		}
 
 		p.input.Next()
+
+		right := p.parseAtom()
+
+		nextTok := p.isOp("")
+
+		if nextTok != nil && PRECEDENCE[nextTok.Value] > opPrec {
+			right = p.parseBinaryExpression(right, opPrec)
+		}
 
 		var exprType ExprType
 		if tok.Value == "=" {
@@ -88,11 +100,12 @@ func (p *Parser) maybeBinary(left *Expr, thisPrec int) *Expr {
 		} else {
 			exprType = Binary
 		}
+
 		left = &Expr{
 			Type:     exprType,
 			Operator: tok.Value,
 			Left:     left,
-			Right:    p.maybeBinary(p.parseAtom(), otherPrec),
+			Right:    right,
 			File:     tok.File,
 			Line:     tok.Line,
 			Col:      tok.Col,
@@ -215,7 +228,7 @@ func (p *Parser) parseIf() *Expr {
 	return ret
 }
 
-func (p *Parser) parseWhile() *Expr {
+func (p *Parser) parseWhileExpr() *Expr {
 	tok := p.input.Peek()
 	p.skipKw("while")
 	cond := p.parseExpression()
@@ -255,7 +268,7 @@ func (p *Parser) parseFunctionDecl() *Expr {
 	}
 }
 
-func (p *Parser) parseBool() *Expr {
+func (p *Parser) parseBoolExpr() *Expr {
 	tok := p.input.Next()
 	return &Expr{
 		Type:   Bool,
@@ -267,7 +280,7 @@ func (p *Parser) parseBool() *Expr {
 	}
 }
 
-func (p *Parser) parseArray() *Expr {
+func (p *Parser) parseArrayDecl() *Expr {
 	tok := p.input.Peek()
 	p.skipKw("array")
 	values := p.parseDelimited("{", "}", ",", p.parseExpression)
@@ -280,10 +293,10 @@ func (p *Parser) parseArray() *Expr {
 	}
 }
 
-func (p *Parser) parseTable() *Expr {
+func (p *Parser) parseTableDecl() *Expr {
 	tok := p.input.Peek()
 	p.skipKw("table")
-	pairs := p.parseDelimited("{", "}", ",", p.parsePair)
+	pairs := p.parseDelimited("{", "}", ",", p.parsePairDecl)
 	return &Expr{
 		Type: Table,
 		Prog: pairs,
@@ -293,7 +306,7 @@ func (p *Parser) parseTable() *Expr {
 	}
 }
 
-func (p *Parser) parsePair() *Expr {
+func (p *Parser) parsePairDecl() *Expr {
 	key := p.parseExpression()
 	_, ok := key.Value.(string)
 	if !ok {
@@ -314,24 +327,23 @@ func (p *Parser) parsePair() *Expr {
 	}
 }
 
-func (p *Parser) maybeCall(expr func() *Expr) *Expr {
-	exprNode := expr()
+func (p *Parser) parseAccessOrCall(expr *Expr) *Expr {
 	// Function call
 	if p.isPunc("(") != nil {
-		return p.parseFunctionCall(exprNode)
+		return p.parseFunctionCall(expr)
 	}
 	// Array/table access
 	if p.isPunc("[") != nil {
-		return p.parseIndex(exprNode)
+		return p.parseIndexExpr(expr)
 	}
 	// Field access
 	if p.isPunc(".") != nil {
-		return p.parseFieldAccess(exprNode)
+		return p.parseFieldAccessExpr(expr)
 	}
-	return exprNode
+	return expr
 }
 
-func (p *Parser) parseFieldAccess(expr *Expr) *Expr {
+func (p *Parser) parseFieldAccessExpr(expr *Expr) *Expr {
 	tok := p.input.Peek()
 	p.skipPunc(".")
 	fieldName := p.parseVarname()
@@ -352,7 +364,7 @@ func (p *Parser) parseFieldAccess(expr *Expr) *Expr {
 	}
 }
 
-func (p *Parser) parseIndex(expr *Expr) *Expr {
+func (p *Parser) parseIndexExpr(expr *Expr) *Expr {
 	tok := p.input.Peek()
 	p.skipPunc("[")
 	indexExpr := p.parseExpression()
@@ -377,41 +389,32 @@ func (p *Parser) parseIndex(expr *Expr) *Expr {
 }
 
 func (p *Parser) parseAtom() *Expr {
-	return p.maybeCall(func() *Expr {
-		if p.isPunc("(") != nil {
-			p.input.Next()
-			exp := p.parseExpression()
-			p.skipPunc(")")
-			return exp
-		}
-		if p.isPunc("{") != nil {
-			return p.parseBlock()
-		}
-		if p.isKw("if") != nil {
-			return p.parseIf()
-		}
-		if p.isKw("while") != nil {
-			return p.parseWhile()
-		}
-		if p.isKw("true") != nil || p.isKw("false") != nil {
-			return p.parseBool()
-		}
-		if p.isKw("fun") != nil {
-			p.input.Next()
-			return p.parseFunctionDecl()
-		}
-		if p.isKw("array") != nil {
-			return p.parseArray()
-		}
-		if p.isKw("table") != nil {
-			return p.parseTable()
-		}
-		if p.isKw("import") != nil {
-			return p.parseImport()
-		}
+	var expr *Expr
+	if p.isPunc("(") != nil {
+		p.input.Next()
+		expr = p.parseExpression()
+		p.skipPunc(")")
+	} else if p.isPunc("{") != nil {
+		expr = p.parseBlock()
+	} else if p.isKw("if") != nil {
+		expr = p.parseIf()
+	} else if p.isKw("while") != nil {
+		expr = p.parseWhileExpr()
+	} else if p.isKw("true") != nil || p.isKw("false") != nil {
+		expr = p.parseBoolExpr()
+	} else if p.isKw("fun") != nil {
+		p.input.Next()
+		expr = p.parseFunctionDecl()
+	} else if p.isKw("array") != nil {
+		expr = p.parseArrayDecl()
+	} else if p.isKw("table") != nil {
+		expr = p.parseTableDecl()
+	} else if p.isKw("import") != nil {
+		expr = p.parseImport()
+	} else {
 		tok := p.input.Next()
 		if tok.Type == "var" || tok.Type == "num" || tok.Type == "str" {
-			return &Expr{
+			expr = &Expr{
 				Type:   ExprType(tok.Type),
 				Value:  tok.Value,
 				File:   tok.File,
@@ -419,21 +422,18 @@ func (p *Parser) parseAtom() *Expr {
 				Col:    tok.Col,
 				Length: tok.Length,
 			}
+		} else {
+			p.unexpected(tok)
 		}
+	}
 
-		p.unexpected(tok)
-		return nil
-	})
+	return p.parseAccessOrCall(expr)
 }
 
 func (p *Parser) parseProgram() *Expr {
 	var prog []*Expr
 	for !p.input.Eof() {
 		prog = append(prog, p.parseExpression())
-		// if !p.input.Eof() {
-		// p.skipPunc(";")
-
-		// }
 	}
 	return &Expr{
 		Type: Prog,
@@ -468,7 +468,8 @@ func (p *Parser) parseBlock() *Expr {
 }
 
 func (p *Parser) parseExpression() *Expr {
-	return p.maybeCall(func() *Expr {
-		return p.maybeBinary(p.parseAtom(), 0)
-	})
+
+	left := p.parseAtom()
+	left = p.parseBinaryExpression(left, 0)
+	return p.parseAccessOrCall(left)
 }
