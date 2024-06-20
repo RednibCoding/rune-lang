@@ -40,11 +40,11 @@ Simply run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the
 Rune scripts have the `.rune` extension. Here is a sample script (`test.rune`):
 
 ```js
-myvar = 12;
+myvar = 12
 
 printer = fun(toPrint) {
     println(toPrint)
-};
+}
 
 if myvar == 10 then
     printer("then")
@@ -52,12 +52,12 @@ elif myvar == 12 then
     printer("elif 12\n")
 elif myvar == 11 then
     printer("elif 11")
-else printer("else");
+else printer("else")
 
-while myvar > 0 do {
-    myvar = myvar  -1;
+while myvar > 0 {
+    myvar = myvar  -1
     printer(myvar)
-};
+}
 
 if myvar < 0 {
     printer("Is smaller than 0")
@@ -65,9 +65,9 @@ if myvar < 0 {
     printer("Is biger or than 0")
 } else {
     printer("Is exactly 0")
-};
+}
 
-if true then printer("Nice") else printer("Also nice");
+if true then printer("Nice") else printer("Also nice")
 
 person1 = table{}
 person1.name = "John"

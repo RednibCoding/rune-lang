@@ -1,4 +1,50 @@
+myvar = 12
 
-import "test2"
+printer = fun(toPrint) {
+    println(toPrint)
+}
 
-println("This is the main script.")
+if myvar == 10 then
+    printer("then")
+elif myvar == 12 then
+    printer("elif 12\n")
+elif myvar == 11 then
+    printer("elif 11")
+else printer("else")
+
+while myvar > 0 {
+    myvar = myvar  -1
+    printer(myvar)
+}
+
+if myvar < 0 {
+    printer("Is smaller than 0")
+} elif myvar > 0 {
+    printer("Is biger or than 0")
+} else {
+    printer("Is exactly 0")
+}
+
+if true then printer("Nice") else printer("Also nice")
+
+person1 = table{}
+person1.name = "John"
+
+person1.sayHello = fun(self) {
+    println(self.name)
+}
+person1.sayHello() # prints: "John"
+
+person2 = new(person1)
+person2.name = "Jenny"
+
+person1.sayHello() # prints: "John"
+person2.sayHello() # prints: "Jenny"
+
+mytable = table{"key 1": false, "key 2": 10, "key 3": 12.4} # spaces in keys will be removed automatically
+println(mytable) # prints: {"key1": false, "key2": 10, "key3": 12.4}
+println(mytable["key2"]) # prints: 10
+mytable["key2"] = 11
+println(mytable["key2"]) # prints: 11
+mytable.key2 = 12
+println(mytable["key2"]) # prints: 12
