@@ -1,12 +1,12 @@
-name: Go Build for Multiple Platforms
+name: Build
 
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -20,33 +20,39 @@ jobs:
           - goos: linux
             goarch: amd64
             dir: linux
+            extension: ""
           - goos: linux
             goarch: arm64
             dir: linux
+            extension: ""
           - goos: windows
             goarch: amd64
             dir: win
+            extension: ".exe"
           - goos: windows
             goarch: arm64
             dir: win
+            extension: ".exe"
           - goos: darwin
             goarch: amd64
             dir: macos
+            extension: ""
           - goos: darwin
             goarch: arm64
             dir: macos
+            extension: ""
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: '^1.22'
 
       - name: Cache Go modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cache/go-build
@@ -61,10 +67,10 @@ jobs:
       - name: Build
         run: |
           mkdir -p ${{ matrix.dir }}
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }} ./...
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} ./dist
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }}
