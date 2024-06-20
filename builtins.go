@@ -133,6 +133,57 @@ func builtin_StrSplit(args ...interface{}) interface{} {
 	return parts
 }
 
+// Trim whitespace from both ends of a string
+func builtin_StrTrim(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("trim requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	str, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	// Trim whitespace from both ends of the string
+	return strings.TrimSpace(str)
+}
+
+// Replace occurrences of a substring within a string with another substring
+func builtin_Replace(args ...interface{}) interface{} {
+	if len(args) != 3 {
+		return fmt.Errorf("replace requires exactly 3 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	str, ok1 := args[0].(string)
+	old, ok2 := args[1].(string)
+	new, ok3 := args[2].(string)
+	if !ok1 || !ok2 || !ok3 {
+		return fmt.Errorf("arguments must be of type string, got: %T, %T, and %T", args[0], args[1], args[2])
+	}
+
+	// Replace occurrences of the old substring with the new substring
+	return strings.ReplaceAll(str, old, new)
+}
+
+// Check if a string contains a specified substring
+func builtin_Contains(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("contains requires exactly 2 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	str, ok1 := args[0].(string)
+	substr, ok2 := args[1].(string)
+	if !ok1 || !ok2 {
+		return fmt.Errorf("arguments must be of type string, got: %T and %T", args[0], args[1])
+	}
+
+	// Check if the string contains the substring
+	return strings.Contains(str, substr)
+}
+
 func builtin_TypeOf(args ...interface{}) interface{} {
 	if len(args) != 1 {
 		return fmt.Errorf("typeof requires exactly 1 argument")

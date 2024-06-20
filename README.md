@@ -770,6 +770,22 @@ if RuneIsAwesome {
 - **Description**: Splits a string into an array of substrings based on a specified delimiter. Returns an array of strings.
 - **Example**: `lines = strsplit(myFileContents, "\n")`
 
+### strreplace
+- **Syntax**: `strreplace(<string>, <old>, <new>)`
+- **Description**: Replaces occurrences of old within a string with new.
+- **Example**: `newStr = strreplace(myFileContents, "\r", "")`
+
+### strstrim
+- **Syntax**: `strstrim(<string>)`
+- **Description**: Trim whitespace from both ends of a string and returns the new string.
+- **Example**: `trimmed = strstrim(myString)`
+
+### strcontains
+- **Syntax**: `strcontains(<string>, <substr>)`
+- **Description**: Returns true if the substring is found within the string, and false otherwise.
+- **Example**: `doesContain = strcontains(myFileContents, "Hello World")`
+
+
 ### typeof
 - **Syntax**: `typeof(<arg>)`
 - **Description**: Returns the type name as a string of the given argument. Possible types are: `int`, `float`, `string`, `bool` and`unknown`.
