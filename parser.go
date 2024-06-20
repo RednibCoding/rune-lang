@@ -153,7 +153,7 @@ func (p *Parser) parseFunCall(funcExpr *Expr) *Expr {
 func (p *Parser) parseVarname() string {
 	name := p.input.Next()
 	if name.Type != "var" {
-		p.input.Error(p.input.current, "Expecting variable name")
+		p.input.Error(name, fmt.Sprintf("Expecting variable name, but got: '%s'", name.Value))
 	}
 	return name.Value
 }
