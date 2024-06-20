@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"unicode"
 )
 
 // Function to print elements
@@ -147,6 +148,98 @@ func builtin_StrTrim(args ...interface{}) interface{} {
 
 	// Trim whitespace from both ends of the string
 	return strings.TrimSpace(str)
+}
+
+// Trim whitespace from the left side of a string
+func builtin_TrimLeft(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("trimleft requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	str, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	// Trim whitespace from the left side of the string
+	return strings.TrimLeftFunc(str, unicode.IsSpace)
+}
+
+// Trim whitespace from the right side of a string
+func builtin_TrimRight(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("trimright requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	str, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	// Trim whitespace from the right side of the string
+	return strings.TrimRightFunc(str, unicode.IsSpace)
+}
+
+// Check if a given string character is a digit
+func builtin_IsDigit(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("isdigit requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	char, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	if len(char) != 1 {
+		return fmt.Errorf("argument must be a single character, got a string of length %d", len(char))
+	}
+
+	// Check if the character is a digit
+	return unicode.IsDigit(rune(char[0]))
+}
+
+// Check if a given string character is an alphabetical character
+func builtin_IsAlpha(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("isalpha requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	char, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	if len(char) != 1 {
+		return fmt.Errorf("argument must be a single character, got a string of length %d", len(char))
+	}
+
+	// Check if the character is an alphabetical character
+	return unicode.IsLetter(rune(char[0]))
+}
+
+// Check if a given string character is a whitespace character
+func builtin_IsWhite(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("iswhite requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	char, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	if len(char) != 1 {
+		return fmt.Errorf("argument must be a single character, got a string of length %d", len(char))
+	}
+
+	// Check if the character is a whitespace character
+	return unicode.IsSpace(rune(char[0]))
 }
 
 // Replace occurrences of a substring within a string with another substring

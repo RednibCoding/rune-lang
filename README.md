@@ -780,6 +780,31 @@ if RuneIsAwesome {
 - **Description**: Trim whitespace from both ends of a string and returns the new string.
 - **Example**: `trimmed = strstrim(myString)`
 
+### trimleft
+- **Syntax**: `trimleft(<string>)`
+- **Description**: Trim whitespace from the beginning of a string and returns the new string.
+- **Example**: `trimmed = trimleft(myString)`
+
+### trimright
+- **Syntax**: `trimright(<string>)`
+- **Description**: Trim whitespace from the end of a string and returns the new string.
+- **Example**: `trimmed = trimright(myString)`
+
+### isdigit
+- **Syntax**: `isdigit(<string>)`
+- **Description**: Returns true if a given string character is a digit
+- **Example**: `isit = isdigit(myString)`
+
+### isalpha
+- **Syntax**: `isalpha(<string>)`
+- **Description**: Returns true if a given string character is an alphabetical character
+- **Example**: `isit = isalpha(myString)`
+
+### iswhite
+- **Syntax**: `iswhite(<string>)`
+- **Description**: Returns true if a given string character is a whitespace character ('\t', '\n', '\v', '\f', '\r', ' ')
+- **Example**: `isit = iswhite(myString)`
+
 ### strcontains
 - **Syntax**: `strcontains(<string>, <substr>)`
 - **Description**: Returns true if the substring is found within the string, and false otherwise.
