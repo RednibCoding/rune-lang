@@ -1,0 +1,70 @@
+name: Go Build for Multiple Platforms
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+        include:
+          - goos: linux
+            goarch: amd64
+            dir: linux
+          - goos: linux
+            goarch: arm64
+            dir: linux
+          - goos: windows
+            goarch: amd64
+            dir: win
+          - goos: windows
+            goarch: arm64
+            dir: win
+          - goos: darwin
+            goarch: amd64
+            dir: macos
+          - goos: darwin
+            goarch: arm64
+            dir: macos
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.22'
+
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build
+        run: |
+          mkdir -p ${{ matrix.dir }}
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }} ./...
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}
