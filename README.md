@@ -768,7 +768,7 @@ if RuneIsAwesome {
 ### strsplit
 - **Syntax**: `strsplit(<str>, <delimiter>)`
 - **Description**: Splits a string into an array of substrings based on a specified delimiter. Returns an array of strings.
-- **Example**: `writefilestr("example.txt", "Hello World!")`
+- **Example**: `lines = strsplit(myFileContents, "\n")`
 
 ### typeof
 - **Syntax**: `typeof(<arg>)`
