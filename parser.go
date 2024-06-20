@@ -138,7 +138,7 @@ func (p *Parser) parseEnclosed(start string, stop string, parser func() *Expr) [
 	return a
 }
 
-func (p *Parser) parseFunCall(funcExpr *Expr) *Expr {
+func (p *Parser) parseFunctionCall(funcExpr *Expr) *Expr {
 	tok := p.input.Peek()
 	return &Expr{
 		Type: Call,
@@ -222,7 +222,7 @@ func (p *Parser) parseWhile() *Expr {
 	if p.isPunc("{") == nil {
 		p.input.Error(p.input.current, fmt.Sprintf("Expecting token '{', bot got: \"%s\"", p.input.current.Value))
 	}
-	body := p.parseProg()
+	body := p.parseBlock()
 	return &Expr{
 		Type: While,
 		Cond: cond,
@@ -233,7 +233,7 @@ func (p *Parser) parseWhile() *Expr {
 	}
 }
 
-func (p *Parser) parseFunDecl() *Expr {
+func (p *Parser) parseFunctionDecl() *Expr {
 	tok := p.input.Peek()
 	paramExprs := p.parseDelimited("(", ")", ",", func() *Expr {
 		return &Expr{
@@ -318,7 +318,7 @@ func (p *Parser) maybeCall(expr func() *Expr) *Expr {
 	exprNode := expr()
 	// Function call
 	if p.isPunc("(") != nil {
-		return p.parseFunCall(exprNode)
+		return p.parseFunctionCall(exprNode)
 	}
 	// Array/table access
 	if p.isPunc("[") != nil {
@@ -385,7 +385,7 @@ func (p *Parser) parseAtom() *Expr {
 			return exp
 		}
 		if p.isPunc("{") != nil {
-			return p.parseProg()
+			return p.parseBlock()
 		}
 		if p.isKw("if") != nil {
 			return p.parseIf()
@@ -398,7 +398,7 @@ func (p *Parser) parseAtom() *Expr {
 		}
 		if p.isKw("fun") != nil {
 			p.input.Next()
-			return p.parseFunDecl()
+			return p.parseFunctionDecl()
 		}
 		if p.isKw("array") != nil {
 			return p.parseArray()
@@ -426,7 +426,7 @@ func (p *Parser) parseAtom() *Expr {
 	})
 }
 
-func (p *Parser) parseToplevel() *Expr {
+func (p *Parser) parseProgram() *Expr {
 	var prog []*Expr
 	for !p.input.Eof() {
 		prog = append(prog, p.parseExpression())
@@ -453,17 +453,17 @@ func (p *Parser) parseImport() *Expr {
 	}
 }
 
-func (p *Parser) parseProg() *Expr {
-	prog := p.parseEnclosed("{", "}", p.parseExpression)
-	if len(prog) == 0 {
+func (p *Parser) parseBlock() *Expr {
+	block := p.parseEnclosed("{", "}", p.parseExpression)
+	if len(block) == 0 {
 		return FALSE
 	}
-	if len(prog) == 1 {
-		return prog[0]
+	if len(block) == 1 {
+		return block[0]
 	}
 	return &Expr{
 		Type: Prog,
-		Prog: prog,
+		Prog: block,
 	}
 }
 

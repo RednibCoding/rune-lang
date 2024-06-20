@@ -39,7 +39,7 @@ func (r *RuneVM) Run(source string, filepath string) {
 	stream := NewInputStream(string(source), filepath)
 	tokenStream := NewTokenStream(stream)
 	parser := NewParser(tokenStream)
-	ast := parser.parseToplevel()
+	ast := parser.parseProgram()
 	evaluator := NewEvaluator()
 
 	evaluator.evaluate(ast, r.env)

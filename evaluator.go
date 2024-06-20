@@ -217,7 +217,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		importStream := NewInputStream(string(importedSource), path)
 		importTokenStream := NewTokenStream(importStream)
 		importParser := NewParser(importTokenStream)
-		importAST := importParser.parseToplevel()
+		importAST := importParser.parseProgram()
 
 		e.evaluate(importAST, env)
 		return nil
