@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rune Examples</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Rune Examples</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="syntax.html">Syntax</a></li>
+                <li><a href="examples.html">Examples</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Code Examples</h2>
+            <p>Here are some examples of what you can do with Rune:</p>
+            <pre>
+<code>// Hello World
+fun main() {
+    print("Hello, World!")
+}
+
+// Factorial
+fun factorial(n) {
+    if n == 0 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+print(factorial(5)) // Outputs 120
+
+// Fibonacci
+fun fibonacci(n) {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+print(fibonacci(10)) // Outputs 55
+            </code>
+            </pre>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Rune Language</p>
+    </footer>
+</body>
+</html>
