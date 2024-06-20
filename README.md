@@ -856,7 +856,7 @@ if RuneIsAwesome {
 - **Example**: `table2 = new(table1)`
 
 ### assert
-- **Syntax**: `assert(<condidion>, <message>)`
+- **Syntax**: `assert(<condition>, <message>)`
 - **Description**: Assert that a condition is true, errors with given message if the assert fails
 - **Example**: `assert(myVar == 10, "myVar was not 10")`
 
