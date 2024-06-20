@@ -2,9 +2,11 @@ name: Go Build for Multiple Platforms
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
   build:
@@ -18,21 +20,27 @@ jobs:
           - goos: linux
             goarch: amd64
             dir: linux
+            extension: ""
           - goos: linux
             goarch: arm64
             dir: linux
+            extension: ""
           - goos: windows
             goarch: amd64
             dir: win
+            extension: ".exe"
           - goos: windows
             goarch: arm64
             dir: win
+            extension: ".exe"
           - goos: darwin
             goarch: amd64
             dir: macos
+            extension: ""
           - goos: darwin
             goarch: arm64
             dir: macos
+            extension: ""
 
     steps:
       - name: Checkout code
@@ -41,7 +49,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '^1.22'
+          go-version: '^1.16' # Adjust this to the Go version you need
 
       - name: Cache Go modules
         uses: actions/cache@v2
@@ -59,10 +67,10 @@ jobs:
       - name: Build
         run: |
           mkdir -p ${{ matrix.dir }}
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }} ./...
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} ./...
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }}
