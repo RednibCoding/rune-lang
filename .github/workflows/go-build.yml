@@ -1,4 +1,4 @@
-name: Go Build for Multiple Platforms
+name: Go Build
 
 on:
   push:
@@ -12,30 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        goos: [linux, windows, darwin]
-        goarch: [amd64, arm64]
-        include:
-          - goos: linux
-            goarch: amd64
-            dir: linux
-          - goos: linux
-            goarch: arm64
-            dir: linux
-          - goos: windows
-            goarch: amd64
-            dir: win
-          - goos: windows
-            goarch: arm64
-            dir: win
-          - goos: darwin
-            goarch: amd64
-            dir: macos
-          - goos: darwin
-            goarch: arm64
-            dir: macos
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -43,7 +19,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '^1.22'
+          go-version: '^1.16' # Adjust this to the Go version you need
 
       - name: Cache Go modules
         uses: actions/cache@v2
@@ -59,12 +35,13 @@ jobs:
         run: go mod tidy
 
       - name: Build
-        run: |
-          mkdir -p ${{ matrix.dir }}
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }} ./...
+        run: go build -v -o myapp ./...
 
-      - name: Upload Build Artifacts
+    #   - name: Run tests
+    #     run: go test -v ./...
+
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: myapp
+          path: myapp
