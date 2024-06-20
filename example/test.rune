@@ -1,5 +1,7 @@
 myvar = 12
 
+assert(myvar == 12, "Oh no, myvar was not 12")
+
 printer = fun(toPrint) {
     println(toPrint)
 }

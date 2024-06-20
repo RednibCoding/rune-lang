@@ -40,6 +40,7 @@ func NewRuneVM() *RuneVM {
 	vm.set("sliceright", builtin_sliceRight)
 	vm.set("len", builtin_Len)
 	vm.set("new", builtin_New)
+	vm.set("assert", builtin_Assert)
 
 	return vm
 }

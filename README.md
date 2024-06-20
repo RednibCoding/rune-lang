@@ -855,6 +855,11 @@ if RuneIsAwesome {
 - **Description**: Returns a deep copy of the given array or table.
 - **Example**: `table2 = new(table1)`
 
+### assert
+- **Syntax**: `assert(<condidion>, <message>)`
+- **Description**: Assert that a condition is true, errors with given message if the assert fails
+- **Example**: `assert(myVar == 10, "myVar was not 10")`
+
 ## Editor Plugins
 In the `editor` directory you will find plugins for different editors. Currently for _(help is welcome)_:
  - [VS Code](https://code.visualstudio.com/)

@@ -541,6 +541,32 @@ func builtin_New(args ...interface{}) interface{} {
 	}
 }
 
+// Assert that a condition is true, errors with given message if the assert fails
+func builtin_Assert(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("assert requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the first argument is a boolean
+	condition, ok := args[0].(bool)
+	if !ok {
+		return fmt.Errorf("first argument must be of type bool, got: %T", args[0])
+	}
+
+	// Using type assertions to check if the first argument is a boolean
+	msg, ok := args[1].(string)
+	if !ok {
+		return fmt.Errorf("second argument must be of type string, got: %T", args[0])
+	}
+
+	// Check the condition and return an error if it is false
+	if !condition {
+		return fmt.Errorf("assertion failed: %s", msg)
+	}
+
+	return nil
+}
+
 // //////////////////////////////////////////////////////////////////////////////
 // Helper Functions
 // //////////////////////////////////////////////////////////////////////////////
