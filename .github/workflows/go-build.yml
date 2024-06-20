@@ -1,4 +1,4 @@
-name: Go Build for Multiple Platforms
+name: Go Build
 
 on:
   push:
@@ -67,7 +67,7 @@ jobs:
       - name: Build
         run: |
           mkdir -p ${{ matrix.dir }}
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} ./...
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} ./dist
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
