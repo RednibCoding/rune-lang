@@ -1,3 +1,4 @@
+[![Build](https://github.com/RednibCoding/runevm/actions/workflows/go-build.yml/badge.svg)](https://github.com/RednibCoding/runevm/actions/workflows/go-build.yml)
 
 # RuneVM: A Runey Scripting Language
 ![](editor/vscode/rune/logo.png)
