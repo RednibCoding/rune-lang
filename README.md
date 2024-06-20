@@ -755,15 +755,15 @@ if RuneIsAwesome {
 - **Description**: Exits the execution immediately.
 - **Example**: `exit()`
 
-### readfilestr
-- **Syntax**: `readfilestr(<path>)`
+### readfile
+- **Syntax**: `readfile(<path>)`
 - **Description**: Reads a file from the given path and returns the contents as a string.
-- **Example**: `strcontent = readfilestr("example.txt")`
+- **Example**: `strcontent = readfile("example.txt")`
 
-### writefilestr
-- **Syntax**: `writefilestr(<path>, <content>)`
+### writefile
+- **Syntax**: `writefile(<path>, <content>)`
 - **Description**: Creates (and overwrites) a file to the given path and writes the given string into is.
-- **Example**: `writefilestr("example.txt", "Hello World!")`
+- **Example**: `writefile("example.txt", "Hello World!")`
 
 ### strsplit
 - **Syntax**: `strsplit(<str>, <delimiter>)`
@@ -810,7 +810,6 @@ if RuneIsAwesome {
 - **Description**: Returns true if the substring is found within the string, and false otherwise.
 - **Example**: `doesContain = strcontains(myFileContents, "Hello World")`
 
-
 ### typeof
 - **Syntax**: `typeof(<arg>)`
 - **Description**: Returns the type name as a string of the given argument. Possible types are: `int`, `float`, `string`, `bool` and`unknown`.
@@ -836,15 +835,15 @@ if RuneIsAwesome {
 - **Description**: Returns a slice of the given array, table, or string from the start index to the end index.
 - **Example**: `slicedArray = slice(myArray, 1, 3)`
 
-### slicefirst
-- **Syntax**: `slicefirst(<array|table|string>, <end>)`
+### sliceleft
+- **Syntax**: `sliceleft(<array|table|string>, <end>)`
 - **Description**: Returns a slice of the given array, table, or string from the start to the given end index.
-- **Example**: `slicedArray = slicefirst(myArray, 2)`
+- **Example**: `slicedArray = sliceleft(myArray, 2)`
 
-### slicelast
-- **Syntax**: `slicelast(<array|table|string>, <start>)`
+### sliceright
+- **Syntax**: `sliceright(<array|table|string>, <start>)`
 - **Description**: Returns a slice of the given array, table, or string from the given start index to the end.
-- **Example**: `slicedArray = sliceLast(myArray, 3)`
+- **Example**: `slicedArray = sliceright(myArray, 3)`
 
 ### len
 - **Syntax**: `len(<array|table|string>)`

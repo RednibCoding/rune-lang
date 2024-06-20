@@ -431,7 +431,7 @@ func builtin_slice(args ...interface{}) interface{} {
 	}
 }
 
-func builtin_sliceFirst(args ...interface{}) interface{} {
+func builtin_sliceLeft(args ...interface{}) interface{} {
 	if len(args) != 2 {
 		return fmt.Errorf("sliceFirst requires exactly 2 arguments")
 	}
@@ -470,7 +470,7 @@ func builtin_sliceFirst(args ...interface{}) interface{} {
 	}
 }
 
-func builtin_sliceLast(args ...interface{}) interface{} {
+func builtin_sliceRight(args ...interface{}) interface{} {
 	if len(args) != 2 {
 		return fmt.Errorf("sliceLast requires exactly 2 arguments")
 	}
