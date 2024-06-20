@@ -1,4 +1,4 @@
-name: Go Build for Multiple Platforms
+name: Build
 
 on:
   push:
