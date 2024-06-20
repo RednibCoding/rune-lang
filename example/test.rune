@@ -48,3 +48,6 @@ mytable["key2"] = 11
 println(mytable["key2"]) # prints: 11
 mytable.key2 = 12
 println(mytable["key2"]) # prints: 12
+println(millis())
+wait(1000)
+println(millis())

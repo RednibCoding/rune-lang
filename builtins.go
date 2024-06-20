@@ -55,12 +55,82 @@ func builtin_Wait(args ...interface{}) interface{} {
 	return nil
 }
 
+func builtin_Millisecs(args ...interface{}) interface{} {
+	if len(args) != 0 {
+		return fmt.Errorf("millisecs requires no arguments")
+	}
+
+	// Get the current time and return the milliseconds since the Unix epoch
+	return time.Now().UnixNano() / int64(time.Millisecond)
+}
+
 func builtin_Exit(args ...interface{}) interface{} {
 	if len(args) != 0 {
 		return fmt.Errorf("exit requires no arguments")
 	}
 	os.Exit(0)
 	return nil
+}
+
+// Read the contents of a file and return them as a string
+func builtin_ReadFileStr(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("readfile requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	filename, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	// Read the contents of the file
+	content, err := os.ReadFile(filename)
+	if err != nil {
+		return fmt.Errorf("failed to read file: %v", err)
+	}
+
+	return string(content)
+}
+
+// Write a string to a file
+func builtin_WriteFileStr(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("writefile requires exactly 2 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	filename, ok1 := args[0].(string)
+	content, ok2 := args[1].(string)
+	if !ok1 || !ok2 {
+		return fmt.Errorf("arguments must be of type string, got: %T and %T", args[0], args[1])
+	}
+
+	// Write the contents to the file
+	err := os.WriteFile(filename, []byte(content), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write file: %v", err)
+	}
+
+	return nil
+}
+
+// Split a string into a slice of substrings based on a specified delimiter
+func builtin_StrSplit(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("strsplit requires exactly 2 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	str, ok1 := args[0].(string)
+	delimiter, ok2 := args[1].(string)
+	if !ok1 || !ok2 {
+		return fmt.Errorf("arguments must be of type string, got: %T and %T", args[0], args[1])
+	}
+
+	// Split the string based on the delimiter
+	parts := strings.Split(str, delimiter)
+	return parts
 }
 
 func builtin_TypeOf(args ...interface{}) interface{} {

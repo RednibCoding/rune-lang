@@ -732,23 +732,43 @@ if RuneIsAwesome {
 
 ### print
 - **Syntax**: `print(<arg1>, <arg2>, ...)`
-- **Description**: Prints the given arguments to the standard out
+- **Description**: Prints the given arguments to the standard out.
 - **Example**: `print("Hello, World times ", 10)`
 
 ### println
 - **Syntax**: `println(<arg1>, <arg2>, ...)`
-- **Description**: Prints the given arguments to the standard out and adds a newline character at the end
+- **Description**: Prints the given arguments to the standard out and adds a newline character at the end.
 - **Example**: `print("Hello, World times ", 10)`
 
 ### wait
 - **Syntax**: `wait(<milliseconds>)`
-- **Description**: Waits the given amout of milliseconds
+- **Description**: Waits the given amout of milliseconds.
 - **Example**: `wait(2000)`
+
+### millis
+- **Syntax**: `millis()`
+- **Description**: Return the milliseconds since the Unix epoch.
+- **Example**: `ms = millis()`
 
 ### exit
 - **Syntax**: `exit()`
-- **Description**: Exits the execution immediately
+- **Description**: Exits the execution immediately.
 - **Example**: `exit()`
+
+### readfilestr
+- **Syntax**: `readfilestr(<path>)`
+- **Description**: Reads a file from the given path and returns the contents as a string.
+- **Example**: `strcontent = readfilestr("example.txt")`
+
+### writefilestr
+- **Syntax**: `writefilestr(<path>, <content>)`
+- **Description**: Creates (and overwrites) a file to the given path and writes the given string into is.
+- **Example**: `writefilestr("example.txt", "Hello World!")`
+
+### strsplit
+- **Syntax**: `strsplit(<str>, <delimiter>)`
+- **Description**: Splits a string into an array of substrings based on a specified delimiter. Returns an array of strings.
+- **Example**: `writefilestr("example.txt", "Hello World!")`
 
 ### typeof
 - **Syntax**: `typeof(<arg>)`
