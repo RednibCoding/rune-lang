@@ -208,12 +208,13 @@ func (p *Parser) parseIf() *Expr {
 			Col:  tok.Col,
 		})
 	}
+
 	if hasElif {
 		if p.isKw("else") != nil {
 			p.input.Next()
-			elifBlocks = append(elifBlocks, p.parseExpression())
+			elseBlock := p.parseExpression()
+			elifBlocks = append(elifBlocks, elseBlock)
 		} else {
-
 			p.input.Error(tok, "Expecting 'else' after 'elif'")
 		}
 		ret.Else = &Expr{
@@ -468,7 +469,6 @@ func (p *Parser) parseBlock() *Expr {
 }
 
 func (p *Parser) parseExpression() *Expr {
-
 	left := p.parseAtom()
 	left = p.parseBinaryExpression(left, 0)
 	return p.parseAccessOrCall(left)
