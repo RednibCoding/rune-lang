@@ -73,13 +73,15 @@ func (p *Parser) unexpected(tok *Token) {
 	}
 }
 
-func (p *Parser) maybeBinary(left *Expr, myPrec int) *Expr {
+func (p *Parser) maybeBinary(left *Expr, thisPrec int) *Expr {
 	for tok := p.isOp(""); tok != nil; tok = p.isOp("") {
-		hisPrec := PRECEDENCE[tok.Value]
-		if hisPrec <= myPrec {
+		otherPrec := PRECEDENCE[tok.Value]
+		if otherPrec <= thisPrec {
 			break
 		}
+
 		p.input.Next()
+
 		var exprType ExprType
 		if tok.Value == "=" {
 			exprType = Assign
@@ -90,7 +92,7 @@ func (p *Parser) maybeBinary(left *Expr, myPrec int) *Expr {
 			Type:     exprType,
 			Operator: tok.Value,
 			Left:     left,
-			Right:    p.maybeBinary(p.parseAtom(), hisPrec),
+			Right:    p.maybeBinary(p.parseAtom(), otherPrec),
 			File:     tok.File,
 			Line:     tok.Line,
 			Col:      tok.Col,
@@ -136,7 +138,7 @@ func (p *Parser) parseEnclosed(start string, stop string, parser func() *Expr) [
 	return a
 }
 
-func (p *Parser) parseCall(funcExpr *Expr) *Expr {
+func (p *Parser) parseFunCall(funcExpr *Expr) *Expr {
 	tok := p.input.Peek()
 	return &Expr{
 		Type: Call,
@@ -231,25 +233,25 @@ func (p *Parser) parseWhile() *Expr {
 	}
 }
 
-func (p *Parser) parseFun() *Expr {
+func (p *Parser) parseFunDecl() *Expr {
 	tok := p.input.Peek()
-	varNames := p.parseDelimited("(", ")", ",", func() *Expr {
+	paramExprs := p.parseDelimited("(", ")", ",", func() *Expr {
 		return &Expr{
 			Type:  Var,
 			Value: p.parseVarname(),
 		}
 	})
-	var vars []string
-	for _, expr := range varNames {
-		vars = append(vars, expr.Value.(string))
+	var params []string
+	for _, expr := range paramExprs {
+		params = append(params, expr.Value.(string))
 	}
 	return &Expr{
-		Type: Fun,
-		Vars: vars,
-		Body: p.parseExpression(),
-		File: tok.File,
-		Line: tok.Line,
-		Col:  tok.Col,
+		Type:   Fun,
+		Params: params,
+		Body:   p.parseExpression(),
+		File:   tok.File,
+		Line:   tok.Line,
+		Col:    tok.Col,
 	}
 }
 
@@ -316,9 +318,9 @@ func (p *Parser) maybeCall(expr func() *Expr) *Expr {
 	exprNode := expr()
 	// Function call
 	if p.isPunc("(") != nil {
-		return p.parseCall(exprNode)
+		return p.parseFunCall(exprNode)
 	}
-	// Array/map access
+	// Array/table access
 	if p.isPunc("[") != nil {
 		return p.parseIndex(exprNode)
 	}
@@ -332,14 +334,14 @@ func (p *Parser) maybeCall(expr func() *Expr) *Expr {
 func (p *Parser) parseFieldAccess(expr *Expr) *Expr {
 	tok := p.input.Peek()
 	p.skipPunc(".")
-	field := p.parseVarname()
+	fieldName := p.parseVarname()
 	return &Expr{
-		Type:  Var, // We use Var type to represent field access
-		Value: expr.Value,
+		Type:  Var,        // We use Var type to represent field access
+		Value: expr.Value, // Variable name that should be stored in the environment e.g. in "person.name" the string "person"
 		Left:  expr,
 		Index: &Expr{
-			Type:  Str, // Field name as a string
-			Value: field,
+			Type:  Str,       // Field name as a string
+			Value: fieldName, // Field name e.g. in "person.name" the string "name"
 			File:  tok.File,
 			Line:  tok.Line,
 			Col:   tok.Col,
@@ -354,6 +356,13 @@ func (p *Parser) parseIndex(expr *Expr) *Expr {
 	tok := p.input.Peek()
 	p.skipPunc("[")
 	indexExpr := p.parseExpression()
+	switch indexExpr.Value.(type) {
+	case string, int:
+		// Valid type, proceed without doing anything
+	default:
+		p.input.Error(p.input.current, fmt.Sprintf("index expression must be of type string for tables or type int for arrays, but got '%T'", indexExpr.Value))
+		return nil
+	}
 	p.skipPunc("]")
 
 	return &Expr{
@@ -389,7 +398,7 @@ func (p *Parser) parseAtom() *Expr {
 		}
 		if p.isKw("fun") != nil {
 			p.input.Next()
-			return p.parseFun()
+			return p.parseFunDecl()
 		}
 		if p.isKw("array") != nil {
 			return p.parseArray()

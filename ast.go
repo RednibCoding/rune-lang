@@ -22,22 +22,41 @@ const (
 )
 
 type Expr struct {
-	Type     ExprType
-	Value    interface{}
-	Left     *Expr
-	Right    *Expr
+	Type ExprType
+	// Multipurpose field for storing a value
+	Value interface{}
+
+	Left  *Expr
+	Right *Expr
+
+	// Operator of binary expressions
 	Operator string
-	Cond     *Expr
-	Then     *Expr
-	Else     *Expr
-	Prog     []*Expr
-	Func     *Expr
-	Args     []*Expr
-	Vars     []string
-	Body     *Expr
-	File     string
-	Line     int
-	Col      int
-	Length   int
-	Index    *Expr
+
+	// If/While
+	Cond *Expr
+	Then *Expr
+	Else *Expr
+
+	// Function decl
+	Func *Expr
+	// Function decl param names
+	Params []string
+
+	// Entire block
+	Prog []*Expr
+
+	// Function call arguments
+	Args []*Expr
+
+	// Function / while bodies
+	Body *Expr
+
+	// Index access / Field access
+	Index *Expr
+
+	// Token infos
+	File   string
+	Line   int
+	Col    int
+	Length int
 }

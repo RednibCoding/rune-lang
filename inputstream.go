@@ -19,7 +19,7 @@ func NewInputStream(source string, filepath string) *InputStream {
 		source:   source,
 		Pos:      0,
 		line:     1,
-		Col:      0,
+		Col:      1,
 	}
 	return p
 }
@@ -32,7 +32,7 @@ func (p *InputStream) Next() byte {
 	p.Pos++
 	if ch == '\n' {
 		p.line++
-		p.Col = 0
+		p.Col = 1
 	} else {
 		p.Col++
 	}

@@ -315,7 +315,8 @@ func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
 func (e *Evaluator) makeFun(env *Environment, exp *Expr) func(args ...interface{}) interface{} {
 	return func(args ...interface{}) interface{} {
 		scope := env.Extend()
-		for i, name := range exp.Vars {
+		// Collect and define all param names in the current scope/environment so they are known within the function
+		for i, name := range exp.Params {
 			if i < len(args) {
 				scope.Def(name, args[i])
 			} else {

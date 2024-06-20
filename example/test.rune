@@ -30,6 +30,8 @@ if true then printer("Nice") else printer("Also nice")
 person1 = table{}
 person1.name = "John"
 
+println(person1[false])
+
 person1.sayHello = fun(self) {
     println(self.name)
 }
