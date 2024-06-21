@@ -12,7 +12,7 @@ Rune stands out for being:
 - **Embeddable:** Seamlessly integrates into your Go projects.
 - **Extensible:** Easily extendable with custom functions and variables.
 - **Portable:** Simple to port to other languages.
-- **Versatile:** Can be used standalone as a script runner with the [Rune](dist/) binary or embedded as a scripting language within your project.
+- **Versatile:** Can be used standalone as a script runner with the standalone binary (see: [Releases](https://github.com/RednibCoding/runevm/releases)) or embedded as a scripting language within your project.
 
 ## Everything you would definetely need for scripting, but not more and not less:
 - **Datatypes:** `int`, `float`, `string`, `bool`
@@ -35,7 +35,7 @@ To get the latest unstable builds, you can download them from the build artiface
 ![](readme/artifacts-download.png)
 
 ## Build from source
-Simply run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the [dist directory](dist/). This will build the Rune binary for all three platforms in there respective directories.
+Simply run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the [rune directory](rune/). This will build the Rune binary for all three platforms in there respective directories.
 
 ## Using the Language
 
