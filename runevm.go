@@ -90,6 +90,10 @@ func (r *RuneVM) SetArray(name string, value []interface{}) {
 	r.set(name, value)
 }
 
+func (r *RuneVM) SetTable(name string, value map[string]interface{}) {
+	r.set(name, value)
+}
+
 func (r *RuneVM) GetBool(name string) (bool, error) {
 	value := r.get(name)
 	if b, ok := value.(bool); ok {
