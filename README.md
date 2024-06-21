@@ -906,7 +906,7 @@ if RuneIsAwesome {
 
 ### typeof
 - **Syntax**: `typeof(<arg>)`
-- **Description**: Returns the type name as a string of the given argument. Possible types are: `int`, `float`, `string`, `bool` and`unknown`.
+- **Description**: Returns the type name as string of the given argument. Possible types are: `int`, `float`, `string`, `bool`, `array`, `table` and `unknown`.
 - **Example**: `typeof(10) # returns "int"`
 
 ### append

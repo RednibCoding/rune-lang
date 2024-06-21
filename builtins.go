@@ -277,6 +277,7 @@ func builtin_Contains(args ...interface{}) interface{} {
 	return strings.Contains(str, substr)
 }
 
+// Returns the type name as string of the given argument.
 func builtin_TypeOf(args ...interface{}) interface{} {
 	if len(args) != 1 {
 		return fmt.Errorf("typeof requires exactly 1 argument")
@@ -294,12 +295,13 @@ func builtin_TypeOf(args ...interface{}) interface{} {
 	case []interface{}:
 		return "array"
 	case map[string]interface{}:
-		return "map"
+		return "table"
 	default:
 		return "unknown"
 	}
 }
 
+// Appends the given value to the given array, table or string. Returns the new array, table or string.
 func builtin_append(args ...interface{}) interface{} {
 	if len(args) < 2 {
 		return fmt.Errorf("append requires exactly 2 arguments for array/string or 3 arguments for map")
@@ -326,6 +328,7 @@ func builtin_append(args ...interface{}) interface{} {
 	}
 }
 
+// Removed the given index from the given array, table or string. Returns the new array, table or string.
 func builtin_remove(args ...interface{}) interface{} {
 	if len(args) != 2 {
 		return fmt.Errorf("remove requires exactly 2 arguments")
@@ -366,6 +369,7 @@ func builtin_remove(args ...interface{}) interface{} {
 	}
 }
 
+// Returns true if the given table has the given key, otherwise false.
 func builtin_hasKey(args ...interface{}) interface{} {
 	if len(args) != 2 {
 		return fmt.Errorf("hasKey requires exactly 2 arguments")
@@ -387,6 +391,7 @@ func builtin_hasKey(args ...interface{}) interface{} {
 	return exists
 }
 
+// Returns a slice of the given array, table, or string from the start index to the end index.
 func builtin_slice(args ...interface{}) interface{} {
 	if len(args) != 3 {
 		return fmt.Errorf("slice requires exactly 3 arguments")
@@ -431,6 +436,7 @@ func builtin_slice(args ...interface{}) interface{} {
 	}
 }
 
+// Returns a slice of the given array, table, or string from the start to the given end index.
 func builtin_sliceLeft(args ...interface{}) interface{} {
 	if len(args) != 2 {
 		return fmt.Errorf("sliceFirst requires exactly 2 arguments")
@@ -470,6 +476,7 @@ func builtin_sliceLeft(args ...interface{}) interface{} {
 	}
 }
 
+// Returns a slice of the given array, table, or string from the given start index to the end.
 func builtin_sliceRight(args ...interface{}) interface{} {
 	if len(args) != 2 {
 		return fmt.Errorf("sliceLast requires exactly 2 arguments")
@@ -509,6 +516,7 @@ func builtin_sliceRight(args ...interface{}) interface{} {
 	}
 }
 
+// Returns the lenght of the given array, table or string.
 func builtin_Len(args ...interface{}) interface{} {
 	if len(args) != 1 {
 		return fmt.Errorf("len requires exactly 1 argument")
@@ -526,6 +534,7 @@ func builtin_Len(args ...interface{}) interface{} {
 	}
 }
 
+// Returns a deep copy of the given array or table.
 func builtin_New(args ...interface{}) interface{} {
 	if len(args) != 1 {
 		return fmt.Errorf("new requires exactly 1 argument")
@@ -599,7 +608,6 @@ func formatMap(m map[string]interface{}) string {
 	}
 	sb.WriteString("}")
 	return sb.String()
-
 
 }
 
