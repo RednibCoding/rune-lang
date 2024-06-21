@@ -63,15 +63,11 @@ jobs:
           mkdir -p ${{ matrix.dir }}
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} ./dist
 
-      - name: Archive Artifacts
-        run: |
-          tar -czvf ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz -C ${{ matrix.dir }} rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }}
-
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rune-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+          path: ${{ matrix.dir }}/
 
       - name: Log Upload Artifacts
         run: |
@@ -121,4 +117,7 @@ jobs:
             if [ -d "$dir" ]; then
               for file in "$dir"/*; do
                 echo "Uploading $file"
-       
+                gh release upload ${{ github.ref }} "$file" --clobber --repo ${{ github.repository }}
+              done
+            fi
+          done
