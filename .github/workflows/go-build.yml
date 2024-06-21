@@ -22,27 +22,27 @@ jobs:
         include:
           - goos: linux
             goarch: amd64
-            dir: dist
+            dir: artifacts
             extension: "-linux-amd64"
           - goos: linux
             goarch: arm64
-            dir: dist
+            dir: artifacts
             extension: "-linux-arm64"
           - goos: windows
             goarch: amd64
-            dir: dist
+            dir: artifacts
             extension: "-windows-amd64.exe"
           - goos: windows
             goarch: arm64
-            dir: dist
+            dir: artifacts
             extension: "-windows-arm64.exe"
           - goos: darwin
             goarch: amd64
-            dir: dist
+            dir: artifacts
             extension: "-darwin-amd64"
           - goos: darwin
             goarch: arm64
-            dir: dist
+            dir: artifacts
             extension: "-darwin-arm64"
 
     steps:
@@ -60,18 +60,18 @@ jobs:
 
       - name: Build
         run: |
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune${{ matrix.extension }} ./dist
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune${{ matrix.extension }} ./artifacts
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rune-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: dist
+          path: artifacts
 
       - name: Log Upload Artifacts
         run: |
           echo "Uploaded artifacts:"
-          ls -l dist/
+          ls -l artifacts/
 
   release:
     needs: build
@@ -88,12 +88,12 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
-          path: dist
+          path: artifacts
 
       - name: List Downloaded Artifacts
         run: |
-          echo "Listing contents of the dist directory:"
-          ls -R dist
+          echo "Listing contents of the artifacts directory:"
+          ls -R artifacts
 
       - name: Create GitHub Release
         id: create_release
@@ -113,12 +113,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           declare -A paths
-          paths[linux/amd64]=dist/rune-linux-amd64
-          paths[linux/arm64]=dist/rune-linux-arm64
-          paths[windows/amd64]=dist/rune-windows-amd64.exe
-          paths[windows/arm64]=dist/rune-windows-arm64.exe
-          paths[darwin/amd64]=dist/rune-darwin-amd64
-          paths[darwin/arm64]=dist/rune-darwin-arm64
+          paths[linux/amd64]=artifacts/rune-linux-amd64
+          paths[linux/arm64]=artifacts/rune-linux-arm64
+          paths[windows/amd64]=artifacts/rune-windows-amd64.exe
+          paths[windows/arm64]=artifacts/rune-windows-arm64.exe
+          paths[darwin/amd64]=artifacts/rune-darwin-amd64
+          paths[darwin/arm64]=artifacts/rune-darwin-arm64
 
           for key in "${!paths[@]}"; do
             file_path="${paths[$key]}"
