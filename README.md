@@ -43,6 +43,8 @@ Rune scripts have the `.rune` extension. Here is a sample script (`test.rune`):
 ```js
 myvar = 12
 
+assert(myvar == 12, "Oh no, myvar was not 12")
+
 printer = fun(toPrint) {
     println(toPrint)
 }
@@ -68,6 +70,9 @@ if myvar < 0 {
     printer("Is exactly 0")
 }
 
+bool = not (myvar == 13 || myvar == 12) && true
+println(bool)
+
 if true then printer("Nice") else printer("Also nice")
 
 person1 = table{}
@@ -76,21 +81,24 @@ person1.name = "John"
 person1.sayHello = fun(self) {
     println(self.name)
 }
-person1.sayHello() # prints: "John"
+person1.sayHello()
 
 person2 = new(person1)
 person2.name = "Jenny"
 
-person1.sayHello() # prints: "John"
-person2.sayHello() # prints: "Jenny"
+person1.sayHello()
+person2.sayHello()
 
-mytable = table{"key 1": false, "key 2": 10, "key 3": 12.4} # spaces in keys will be removed automatically
-println(mytable) # prints: {"key1": false, "key2": 10, "key3": 12.4}
-println(mytable["key2"]) # prints: 10
+mytable = table{"key 1": false, "key 2": 10, "key 3": 12.4}
+println(mytable)
+println(mytable["key2"])
 mytable["key2"] = 11
-println(mytable["key2"]) # prints: 11
+println(mytable["key2"])
 mytable.key2 = 12
-println(mytable["key2"]) # prints: 12
+println(mytable["key2"])
+println(millis())
+wait(1000)
+println(millis())
 ```
 
 ### Running Scripts

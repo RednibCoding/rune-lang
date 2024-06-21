@@ -1,9 +1,5 @@
 myvar = 12
 
-a = not (myvar == 13 || myvar == 12)
-not println(a)
-exit()
-
 assert(myvar == 12, "Oh no, myvar was not 12")
 
 printer = fun(toPrint) {
@@ -30,6 +26,9 @@ if myvar < 0 {
 } else {
     printer("Is exactly 0")
 }
+
+bool = not (myvar == 13 || myvar == 12) && true
+println(bool)
 
 if true then printer("Nice") else printer("Also nice")
 
