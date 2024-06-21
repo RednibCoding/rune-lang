@@ -21,6 +21,10 @@ type ReturnValue struct {
 	Value interface{}
 }
 
+type BreakValue struct {
+	Value bool
+}
+
 func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	if exp == nil {
 		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
@@ -133,8 +137,8 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 			return e.evaluate(exp.Then, env)
 		}
 		if exp.Else != nil {
-			if exp.Else.Type == Prog {
-				for _, elif := range exp.Else.Prog {
+			if exp.Else.Type == Block {
+				for _, elif := range exp.Else.Block {
 					if elif.Type == If {
 						elifCond := e.evaluate(elif.Cond, env)
 						if elifCond != false {
@@ -156,29 +160,34 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 			if !cond.(bool) {
 				break
 			}
-			e.evaluate(exp.Body, env)
+			for _, exp := range exp.Body.Block {
+				result := e.evaluate(exp, env)
+				if _, ok := result.(BreakValue); ok {
+					return false
+				}
+			}
 		}
 		return false
 
 	case Array:
 		var arr []interface{}
-		for _, element := range exp.Prog {
+		for _, element := range exp.Block {
 			arr = append(arr, e.evaluate(element, env))
 		}
 		return arr
 
 	case Table:
 		m := make(map[string]interface{})
-		for _, pair := range exp.Prog {
+		for _, pair := range exp.Block {
 			key := e.evaluate(pair.Left, env)
 			value := e.evaluate(pair.Right, env)
 			m[fmt.Sprint(key)] = value
 		}
 		return m
 
-	case Prog:
+	case Block:
 		var val interface{} = false
-		for _, ex := range exp.Prog {
+		for _, ex := range exp.Block {
 			result := e.evaluate(ex, env)
 			if ret, ok := result.(ReturnValue); ok {
 				return ret.Value
@@ -216,6 +225,9 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 
 	case Return:
 		return ReturnValue{Value: e.evaluate(exp.Right, env)}
+
+	case Break:
+		return BreakValue{Value: false}
 
 	case Import:
 		path := e.evaluate(exp.Left, env).(string) + ".rune"

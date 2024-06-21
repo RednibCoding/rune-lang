@@ -12,10 +12,11 @@ const (
 	Unary  ExprType = "unary"
 	Fun    ExprType = "fun"
 	If     ExprType = "if"
-	Prog   ExprType = "prog"
+	Block  ExprType = "block"
 	Call   ExprType = "call"
 	Return ExprType = "return"
 	While  ExprType = "while"
+	Break  ExprType = "break"
 	Array  ExprType = "array"
 	Table  ExprType = "table"
 	Pair   ExprType = "pair"
@@ -45,7 +46,7 @@ type Expr struct {
 	Params []string
 
 	// Entire block
-	Prog []*Expr
+	Block []*Expr
 
 	// Function call arguments
 	Args []*Expr

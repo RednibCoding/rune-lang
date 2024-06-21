@@ -218,8 +218,8 @@ func (p *Parser) parseIf() *Expr {
 			p.input.Error(tok, "Expecting 'else' after 'elif'")
 		}
 		ret.Else = &Expr{
-			Type: Prog,
-			Prog: elifBlocks,
+			Type:  Block,
+			Block: elifBlocks,
 		}
 	} else if p.isKw("else") != nil {
 		p.input.Next()
@@ -286,11 +286,11 @@ func (p *Parser) parseArrayDecl() *Expr {
 	p.skipKw("array")
 	values := p.parseDelimited("{", "}", ",", p.parseExpression)
 	return &Expr{
-		Type: Array,
-		Prog: values,
-		File: tok.File,
-		Line: tok.Line,
-		Col:  tok.Col,
+		Type:  Array,
+		Block: values,
+		File:  tok.File,
+		Line:  tok.Line,
+		Col:   tok.Col,
 	}
 }
 
@@ -299,11 +299,11 @@ func (p *Parser) parseTableDecl() *Expr {
 	p.skipKw("table")
 	pairs := p.parseDelimited("{", "}", ",", p.parsePairDecl)
 	return &Expr{
-		Type: Table,
-		Prog: pairs,
-		File: tok.File,
-		Line: tok.Line,
-		Col:  tok.Col,
+		Type:  Table,
+		Block: pairs,
+		File:  tok.File,
+		Line:  tok.Line,
+		Col:   tok.Col,
 	}
 }
 
@@ -424,6 +424,18 @@ func (p *Parser) parseReturnExpr() *Expr {
 	}
 }
 
+func (p *Parser) parseBreakExpr() *Expr {
+	tok := p.input.Peek()
+	p.skipKw("break")
+	return &Expr{
+		Type:  Break,
+		Right: FALSE,
+		File:  tok.File,
+		Line:  tok.Line,
+		Col:   tok.Col,
+	}
+}
+
 func (p *Parser) parseAtom() *Expr {
 	var expr *Expr
 	if p.isPunc("(") != nil {
@@ -451,6 +463,8 @@ func (p *Parser) parseAtom() *Expr {
 		expr = p.parseNotExpr()
 	} else if p.isKw("return") != nil {
 		expr = p.parseReturnExpr()
+	} else if p.isKw("break") != nil {
+		expr = p.parseBreakExpr()
 
 	} else {
 		tok := p.input.Next()
@@ -477,8 +491,8 @@ func (p *Parser) parseProgram() *Expr {
 		prog = append(prog, p.parseExpression())
 	}
 	return &Expr{
-		Type: Prog,
-		Prog: prog,
+		Type:  Block,
+		Block: prog,
 	}
 }
 
@@ -503,8 +517,8 @@ func (p *Parser) parseBlock() *Expr {
 		return block[0]
 	}
 	return &Expr{
-		Type: Prog,
-		Prog: block,
+		Type:  Block,
+		Block: block,
 	}
 }
 

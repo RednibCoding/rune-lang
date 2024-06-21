@@ -1,4 +1,12 @@
-# Hello World
+
+a = 1
+
+while true {
+    if a <= 0 then break
+    a = a -1
+    println(a)
+}
+
 main = fun() {
     println("Hello, World!")
     return = 42
@@ -8,7 +16,6 @@ main = fun() {
 val = main()
 println(val)
 
-return 42
 myvar = "12"
 
 mybool = not 13 # false because 13 is truthy
