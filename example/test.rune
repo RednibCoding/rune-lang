@@ -1,5 +1,9 @@
 myvar = 12
 
+a = not (myvar == 13 || myvar == 12)
+not println(a)
+exit()
+
 assert(myvar == 12, "Oh no, myvar was not 12")
 
 printer = fun(toPrint) {

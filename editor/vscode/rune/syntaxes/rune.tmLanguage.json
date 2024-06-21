@@ -45,7 +45,7 @@
 		  },
 		  {
 			"name": "constant.language.rune",
-			"match": "\\b(fun|true|false|array|table)\\b"
+			"match": "\\b(fun|true|false|not|array|table)\\b"
 		  }
 		]
 	  },

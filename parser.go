@@ -389,6 +389,23 @@ func (p *Parser) parseIndexExpr(expr *Expr) *Expr {
 	}
 }
 
+func (p *Parser) parseNotExpr() *Expr {
+	tok := p.input.Peek()
+	p.skipKw("not")
+	expr := p.parseExpression()
+	if expr.Type != Bool && expr.Type != Binary && expr.Type != Assign && expr.Type != Call && expr.Type != Var {
+		p.unexpected(tok)
+	}
+	return &Expr{
+		Type:     Unary,
+		Operator: "not",
+		Right:    expr,
+		File:     tok.File,
+		Line:     tok.Line,
+		Col:      tok.Col,
+	}
+}
+
 func (p *Parser) parseAtom() *Expr {
 	var expr *Expr
 	if p.isPunc("(") != nil {
@@ -412,6 +429,9 @@ func (p *Parser) parseAtom() *Expr {
 		expr = p.parseTableDecl()
 	} else if p.isKw("import") != nil {
 		expr = p.parseImport()
+	} else if p.isKw("not") != nil {
+		expr = p.parseNotExpr()
+
 	} else {
 		tok := p.input.Next()
 		if tok.Type == "var" || tok.Type == "num" || tok.Type == "str" {

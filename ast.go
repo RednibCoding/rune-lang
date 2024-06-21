@@ -9,6 +9,7 @@ const (
 	Var    ExprType = "var"
 	Assign ExprType = "assign"
 	Binary ExprType = "binary"
+	Unary  ExprType = "unary"
 	Fun    ExprType = "fun"
 	If     ExprType = "if"
 	Prog   ExprType = "prog"

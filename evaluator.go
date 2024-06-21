@@ -111,8 +111,12 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		return env.Set(exp.Left.Value.(string), e.evaluate(exp.Right, env), exp)
 
 	case Binary:
-		return applyOp(exp.Operator,
+		return applyBinaryOp(exp.Operator,
 			e.evaluate(exp.Left, env),
+			e.evaluate(exp.Right, env), exp)
+
+	case Unary:
+		return applyUnaryOp(exp.Operator,
 			e.evaluate(exp.Right, env), exp)
 
 	case Fun:
@@ -243,7 +247,38 @@ func parseNumber(val string, exp *Expr) interface{} {
 	return i
 }
 
-func applyOp(op string, a, b interface{}, exp *Expr) interface{} {
+func applyUnaryOp(op string, a interface{}, exp *Expr) interface{} {
+	boolVal := func(x interface{}) bool {
+		switch v := x.(type) {
+		case bool:
+			return v
+		case string:
+			if b, err := strconv.ParseBool(v); err == nil {
+				return b
+			}
+		case int:
+			return v != 0
+		case float64:
+			return v != 0
+		default:
+			if x != nil {
+				Error(exp, "Expected bool but got %v", x)
+			} else {
+				Error(exp, fmt.Sprintf("Unary operator '%s' needs a valid operand", op))
+			}
+		}
+		return false
+	}
+	switch op {
+	case "not":
+		return !boolVal(a)
+	default:
+		Error(exp, "Can't apply unary operator %s", op)
+		return nil
+	}
+}
+
+func applyBinaryOp(op string, a, b interface{}, exp *Expr) interface{} {
 	num := func(x interface{}) float64 {
 		switch v := x.(type) {
 		case string:

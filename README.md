@@ -18,7 +18,7 @@ Rune stands out for being:
 - **Datatypes:** `int`, `float`, `string`, `bool`
 - **Branching:** `if`, `elif`, `else` and optional `then`
 - **Looping:** `while`
-- **Operators:** `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`
+- **Operators:** `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`, `not`
 - **Arrays**: `array`
 - **Dictionaries/Maps**: `table`
 - **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
