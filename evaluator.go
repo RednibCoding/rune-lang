@@ -7,13 +7,16 @@ import (
 	"strings"
 )
 
+const MaxRecursionDepth = 1000 // Between 1000 and 2000 is considered to be a reasonable recursion depth for recursive functions
+
 type Evaluator struct {
 	// Keep track of file path that have been imported by the import statement.
-	importedPaths map[string]bool
+	importedPaths  map[string]bool
+	recursionDepth int
 }
 
 func NewEvaluator() *Evaluator {
-	e := &Evaluator{importedPaths: make(map[string]bool)}
+	e := &Evaluator{importedPaths: make(map[string]bool), recursionDepth: 0}
 	return e
 }
 
@@ -34,6 +37,14 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
 		return nil
 	}
+
+	e.recursionDepth++
+	defer func() { e.recursionDepth-- }()
+
+	if e.recursionDepth > MaxRecursionDepth {
+		Error(exp, "Maximum recursion depth exceeded")
+	}
+
 	switch exp.Type {
 	case Num:
 		return parseNumber(exp.Value.(string), exp)
