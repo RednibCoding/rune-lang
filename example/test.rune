@@ -1,7 +1,7 @@
 # Hello World
 main = fun() {
     println("Hello, World!")
-    return
+    return = 42
     println("After return")
 
 }

@@ -634,7 +634,7 @@ The last expression of a function will be returned, so the return keyword is opt
 
 However, you can use `return` to early exit a function.
 
->**Differences:** In Rune, you have to explicitly bind the return value with `<` to `return`.
+>**Differences:** In Rune, you have to explicitly bind the return value with `=` to `return`.
 
 The example below does not return 42, because 42 is not part of the return expression even though it is on the same line. It will return `false` because no return value has been given to `return`.
 ```js
@@ -652,11 +652,11 @@ Hello, World!
 false
 ```
 
-To explicitly provide a return value to `return`, you have to bind it to `return` with `<`.
+To explicitly provide a return value to `return`, you have to bind it to `return` with `=`.
 ```js
 main = fun() {
     println("Hello, World!")
-    return < 42
+    return = 42
     println("After return")
 
 }

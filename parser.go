@@ -408,7 +408,7 @@ func (p *Parser) parseReturnExpr() *Expr {
 	tok := p.input.Peek()
 	p.skipKw("return")
 	var expr *Expr
-	if p.isOp("<") != nil {
+	if p.isOp("=") != nil {
 		p.input.Next()
 		expr = p.parseExpression()
 	} else {
