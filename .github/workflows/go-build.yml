@@ -87,6 +87,13 @@ jobs:
 
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
+        with:
+          path: dist
+
+      - name: List Downloaded Artifacts
+        run: |
+          echo "Listing contents of the dist directory:"
+          ls -R dist
 
       - name: Create GitHub Release
         id: create_release
@@ -101,11 +108,32 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Assets
+      - name: Upload Linux Artifacts
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for file in dist/*/*; do
-            echo "Uploading $file"
-            gh release upload ${{ github.ref }} "$file" --clobber --repo ${{ github.repository }}
-          done
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/linux/rune-linux-amd64
+          asset_name: rune-linux-amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows Artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/win/rune-windows-amd64.exe
+          asset_name: rune-windows-amd64.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload MacOS Artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/macos/rune-darwin-amd64
+          asset_name: rune-darwin-amd64
+          asset_content_type: application/octet-stream
