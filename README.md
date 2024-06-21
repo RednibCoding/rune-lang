@@ -520,7 +520,7 @@ mybool = not 0 # true because 0 is falsy
 mybool = not "" # true because "" is falsy
 ```
 
-You can change multiply `not` expressions:
+You can chain multiply `not` expressions:
 ```
 mybool = not true # false
 mybool = not not true # true
