@@ -22,27 +22,27 @@ jobs:
         include:
           - goos: linux
             goarch: amd64
-            dir: dist
+            dir: rune
             extension: "-linux-amd64"
           - goos: linux
             goarch: arm64
-            dir: dist
+            dir: rune
             extension: "-linux-arm64"
           - goos: windows
             goarch: amd64
-            dir: dist
+            dir: rune
             extension: "-windows-amd64.exe"
           - goos: windows
             goarch: arm64
-            dir: dist
+            dir: rune
             extension: "-windows-arm64.exe"
           - goos: darwin
             goarch: amd64
-            dir: dist
+            dir: rune
             extension: "-darwin-amd64"
           - goos: darwin
             goarch: arm64
-            dir: dist
+            dir: rune
             extension: "-darwin-arm64"
 
     steps:
@@ -60,18 +60,18 @@ jobs:
 
       - name: Build
         run: |
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune${{ matrix.extension }} ./dist
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune${{ matrix.extension }} ./rune
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rune-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: dist
+          path: rune
 
       - name: Log Upload Artifacts
         run: |
           echo "Uploaded artifacts:"
-          ls -l dist/
+          ls -l rune/
 
   release:
     needs: build
@@ -86,7 +86,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           path: artifacts
 
