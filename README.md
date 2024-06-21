@@ -18,7 +18,7 @@ Rune stands out for being:
 - **Datatypes:** `int`, `float`, `string`, `bool`
 - **Branching:** `if`, `elif`, `else` and optional `then`
 - **Looping:** `while`
-- **Operators:** `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`, `not`
+- **Operators:** `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`, `not`. See [Binary operators](#binary-operators), [Unary operators](#unary-operators)
 - **Arrays**: `array`
 - **Dictionaries/Maps**: `table`
 - **Compound types and field access**: e.g. `person1 = new(person)` and  `person1.name = "John"` for more info see: [Field access](#field-access)
@@ -506,10 +506,26 @@ println(message)
 print("The count is: ", count)
 ```
 
-## Operators
-Supported operators are: `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`
+## Binary Operators
+Binary operators: `=`, `||`, `&&`, `<`, `>`, `<=`, `>=`, `==`, `!=`, `+`, `-`, `*`, `/`, `%`
 
 They do what you would expect. I guess no further explaination is needed.
+
+## Unary Operators
+
+- **`not`:** negates it's operand: `mybool = not true`, will result in: `false`. Operands will be casted to booleans if possible:
+```js
+mybool = not 13 # false because 13 is truthy
+mybool = not 0 # true because 0 is falsy
+mybool = not "" # true because "" is falsy
+```
+
+You can change multiply `not` expressions:
+```
+mybool = not true # false
+mybool = not not true # true
+mybool = not not not true # false
+```
 
 ## Control Flow
 

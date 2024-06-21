@@ -1,4 +1,12 @@
-myvar = 12
+myvar = "12"
+
+mybool = not 13 # false because 13 is truthy
+println(mybool)
+mybool = not 0 # true because 0 is falsy
+println(mybool)
+mybool = not "" # true because "" is falsy
+println(mybool)
+exit()
 
 assert(myvar == 12, "Oh no, myvar was not 12")
 

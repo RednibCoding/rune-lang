@@ -262,7 +262,7 @@ func applyUnaryOp(op string, a interface{}, exp *Expr) interface{} {
 			return v != 0
 		default:
 			if x != nil {
-				Error(exp, "Expected bool but got %v", x)
+				return false
 			} else {
 				Error(exp, fmt.Sprintf("Unary operator '%s' needs a valid operand", op))
 			}

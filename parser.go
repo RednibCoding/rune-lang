@@ -393,9 +393,9 @@ func (p *Parser) parseNotExpr() *Expr {
 	tok := p.input.Peek()
 	p.skipKw("not")
 	expr := p.parseExpression()
-	if expr.Type != Bool && expr.Type != Binary && expr.Type != Assign && expr.Type != Call && expr.Type != Var {
-		p.unexpected(tok)
-	}
+	// if expr.Type != Bool && expr.Type != Binary && expr.Type != Assign && expr.Type != Call && expr.Type != Var {
+	// 	p.unexpected(tok)
+	// }
 	return &Expr{
 		Type:     Unary,
 		Operator: "not",
