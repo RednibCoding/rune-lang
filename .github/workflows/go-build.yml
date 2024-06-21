@@ -22,27 +22,27 @@ jobs:
         include:
           - goos: linux
             goarch: amd64
-            dir: artifacts
+            dir: dist
             extension: "-linux-amd64"
           - goos: linux
             goarch: arm64
-            dir: artifacts
+            dir: dist
             extension: "-linux-arm64"
           - goos: windows
             goarch: amd64
-            dir: artifacts
+            dir: dist
             extension: "-windows-amd64.exe"
           - goos: windows
             goarch: arm64
-            dir: artifacts
+            dir: dist
             extension: "-windows-arm64.exe"
           - goos: darwin
             goarch: amd64
-            dir: artifacts
+            dir: dist
             extension: "-darwin-amd64"
           - goos: darwin
             goarch: arm64
-            dir: artifacts
+            dir: dist
             extension: "-darwin-arm64"
 
     steps:
