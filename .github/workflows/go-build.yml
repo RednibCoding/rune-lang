@@ -108,32 +108,22 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Linux Artifacts
-        uses: actions/upload-release-asset@v1
+      - name: Upload Release Assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/linux/rune-linux-amd64
-          asset_name: rune-linux-amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload Windows Artifacts
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/win/rune-windows-amd64.exe
-          asset_name: rune-windows-amd64.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload MacOS Artifacts
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/macos/rune-darwin-amd64
-          asset_name: rune-darwin-amd64
-          asset_content_type: application/octet-stream
+        run: |
+          for os in linux windows darwin; do
+            for arch in amd64 arm64; do
+              extension=""
+              if [ "$os" == "windows" ]; then
+                extension=".exe"
+              fi
+              file_path="dist/rune-${os}-${arch}${extension}"
+              if [ -f "$file_path" ]; then
+                echo "Uploading $file_path"
+                gh release upload ${{ github.ref }} "$file_path" --clobber --repo ${{ github.repository }}
+              else
+                echo "File $file_path does not exist"
+              fi
+            done
+          done
