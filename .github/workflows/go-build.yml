@@ -1,9 +1,12 @@
-name: Build
+name: Build and Release
 
 on:
   push:
     branches:
       - master
+    tags:
+      - 'v*.*.*'  # Match version tags, e.g., v1.0.0
+
   pull_request:
     branches:
       - master
@@ -50,17 +53,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '^1.22'
-          cache: false
-
-      # - name: Cache Go modules
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: |
-      #       ~/.cache/go-build
-      #       ~/go/pkg/mod
-      #     key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-go-
 
       - name: Install dependencies
         run: go mod tidy
@@ -70,8 +62,52 @@ jobs:
           mkdir -p ${{ matrix.dir }}
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} ./dist
 
+      - name: Archive Artifacts
+        run: |
+          tar -czvf ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz -C ${{ matrix.dir }} rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }}
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }}
+          path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+
+      - name: Set output for artifact name
+        id: set_output
+        run: echo "::set-output name=artifact_name::rune-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz"
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./artifacts
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release notes for version ${{ github.ref }}.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Assets
+        run: |
+          for file in ./artifacts/*.tar.gz; do
+            filename=$(basename "$file")
+            gh release upload ${{ github.ref }} "$file" --clobber --repo ${{ github.repository }}
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
