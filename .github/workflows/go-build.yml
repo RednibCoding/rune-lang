@@ -103,7 +103,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           name: Release ${{ github.ref_name }}
-          body: Release notes for version ${{ github.ref_name }}
+          body: Release of version ${{ github.ref_name }}
           draft: false
           prerelease: false
 
