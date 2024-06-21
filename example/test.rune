@@ -1,11 +1,14 @@
 
-a = 1
+a = 10
 
 while true {
-    if a <= 0 then break
     a = a -1
+    if a <= 0 then break
+    if a % 2 == 0 then continue
     println(a)
 }
+
+println("Loop finished")
 
 main = fun() {
     println("Hello, World!")
@@ -13,6 +16,7 @@ main = fun() {
     println("After return")
 
 }
+
 val = main()
 println(val)
 

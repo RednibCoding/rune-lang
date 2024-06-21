@@ -15,9 +15,6 @@
 		"include": "#numbers"
 	  },
 	  {
-		"include": "#functions"
-	  },
-	  {
 		"include": "#user-defined-functions"
 	  },
 	  {
@@ -41,11 +38,11 @@
 		"patterns": [
 		  {
 			"name": "keyword.control.rune",
-			"match": "\\b(import|if|then|elif|else|while|break|return)\\b"
+			"match": "\\b(import|if|then|elif|else|while|break|continue|return)\\b"
 		  },
 		  {
 			"name": "constant.language.rune",
-			"match": "\\b(fun|true|false|not|array|table)\\b"
+			"match": "\\b(true|false|not|array|table|fun)\\b"
 		  }
 		]
 	  },
@@ -72,14 +69,7 @@
 		  }
 		]
 	  },
-	  "functions": {
-		"patterns": [
-		  {
-			"name": "entity.name.function.rune",
-			"match": "\\b(fun)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\b"
-		  }
-		]
-	  },
+	
 	  "user-defined-functions": {
 		"patterns": [
 		  {
@@ -87,7 +77,7 @@
 			"begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b\\s*=\\s*\\b(fun)\\b",
 			"beginCaptures": {
 			  "1": { "name": "entity.name.function.rune" },
-			  "2": { "name": "keyword.control.rune" }
+			  "2": { "name": "constant.language.rune" }
 			},
 			"end": "(?={|;)",
 			"patterns": [

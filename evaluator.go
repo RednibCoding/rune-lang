@@ -25,6 +25,10 @@ type BreakValue struct {
 	Value bool
 }
 
+type ContinueValue struct {
+	Value bool
+}
+
 func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	if exp == nil {
 		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
@@ -160,11 +164,19 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 			if !cond.(bool) {
 				break
 			}
+			shouldContinue := false
 			for _, exp := range exp.Body.Block {
 				result := e.evaluate(exp, env)
 				if _, ok := result.(BreakValue); ok {
 					return false
+				} else if _, ok := result.(ContinueValue); ok {
+					shouldContinue = true
+					break
 				}
+			}
+			if shouldContinue {
+				shouldContinue = false
+				continue
 			}
 		}
 		return false
@@ -228,6 +240,9 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 
 	case Break:
 		return BreakValue{Value: false}
+
+	case Continue:
+		return ContinueValue{Value: false}
 
 	case Import:
 		path := e.evaluate(exp.Left, env).(string) + ".rune"

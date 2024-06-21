@@ -539,13 +539,25 @@ while x < 5 {
 ```
 
 ### Break
-In order to break out of a loop early, you can use the break keyword
+In order to break out of a loop early, you can use the `break` keyword
 ```js
 while true {
     println("I am not an endless loop")
     break
 }
 ```
+
+### Continue
+In order to stop the current iteration of a loop and skip right to the loop condition, you can use the `continue` keyword
+```js
+a = 10
+while a > 0 {
+    a = a -1
+    if a % 2 == 0 then continue
+    println(a)
+}
+```
+
 
 ## Data Types
 

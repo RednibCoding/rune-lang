@@ -436,6 +436,18 @@ func (p *Parser) parseBreakExpr() *Expr {
 	}
 }
 
+func (p *Parser) parseContinueExpr() *Expr {
+	tok := p.input.Peek()
+	p.skipKw("continue")
+	return &Expr{
+		Type:  Continue,
+		Right: FALSE,
+		File:  tok.File,
+		Line:  tok.Line,
+		Col:   tok.Col,
+	}
+}
+
 func (p *Parser) parseAtom() *Expr {
 	var expr *Expr
 	if p.isPunc("(") != nil {
@@ -465,6 +477,8 @@ func (p *Parser) parseAtom() *Expr {
 		expr = p.parseReturnExpr()
 	} else if p.isKw("break") != nil {
 		expr = p.parseBreakExpr()
+	} else if p.isKw("continue") != nil {
+		expr = p.parseContinueExpr()
 
 	} else {
 		tok := p.input.Next()

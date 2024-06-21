@@ -24,7 +24,7 @@ type TokenStream struct {
 
 func NewTokenStream(input *InputStream) *TokenStream {
 	keywords := map[string]bool{
-		"if": true, "then": true, "elif": true, "else": true, "while": true, "break": true, "fun": true, "return": true,
+		"if": true, "then": true, "elif": true, "else": true, "while": true, "break": true, "continue": true, "fun": true, "return": true,
 		"true": true, "false": true, "array": true, "table": true, "import": true, "not": true,
 	}
 	return &TokenStream{input: input, keywords: keywords}
