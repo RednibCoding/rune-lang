@@ -124,9 +124,10 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		return env.Set(exp.Left.Value.(string), e.evaluate(exp.Right, env), exp)
 
 	case Binary:
-		return applyBinaryOp(exp.Operator,
-			e.evaluate(exp.Left, env),
-			e.evaluate(exp.Right, env), exp)
+		a := e.evaluate(exp.Left, env)
+		b := e.evaluate(exp.Right, env)
+		result := applyBinaryOp(exp.Operator, a, b, exp)
+		return result
 
 	case Unary:
 		return applyUnaryOp(exp.Operator,
@@ -378,9 +379,9 @@ func applyBinaryOp(op string, a, b interface{}, exp *Expr) interface{} {
 	case ">=":
 		return num(a) >= num(b)
 	case "==":
-		return a == b
+		return num(a) == num(b)
 	case "!=":
-		return a != b
+		return num(a) != num(b)
 	default:
 		Error(exp, "Can't apply operator %s", op)
 		return nil
