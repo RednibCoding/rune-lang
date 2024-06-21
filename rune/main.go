@@ -9,16 +9,17 @@ import (
 
 /*********************************************************
 *
-* To build the rune binary: use the build.bat on windows or build.sh on linux
+* To build the rune binary: use the build.bat on windows or build.sh on linux/macos
 *
 **********************************************************/
 
-
+const version = "v0.1.36"
 
 func main() {
 	args := os.Args
 	if len(args) < 2 {
-		fmt.Println("USAGE: rune <sourcefile>")
+		fmt.Printf("Rune interpreter %s\n", version)
+		fmt.Println("  USAGE: rune <sourcefile>")
 		os.Exit(1)
 	}
 	source, err := os.ReadFile(args[1])
