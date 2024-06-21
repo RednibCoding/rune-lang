@@ -29,7 +29,10 @@ Rune stands out for being:
 
 
 ## Pre compiled binaries
-In the [dist directory](dist/), you will find pre compiled binaries for the three major platforms.
+In the [dist directory](dist/), you will find pre compiled binaries for the three major platforms. (However they might not always be up to date).
+
+To get the latest builds, you can download them from the build artifaces section. Go to [Artifacts](https://github.com/RednibCoding/runevm/actions/workflows/go-build.yml) and click on the latest build (top most entry) and then scroll down to artifacts:
+![](readme/artifacts-download.png)
 
 ## Build from source
 Simply run the `build.bat` on Windows or the `build.sh` on Linux or Mac from the [dist directory](dist/). This will build the Rune binary for all three platforms in there respective directories.
