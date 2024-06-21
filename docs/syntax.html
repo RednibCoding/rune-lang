@@ -24,14 +24,14 @@
             <p>Here are some of the basic syntax elements of the Rune language:</p>
             <pre>
 <code>// Variable declaration
-let x = 10
+x = 10
 
-// Function declaration
-fun add(a, b) {
-    return a + b
+# Function declaration
+add = fun(a, b) {
+    a + b # the last expression will be returned
 }
 
-// Conditional statement
+# Conditional statement
 if x > 0 {
     print("x is positive")
 } else {
@@ -39,8 +39,9 @@ if x > 0 {
 }
 
 // Loop
-for i in range(0, 10) {
-    print(i)
+while i > 10 {
+    println(i)
+    i = i + 1
 }
             </code>
             </pre>

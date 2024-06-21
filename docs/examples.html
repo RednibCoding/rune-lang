@@ -23,28 +23,25 @@
             <h2>Code Examples</h2>
             <p>Here are some examples of what you can do with Rune:</p>
             <pre>
-<code>// Hello World
-fun main() {
+<code>
+# Hello World
+main = fun() {
     print("Hello, World!")
 }
 
-// Factorial
-fun factorial(n) {
-    if n == 0 {
-        return 1
-    }
-    return n * factorial(n - 1)
+# Factorial
+factorial = fun(n) {
+    if n == 0 then 1
+    n * factorial(n - 1)
 }
-print(factorial(5)) // Outputs 120
+println(factorial(5)) # Outputs 120
 
-// Fibonacci
-fun fibonacci(n) {
-    if n <= 1 {
-        return n
-    }
-    return fibonacci(n - 1) + fibonacci(n - 2)
+# Fibonacci
+fibonacci = fun(n) {
+    if n <= 1 then n
+    fibonacci(n - 1) + fibonacci(n - 2)
 }
-print(fibonacci(10)) // Outputs 55
+print(fibonacci(10)) # Outputs 55
             </code>
             </pre>
         </section>
