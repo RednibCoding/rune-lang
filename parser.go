@@ -393,9 +393,7 @@ func (p *Parser) parseNotExpr() *Expr {
 	tok := p.input.Peek()
 	p.skipKw("not")
 	expr := p.parseExpression()
-	// if expr.Type != Bool && expr.Type != Binary && expr.Type != Assign && expr.Type != Call && expr.Type != Var {
-	// 	p.unexpected(tok)
-	// }
+
 	return &Expr{
 		Type:     Unary,
 		Operator: "not",
@@ -403,6 +401,26 @@ func (p *Parser) parseNotExpr() *Expr {
 		File:     tok.File,
 		Line:     tok.Line,
 		Col:      tok.Col,
+	}
+}
+
+func (p *Parser) parseReturnExpr() *Expr {
+	tok := p.input.Peek()
+	p.skipKw("return")
+	var expr *Expr
+	if p.isOp("<") != nil {
+		p.input.Next()
+		expr = p.parseExpression()
+	} else {
+		// Inject a false expression if the return has no argument
+		expr = FALSE
+	}
+	return &Expr{
+		Type:  Return,
+		Right: expr,
+		File:  tok.File,
+		Line:  tok.Line,
+		Col:   tok.Col,
 	}
 }
 
@@ -431,6 +449,8 @@ func (p *Parser) parseAtom() *Expr {
 		expr = p.parseImport()
 	} else if p.isKw("not") != nil {
 		expr = p.parseNotExpr()
+	} else if p.isKw("return") != nil {
+		expr = p.parseReturnExpr()
 
 	} else {
 		tok := p.input.Next()

@@ -459,30 +459,6 @@ sayHello(person)
 
 The Rune language is a simple, dynamic scripting language. The following chapter describes the syntax and features of the Rune language, including how to define and call functions, use variables, control flow with `if` and `while` statements, data types, arrays, tables and more.
 
-## Defining and Calling Functions
-
-### Defining Functions
-
-Functions in Rune are defined by assigning a function to a name.
-
-Example:
-
-```js
-greet = func() {
-    print("Greetings")
-}
-```
-
-### Calling Functions
-
-Functions are called using the name followed by parentheses and optional arguments.
-
-Example:
-
-```js
-greet()
-```
-
 ## Defining and Using Variables
 
 ### Defining Variables
@@ -628,6 +604,75 @@ if false {
 }
 
 ```
+
+## Defining and Calling Functions
+
+### Defining Functions
+
+Functions in Rune are defined by assigning a function to a name.
+
+Example:
+
+```js
+greet = func() {
+    print("Greetings")
+}
+```
+
+### Calling Functions
+
+Functions are called using the name followed by parentheses and optional arguments.
+
+Example:
+
+```js
+greet()
+```
+
+## Return
+The last expression of a function will be returned, so the return keyword is optional.
+
+However, you can use `return` to early exit a function.
+
+>**Differences:** In Rune, you have to explicitly bind the return value with `<` to `return`.
+
+The example below does not return 42, because 42 is not part of the return expression even though it is on the same line. It will return `false` because no return value has been given to `return`.
+```js
+main = fun() {
+    println("Hello, World!")
+    return 42
+    println("After return")
+}
+val = main()
+println(val)
+```
+output:
+```
+Hello, World!
+false
+```
+
+To explicitly provide a return value to `return`, you have to bind it to `return` with `<`.
+```js
+main = fun() {
+    println("Hello, World!")
+    return < 42
+    println("After return")
+
+}
+val = main()
+println(val)
+```
+
+output:
+```
+Hello, World!
+42
+```
+
+>**Note:** using `return` to return a value from a function is not ideomatic in Rune. Because the last expression in a function will be returned, `return` with a value is rarely needed.
+
+>**Nice to know:** `return` skips all further expression in the scope where it was used. So using it in the top level will quit further execution of the script, basically acting as a program exit.
 
 ## Arrays
 In Rune you can define an array by binding it to a name:

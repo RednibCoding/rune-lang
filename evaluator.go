@@ -17,6 +17,10 @@ func NewEvaluator() *Evaluator {
 	return e
 }
 
+type ReturnValue struct {
+	Value interface{}
+}
+
 func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	if exp == nil {
 		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
@@ -50,6 +54,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 				Error(exp, "Variable %v is not an array or table", exp.Value)
 			}
 		}
+
 		return value
 
 	case Assign:
@@ -174,7 +179,11 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	case Prog:
 		var val interface{} = false
 		for _, ex := range exp.Prog {
-			val = e.evaluate(ex, env)
+			result := e.evaluate(ex, env)
+			if ret, ok := result.(ReturnValue); ok {
+				return ret.Value
+			}
+			val = result
 		}
 		return val
 
@@ -204,6 +213,9 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 			Error(exp, "Error in function call: '%v'", err)
 		}
 		return ret
+
+	case Return:
+		return ReturnValue{Value: e.evaluate(exp.Right, env)}
 
 	case Import:
 		path := e.evaluate(exp.Left, env).(string) + ".rune"

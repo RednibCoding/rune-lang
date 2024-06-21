@@ -41,7 +41,7 @@
 		"patterns": [
 		  {
 			"name": "keyword.control.rune",
-			"match": "\\b(if|then|elif|else|while|import)\\b"
+			"match": "\\b(if|then|elif|else|while|import|return)\\b"
 		  },
 		  {
 			"name": "constant.language.rune",

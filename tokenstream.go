@@ -18,12 +18,13 @@ type Token struct {
 type TokenStream struct {
 	input    *InputStream
 	current  *Token
+	last     *Token
 	keywords map[string]bool
 }
 
 func NewTokenStream(input *InputStream) *TokenStream {
 	keywords := map[string]bool{
-		"if": true, "then": true, "elif": true, "else": true, "while": true, "fun": true,
+		"if": true, "then": true, "elif": true, "else": true, "while": true, "fun": true, "return": true,
 		"true": true, "false": true, "array": true, "table": true, "import": true, "not": true,
 	}
 	return &TokenStream{input: input, keywords: keywords}
@@ -117,10 +118,12 @@ func (ts *TokenStream) skipComment() {
 
 func (ts *TokenStream) readNext() *Token {
 	ts.readWhile(ts.isWhitespace)
+
 	if ts.input.Eof() {
 		return nil
 	}
 	ch := ts.input.Peek()
+
 	switch {
 	case ch == '#':
 		ts.skipComment()
@@ -151,12 +154,17 @@ func (ts *TokenStream) Peek() *Token {
 	return ts.current
 }
 
+func (ts *TokenStream) Last() *Token {
+	return ts.last
+}
+
 func (ts *TokenStream) Next() *Token {
 	tok := ts.current
 	ts.current = nil
 	if tok == nil {
-		return ts.readNext()
+		tok = ts.readNext()
 	}
+	ts.last = ts.copyToken(tok)
 	return tok
 }
 
@@ -166,4 +174,16 @@ func (ts *TokenStream) Eof() bool {
 
 func (ts *TokenStream) Error(tok *Token, msg string) {
 	ts.input.Error(tok, msg)
+}
+
+func (ts *TokenStream) copyToken(tok *Token) *Token {
+	t := &Token{
+		Type:   tok.Type,
+		Value:  tok.Value,
+		File:   tok.File,
+		Line:   tok.Line,
+		Col:    tok.Col,
+		Length: tok.Length,
+	}
+	return t
 }

@@ -14,6 +14,7 @@ const (
 	If     ExprType = "if"
 	Prog   ExprType = "prog"
 	Call   ExprType = "call"
+	Return ExprType = "return"
 	While  ExprType = "while"
 	Array  ExprType = "array"
 	Table  ExprType = "table"

@@ -1,23 +1,14 @@
 # Hello World
 main = fun() {
-    print("Hello, World!")
-}
+    println("Hello, World!")
+    return
+    println("After return")
 
-# Factorial
-factorial = fun(n) {
-    if n == 0 then 1
-    n * factorial(n - 1)
 }
-println(factorial(5)) # Outputs 120
+val = main()
+println(val)
 
-# Fibonacci
-fibonacci = fun(n) {
-    if n <= 1 then n
-    fibonacci(n - 1) + fibonacci(n - 2)
-}
-print(fibonacci(10)) # Outputs 55
-exit()
-
+return 42
 myvar = "12"
 
 mybool = not 13 # false because 13 is truthy
