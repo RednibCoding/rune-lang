@@ -108,29 +108,37 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Debug Release Info
-        run: |
-          echo "Release tag: ${{ github.ref }}"
-          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
-
       - name: Upload Release Assets
+        uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          declare -A paths
-          paths[linux/amd64]=artifacts/rune-linux-amd64/rune-linux-amd64
-          paths[linux/arm64]=artifacts/rune-linux-arm64/rune-linux-arm64
-          paths[windows/amd64]=artifacts/rune-windows-amd64/rune-windows-amd64.exe
-          paths[windows/arm64]=artifacts/rune-windows-arm64/rune-windows-arm64.exe
-          paths[darwin/amd64]=artifacts/rune-darwin-amd64/rune-darwin-amd64
-          paths[darwin/arm64]=artifacts/rune-darwin-arm64/rune-darwin-arm64
+        with:
+          script: |
+            const fs = require('fs').promises;
+            const path = require('path');
 
-          for key in "${!paths[@]}"; do
-            file_path="${paths[$key]}"
-            if [ -f "$file_path" ]; then
-              echo "Uploading $file_path"
-              gh release upload ${{ github.ref }} "$file_path" --clobber --repo ${{ github.repository }}
-            else
-              echo "File $file_path does not exist"
-            fi
-          done
+            const artifacts = [
+              'artifacts/rune-linux-amd64/rune-linux-amd64',
+              'artifacts/rune-linux-arm64/rune-linux-arm64',
+              'artifacts/rune-windows-amd64/rune-windows-amd64.exe',
+              'artifacts/rune-windows-arm64/rune-windows-arm64.exe',
+              'artifacts/rune-darwin-amd64/rune-darwin-amd64',
+              'artifacts/rune-darwin-arm64/rune-darwin-arm64'
+            ];
+
+            for (const artifact of artifacts) {
+              try {
+                const data = await fs.readFile(artifact);
+                const fileName = path.basename(artifact);
+                await github.rest.repos.uploadReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: ${{ steps.create_release.outputs.id }},
+                  name: fileName,
+                  data: data
+                });
+                console.log(`Uploaded ${fileName}`);
+              } catch (error) {
+                console.error(`Error uploading ${artifact}: ${error.message}`);
+              }
+            }
