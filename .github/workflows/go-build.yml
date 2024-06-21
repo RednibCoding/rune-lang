@@ -22,27 +22,27 @@ jobs:
         include:
           - goos: linux
             goarch: amd64
-            dir: artifacts
+            dir: dist
             extension: "-linux-amd64"
           - goos: linux
             goarch: arm64
-            dir: artifacts
+            dir: dist
             extension: "-linux-arm64"
           - goos: windows
             goarch: amd64
-            dir: artifacts
+            dir: dist
             extension: "-windows-amd64.exe"
           - goos: windows
             goarch: arm64
-            dir: artifacts
+            dir: dist
             extension: "-windows-arm64.exe"
           - goos: darwin
             goarch: amd64
-            dir: artifacts
+            dir: dist
             extension: "-darwin-amd64"
           - goos: darwin
             goarch: arm64
-            dir: artifacts
+            dir: dist
             extension: "-darwin-arm64"
 
     steps:
@@ -66,12 +66,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rune-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: artifacts
+          path: dist
 
       - name: Log Upload Artifacts
         run: |
           echo "Uploaded artifacts:"
-          ls -l artifacts/
+          ls -l dist/
 
   release:
     needs: build
@@ -107,6 +107,11 @@ jobs:
             Release notes for version ${{ github.ref }}.
           draft: false
           prerelease: false
+
+      - name: Debug Release Info
+        run: |
+          echo "Release tag: ${{ github.ref }}"
+          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
 
       - name: Upload Release Assets
         env:
