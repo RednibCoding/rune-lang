@@ -22,28 +22,28 @@ jobs:
         include:
           - goos: linux
             goarch: amd64
-            dir: dist/linux
-            extension: ""
+            dir: dist
+            extension: "-linux-amd64"
           - goos: linux
             goarch: arm64
-            dir: dist/linux
-            extension: ""
+            dir: dist
+            extension: "-linux-arm64"
           - goos: windows
             goarch: amd64
-            dir: dist/win
-            extension: ".exe"
+            dir: dist
+            extension: "-windows-amd64.exe"
           - goos: windows
             goarch: arm64
-            dir: dist/win
-            extension: ".exe"
+            dir: dist
+            extension: "-windows-arm64.exe"
           - goos: darwin
             goarch: amd64
-            dir: dist/macos
-            extension: ""
+            dir: dist
+            extension: "-darwin-amd64"
           - goos: darwin
             goarch: arm64
-            dir: dist/macos
-            extension: ""
+            dir: dist
+            extension: "-darwin-arm64"
 
     steps:
       - name: Checkout code
@@ -60,7 +60,7 @@ jobs:
 
       - name: Build
         run: |
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} ./dist
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune${{ matrix.extension }} ./dist
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
@@ -108,32 +108,24 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Linux Artifacts
-        uses: actions/upload-release-asset@v1
+      - name: Upload Release Assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/rune-linux-amd64
-          asset_name: rune-linux-amd64
-          asset_content_type: application/octet-stream
+        run: |
+          declare -A paths
+          paths[linux/amd64]=dist/rune-linux-amd64
+          paths[linux/arm64]=dist/rune-linux-arm64
+          paths[windows/amd64]=dist/rune-windows-amd64.exe
+          paths[windows/arm64]=dist/rune-windows-arm64.exe
+          paths[darwin/amd64]=dist/rune-darwin-amd64
+          paths[darwin/arm64]=dist/rune-darwin-arm64
 
-      - name: Upload Windows Artifacts
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/rune-windows-amd64.exe
-          asset_name: rune-windows-amd64.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload MacOS Artifacts
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/rune-darwin-amd64
-          asset_name: rune-darwin-amd64
-          asset_content_type: application/octet-stream
+          for key in "${!paths[@]}"; do
+            file_path="${paths[$key]}"
+            if [ -f "$file_path" ]; then
+              echo "Uploading $file_path"
+              gh release upload ${{ github.ref }} "$file_path" --clobber --repo ${{ github.repository }}
+            else
+              echo "File $file_path does not exist"
+            fi
+          done
