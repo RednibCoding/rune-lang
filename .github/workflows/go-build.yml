@@ -73,6 +73,11 @@ jobs:
           name: rune-${{ matrix.goos }}-${{ matrix.goarch }}
           path: ${{ matrix.dir }}/rune-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
 
+      - name: Log Upload Artifacts
+        run: |
+          echo "Uploaded artifacts:"
+          ls -l ${{ matrix.dir }}/
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -88,12 +93,12 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
         with:
-          path: ./artifacts
+          path: artifacts
 
       - name: List Downloaded Artifacts
         run: |
-          echo "Listing contents of the ./artifacts directory:"
-          ls -R ./artifacts
+          echo "Listing contents of the artifacts directory:"
+          ls -R artifacts
 
       - name: Create GitHub Release
         id: create_release
@@ -112,11 +117,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for dir in ./artifacts/*; do
+          for dir in artifacts/*; do
             if [ -d "$dir" ]; then
               for file in "$dir"/*; do
                 echo "Uploading $file"
-                gh release upload ${{ github.ref }} "$file" --clobber --repo ${{ github.repository }}
-              done
-            fi
-          done
+       
