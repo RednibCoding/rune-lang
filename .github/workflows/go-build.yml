@@ -108,7 +108,7 @@ jobs:
           prerelease: false
 
       - name: Upload Release Assets
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
