@@ -22,27 +22,27 @@ jobs:
         include:
           - goos: linux
             goarch: amd64
-            dir: dist
+            dir: artifacts
             extension: "-linux-amd64"
           - goos: linux
             goarch: arm64
-            dir: dist
+            dir: artifacts
             extension: "-linux-arm64"
           - goos: windows
             goarch: amd64
-            dir: dist
+            dir: artifacts
             extension: "-windows-amd64.exe"
           - goos: windows
             goarch: arm64
-            dir: dist
+            dir: artifacts
             extension: "-windows-arm64.exe"
           - goos: darwin
             goarch: amd64
-            dir: dist
+            dir: artifacts
             extension: "-darwin-amd64"
           - goos: darwin
             goarch: arm64
-            dir: dist
+            dir: artifacts
             extension: "-darwin-arm64"
 
     steps:
@@ -60,7 +60,7 @@ jobs:
 
       - name: Build
         run: |
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune${{ matrix.extension }} ./artifacts
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.dir }}/rune${{ matrix.extension }} ./dist
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
