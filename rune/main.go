@@ -13,7 +13,7 @@ import (
 *
 **********************************************************/
 
-const version = "v0.1.41"
+const version = "v0.1.43"
 
 func main() {
 	args := os.Args
