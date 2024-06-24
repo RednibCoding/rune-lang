@@ -336,6 +336,12 @@ func applyBinaryOp(op string, a, b interface{}, exp *Expr) interface{} {
 			return parseNumber(v, exp).(float64)
 		case int:
 			return float64(v)
+		case int32:
+			return float64(v)
+		case int64:
+			return float64(v)
+		case float32:
+			return float64(v)
 		case float64:
 			return v
 		default:
