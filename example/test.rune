@@ -1,8 +1,13 @@
 factorial = fun(n) {
-    if n == 0 then 1
+    if n == 0 then return = 1
     n * factorial(n - 1)
 }
-println(factorial(5)) # Outputs 120
+
+timeBefore = millis()
+factorial(998)
+timeAfter = millis()
+time = timeAfter - timeBefore
+println(time)
 
 fibonacci = fun(n) {
     if n <= 1 then return = n
