@@ -1,5 +1,11 @@
-foo = "bar"
+
+a = 10
+b = 10.0000
+c = a + b
+println(typeof(c))
 exit()
+
+foo = "bar"
 
 testFun = fun() {
     foo = "bar"

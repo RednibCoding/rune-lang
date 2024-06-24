@@ -2,6 +2,7 @@ package runevm
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -342,14 +343,10 @@ func applyBinaryOp(op string, a, b interface{}, exp *Expr) interface{} {
 			return parseNumber(v, exp).(float64)
 		case int:
 			return float64(v)
-		case int32:
-			return float64(v)
-		case int64:
-			return float64(v)
 		case float32:
 			return float64(v)
 		case float64:
-			return v
+			return float64(v)
 		default:
 			Error(exp, "Expected number but got %T", x)
 			return 0
@@ -378,15 +375,22 @@ func applyBinaryOp(op string, a, b interface{}, exp *Expr) interface{} {
 		}
 		return false
 	}
+	roundIfInt := func(value float64) interface{} {
+		if math.Abs(value-math.Round(value)) < 1e-9 {
+			return int(value)
+		}
+		return value
+	}
+
 	switch op {
 	case "+":
-		return num(a) + num(b)
+		return roundIfInt(num(a) + num(b))
 	case "-":
-		return num(a) - num(b)
+		return roundIfInt(num(a) - num(b))
 	case "*":
-		return num(a) * num(b)
+		return roundIfInt(num(a) * num(b))
 	case "/":
-		return num(a) / div(b)
+		return roundIfInt(num(a) / div(b))
 	case "%":
 		return int(num(a)) % int(num(b))
 	case "&&":
