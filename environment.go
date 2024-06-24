@@ -36,9 +36,9 @@ func (env *Environment) Get(name string, exp *Expr) interface{} {
 
 func (env *Environment) Set(name string, value interface{}, exp *Expr) interface{} {
 	scope := env.Lookup(name)
-	if scope == nil && env.parent != nil {
-		Error(exp, "Undefined variable '%s'", name)
-	}
+	// if scope == nil && env.parent != nil {
+	// 	Error(exp, "Undefined variable '%s'", name)
+	// }
 	if scope != nil {
 		scope.vars[name] = value
 	} else {

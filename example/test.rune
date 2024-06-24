@@ -1,3 +1,14 @@
+foo = "bar"
+exit()
+
+testFun = fun() {
+    foo = "bar"
+    println(foo)
+}
+
+testFun()
+
+exit()
 fibonacci = fun(n) {
     if n <= 0 then return = 0
     elif n == 1 then return = 1
