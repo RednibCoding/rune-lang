@@ -1,3 +1,18 @@
+fibonacci = fun(n) {
+    if n <= 0 then return = 0
+    elif n == 1 then return = 1
+    else
+    fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+timeBefore = millis()
+result = fibonacci(30)
+timeAfter = millis()
+time = timeAfter - timeBefore
+println("Result: ", result)
+println("Milliseconds: ", time)
+return
+
 factorial = fun(n) {
     if n == 0 then return = 1
     n * factorial(n - 1)

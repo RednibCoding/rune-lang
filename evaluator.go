@@ -137,6 +137,12 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	case Binary:
 		a := e.evaluate(exp.Left, env)
 		b := e.evaluate(exp.Right, env)
+		if a_, ok := a.(ReturnValue); ok {
+			a = a_.Value
+		}
+		if b_, ok := b.(ReturnValue); ok {
+			b = b_.Value
+		}
 		result := applyBinaryOp(exp.Operator, a, b, exp)
 		return result
 
