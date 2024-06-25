@@ -13,12 +13,10 @@ import (
 *
 **********************************************************/
 
-const version = "v0.1.46"
-
 func main() {
 	args := os.Args
 	if len(args) < 2 {
-		fmt.Printf("Rune interpreter %s\n", version)
+		fmt.Printf("Rune interpreter %s\n", runevm.Version)
 		fmt.Println("  USAGE: rune <sourcefile>")
 		os.Exit(1)
 	}

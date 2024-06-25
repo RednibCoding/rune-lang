@@ -10,6 +10,19 @@ import (
 	"unicode"
 )
 
+// Returns the vm version in the format: `x.x.x`
+func builtin_VmVersion(args ...interface{}) interface{} {
+	if len(args) != 0 {
+		return fmt.Errorf("vmversion requires no arguments")
+	}
+
+	after, found := strings.CutPrefix(Version, "v")
+	if !found {
+		return Version
+	}
+	return after
+}
+
 // Function to print elements
 func builtin_Print(args ...interface{}) interface{} {
 	for _, arg := range args {
@@ -384,6 +397,76 @@ func builtin_HasSuffix(args ...interface{}) interface{} {
 
 	// Check if the string contains the substring
 	return strings.HasSuffix(str, substr)
+}
+
+// Cuts the given prefix from the given string. Returns the new string.
+func builtin_CutPrefix(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("cutprefix requires exactly 2 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	str, ok1 := args[0].(string)
+	substr, ok2 := args[1].(string)
+	if !ok1 || !ok2 {
+		return fmt.Errorf("arguments must be of type string, got: %T and %T", args[0], args[1])
+	}
+
+	// Check if the string contains the substring
+	after, found := strings.CutPrefix(str, substr)
+	if !found {
+		return str
+	}
+	return after
+}
+
+// Cuts the given suffix from the given string. Returns the new string.
+func builtin_CutSuffix(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("cutsuffix requires exactly 2 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	str, ok1 := args[0].(string)
+	substr, ok2 := args[1].(string)
+	if !ok1 || !ok2 {
+		return fmt.Errorf("arguments must be of type string, got: %T and %T", args[0], args[1])
+	}
+
+	// Check if the string contains the substring
+	after, found := strings.CutSuffix(str, substr)
+	if !found {
+		return str
+	}
+	return after
+}
+
+// Returns the given string with all Unicode letters mapped to their lower case.
+func builtin_StrToLower(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("strlower requires exactly 1 argument")
+	}
+
+	str, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	return strings.ToLower(str)
+}
+
+// Returns the given string with all Unicode letters mapped to their upper case.
+func builtin_StrToUpper(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("strupper requires exactly 1 argument")
+	}
+
+	str, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	return strings.ToUpper(str)
 }
 
 // Returns the type name as string of the given argument.

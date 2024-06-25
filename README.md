@@ -824,6 +824,11 @@ if RuneIsAwesome {
 
 ## Builin Functions
 
+### version
+- **Syntax**: `version()`
+- **Description**: Returns the rune interpreter version in the format: `x.x.x`.
+- **Example**: `interpreter_version = version()`
+
 ### print
 - **Syntax**: `print(<arg1>, <arg2>, ...)`
 - **Description**: Prints the given arguments to the standard out.
@@ -906,7 +911,7 @@ if RuneIsAwesome {
 
 ### isalpha
 - **Syntax**: `isalpha(<string>)`
-- **Description**: Returns true if a given string character is an alphabetical character
+- **Description**: Returns true if a given string character is an alphabetical character.
 - **Example**: `isit = isalpha(myString)`
 
 ### iswhite
@@ -921,13 +926,33 @@ if RuneIsAwesome {
 
 ### strhasprefix
 - **Syntax**: `strhasprefix(<string>, <substr>)`
-- **Description**: Returns true if a string starts with the given substring, otherwise false
+- **Description**: Returns true if a string starts with the given substring, otherwise false.
 - **Example**: `doesContain = strhasprefix(myFileContents, "Hello World")`
 
 ### strhassuffix
 - **Syntax**: `strhassuffix(<string>, <substr>)`
-- **Description**: Returns true if a string ends with the given substring, otherwise false
+- **Description**: Returns true if a string ends with the given substring, otherwise false.
 - **Example**: `doesContain = strhassuffix(myFileContents, "Hello World")`
+
+### cutprefix
+- **Syntax**: `cutprefix(<string>, <prefix>)`
+- **Description**: Cuts the given prefix from the given string. Returns the new string.
+- **Example**: `cutstr = cutprefix(myFileContents, "Hello World")`
+
+### cutsuffix
+- **Syntax**: `cutsuffix(<string>, <suffix>)`
+- **Description**: Cuts the given suffix from the given string. Returns the new string.
+- **Example**: `cutstr = cutsuffix(myFileContents, "Hello World")`
+
+### strlower
+- **Syntax**: `strlower(<string>)`
+- **Description**: Returns the given string with all Unicode letters mapped to their lower case.
+- **Example**: `newstr = strlower("Hello World")`
+
+### strupper
+- **Syntax**: `strupper(<string>)`
+- **Description**: Returns the given string with all Unicode letters mapped to their upper case.
+- **Example**: `newstr = strupper("Hello World")`
 
 ### typeof
 - **Syntax**: `typeof(<arg>)`

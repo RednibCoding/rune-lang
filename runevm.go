@@ -5,6 +5,8 @@ import (
 	"strconv"
 )
 
+const Version = "v0.1.46"
+
 type RuneVM struct {
 	filepath string
 	source   string
@@ -15,6 +17,7 @@ func NewRuneVM() *RuneVM {
 	vm := &RuneVM{}
 
 	vm.env = NewEnvironment(nil)
+	vm.set("version", builtin_VmVersion)
 	vm.set("print", builtin_Print)
 	vm.set("println", builtin_Println)
 	vm.set("wait", builtin_Wait)
@@ -36,6 +39,10 @@ func NewRuneVM() *RuneVM {
 	vm.set("strcontains", builtin_Contains)
 	vm.set("strhasprefix", builtin_HasPrefix)
 	vm.set("strhassuffix", builtin_HasSuffix)
+	vm.set("cutprefix", builtin_CutPrefix)
+	vm.set("cutsuffix", builtin_CutSuffix)
+	vm.set("strlower", builtin_StrToLower)
+	vm.set("strupper", builtin_StrToUpper)
 	vm.set("typeof", builtin_TypeOf)
 	vm.set("append", builtin_append)
 	vm.set("remove", builtin_remove)
