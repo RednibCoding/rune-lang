@@ -35,7 +35,7 @@ type ContinueValue struct {
 
 func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 	if exp == nil {
-		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
+		evalError(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
 		return nil
 	}
 
@@ -43,7 +43,7 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 	defer func() { e.recursionDepth-- }()
 
 	if e.recursionDepth > MaxRecursionDepth {
-		Error(exp, "Maximum recursion depth exceeded")
+		evalError(exp, "Maximum recursion depth exceeded")
 	}
 
 	switch exp.Type {
@@ -60,18 +60,18 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 			case []interface{}:
 				index := e.evaluate(exp.Index, env).(int)
 				if index < 0 || index >= len(v) {
-					Error(exp, "Index '%d' out of bounds for array '%v[%d]'", index, exp.Value, len(v))
+					evalError(exp, "Index '%d' out of bounds for array '%v[%d]'", index, exp.Value, len(v))
 				}
 				return v[index]
 			case map[string]interface{}:
 				key := e.evaluate(exp.Index, env).(string)
 				val, ok := v[key]
 				if !ok {
-					Error(exp, "Key '%s' not found in table '%v'", key, exp.Value)
+					evalError(exp, "Key '%s' not found in table '%v'", key, exp.Value)
 				}
 				return val
 			default:
-				Error(exp, "Variable %v is not an array or table", exp.Value)
+				evalError(exp, "Variable %v is not an array or table", exp.Value)
 			}
 		}
 
@@ -81,7 +81,7 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 		if exp.Left.Type == varExpr && exp.Left.Index != nil {
 			arrayOrTable := e.evaluate(exp.Left.Left, env)
 			if arrayOrTable == nil {
-				Error(exp, "Cannot assign to an index on a null expression")
+				evalError(exp, "Cannot assign to an index on a null expression")
 				return nil
 			}
 			index := e.evaluate(exp.Left.Index, env)
@@ -91,11 +91,11 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 			case []interface{}:
 				idx, ok := index.(int)
 				if !ok {
-					Error(exp, "Array index must be an integer")
+					evalError(exp, "Array index must be an integer")
 					return nil
 				}
 				if idx < 0 || idx >= len(arr) {
-					Error(exp, "Array index out of bounds")
+					evalError(exp, "Array index out of bounds")
 					return nil
 				}
 				arr[idx] = value
@@ -103,13 +103,13 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 			case map[string]interface{}:
 				key, ok := index.(string)
 				if !ok {
-					Error(exp, "Table key must be a string")
+					evalError(exp, "Table key must be a string")
 					return nil
 				}
 				arr[key] = value
 				return value
 			default:
-				Error(exp, "Cannot index into type %T", arrayOrTable)
+				evalError(exp, "Cannot index into type %T", arrayOrTable)
 				return nil
 			}
 		} else if exp.Left.Type == varExpr && exp.Left.Value != nil {
@@ -122,7 +122,7 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 					m[field] = value
 					return value
 				} else {
-					Error(exp, "Cannot assign to field %v on non-table object", field)
+					evalError(exp, "Cannot assign to field %v on non-table object", field)
 					return nil
 				}
 			}
@@ -131,7 +131,7 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 		}
 
 		if exp.Left.Type != varExpr {
-			Error(exp, "Cannot assign to %v", exp.Left)
+			evalError(exp, "Cannot assign to %v", exp.Left)
 		}
 		return env.set(exp.Left.Value.(string), e.evaluate(exp.Right, env))
 
@@ -230,7 +230,7 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 	case callExpr:
 		fn, ok := e.evaluate(exp.Func, env).(func(args ...interface{}) interface{})
 		if !ok {
-			Error(exp, "'%s' is not a function", exp.Func.Value)
+			evalError(exp, "'%s' is not a function", exp.Func.Value)
 		}
 
 		var args []interface{}
@@ -250,7 +250,7 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 
 		ret := fn(args...)
 		if err, ok := ret.(error); ok {
-			Error(exp, "Error in function call: '%v'", err)
+			evalError(exp, "Error in function call: '%v'", err)
 		}
 		return ret
 
@@ -266,14 +266,14 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 	case importExpr:
 		path := e.evaluate(exp.Left, env).(string) + ".rune"
 		if _, alreadyImported := e.importedPaths[path]; alreadyImported {
-			Error(exp, "Duplicate import detected: '%s' was already imported", path)
+			evalError(exp, "Duplicate import detected: '%s' was already imported", path)
 		}
 
 		e.importedPaths[path] = true
 
 		importedSource, err := os.ReadFile(path)
 		if err != nil {
-			Error(exp, "Failed to import file '%s': %v", path, err)
+			evalError(exp, "Failed to import file '%s': %v", path, err)
 		}
 
 		importStream := newInputStream(string(importedSource), path)
@@ -285,7 +285,7 @@ func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 		return nil
 
 	default:
-		Error(exp, "I don't know how to evaluate %v", exp.Type)
+		evalError(exp, "I don't know how to evaluate %v", exp.Type)
 		return nil
 	}
 }
@@ -294,13 +294,13 @@ func parseNumber(val string, exp *expression) interface{} {
 	if strings.Contains(val, ".") {
 		f, err := strconv.ParseFloat(val, 64)
 		if err != nil {
-			Error(exp, "Expected number but got %T", val)
+			evalError(exp, "Expected number but got %T", val)
 		}
 		return f
 	}
 	i, err := strconv.Atoi(val)
 	if err != nil {
-		Error(exp, "Expected number but got %T", val)
+		evalError(exp, "Expected number but got %T", val)
 	}
 	return i
 }
@@ -322,7 +322,7 @@ func applyUnaryOp(op string, a interface{}, exp *expression) interface{} {
 			if x != nil {
 				return false
 			} else {
-				Error(exp, fmt.Sprintf("Unary operator '%s' needs a valid operand", op))
+				evalError(exp, fmt.Sprintf("Unary operator '%s' needs a valid operand", op))
 			}
 		}
 		return false
@@ -331,7 +331,7 @@ func applyUnaryOp(op string, a interface{}, exp *expression) interface{} {
 	case "not":
 		return !boolVal(a)
 	default:
-		Error(exp, "Can't apply unary operator %s", op)
+		evalError(exp, "Can't apply unary operator %s", op)
 		return nil
 	}
 }
@@ -352,13 +352,13 @@ func applyBinaryOp(op string, a, b interface{}, exp *expression) interface{} {
 		case float64:
 			return float64(v)
 		default:
-			Error(exp, "Expected number but got %T", x)
+			evalError(exp, "Expected number but got %T", x)
 			return 0
 		}
 	}
 	div := func(x interface{}) float64 {
 		if num(x) == 0 {
-			Error(exp, "Divide by zero")
+			evalError(exp, "Divide by zero")
 		}
 		return num(x)
 	}
@@ -375,7 +375,7 @@ func applyBinaryOp(op string, a, b interface{}, exp *expression) interface{} {
 		case float64:
 			return v != 0
 		default:
-			Error(exp, "Expected bool but got %v", x)
+			evalError(exp, "Expected bool but got %v", x)
 		}
 		return false
 	}
@@ -414,7 +414,7 @@ func applyBinaryOp(op string, a, b interface{}, exp *expression) interface{} {
 	case "!=":
 		return num(a) != num(b)
 	default:
-		Error(exp, "Can't apply operator %s", op)
+		evalError(exp, "Can't apply operator %s", op)
 		return nil
 	}
 }
@@ -435,7 +435,7 @@ func (e *Evaluator) makeFun(env *Environment, exp *expression) func(args ...inte
 	}
 }
 
-func Error(exp *expression, format string, a ...interface{}) {
+func evalError(exp *expression, format string, a ...interface{}) {
 	msg := fmt.Sprintf(format, a...)
 	if exp != nil {
 		fmt.Printf("error (%s:%d:%d): %s\n", exp.File, exp.Line, exp.Col, msg)

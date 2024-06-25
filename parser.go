@@ -311,7 +311,7 @@ func (p *Parser) parsePairDecl() *expression {
 	key := p.parseExpression()
 	_, ok := key.Value.(string)
 	if !ok {
-		Error(key, "key must be of type string, but got: '%v'", key.Value)
+		evalError(key, "key must be of type string, but got: '%v'", key.Value)
 	}
 	// remove any occurences of whitespaces including space, tabs and newlines
 	key.Value = strings.Join(strings.Fields(key.Value.(string)), "")

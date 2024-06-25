@@ -30,7 +30,7 @@ func (env *Environment) get(name string, exp *expression) interface{} {
 	if env.parent != nil {
 		return env.parent.get(name, exp)
 	}
-	Error(exp, "Undefined variable '%s'", name)
+	evalError(exp, "Undefined variable '%s'", name)
 	return nil
 }
 
