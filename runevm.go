@@ -58,6 +58,7 @@ func NewRuneVM() *RuneVM {
 	return vm
 }
 
+// Executes the Rune source code from the provided source string. Filepath is used for error reporting.
 func (r *RuneVM) Run(source string, filepath string) {
 	r.filepath = filepath
 	r.source = source
@@ -79,34 +80,42 @@ func (r *RuneVM) get(name string) interface{} {
 	return r.env.get(name, nil)
 }
 
+// Defines a function in the Rune environment.
 func (r *RuneVM) SetFun(name string, value func(...interface{}) interface{}) {
 	r.set(name, value)
 }
 
+// Defines a boolean variable in the Rune environment.
 func (r *RuneVM) SetBool(name string, value bool) {
 	r.set(name, value)
 }
 
+// Defines an integer variable in the Rune environment.
 func (r *RuneVM) SetInt(name string, value int) {
 	r.set(name, value)
 }
 
+// Defines a float variable in the Rune environment.
 func (r *RuneVM) SetFloat(name string, value float64) {
 	r.set(name, value)
 }
 
+// Defines a string variable in the Rune environment.
 func (r *RuneVM) SetString(name string, value string) {
 	r.set(name, value)
 }
 
+// Defines an array variable in the Rune environment.
 func (r *RuneVM) SetArray(name string, value []interface{}) {
 	r.set(name, value)
 }
 
+// Defines a table (map) variable in the Rune environment.
 func (r *RuneVM) SetTable(name string, value map[string]interface{}) {
 	r.set(name, value)
 }
 
+// Retrieves a boolean variable from the Rune environment.
 func (r *RuneVM) GetBool(name string) (bool, error) {
 	value := r.get(name)
 	if b, ok := value.(bool); ok {
@@ -115,6 +124,7 @@ func (r *RuneVM) GetBool(name string) (bool, error) {
 	return false, fmt.Errorf("'%s' is not a bool", name)
 }
 
+// Retrieves a string variable from the Rune environment.
 func (r *RuneVM) GetString(name string) (string, error) {
 	value := r.get(name)
 	if s, ok := value.(string); ok {
@@ -123,6 +133,7 @@ func (r *RuneVM) GetString(name string) (string, error) {
 	return "", fmt.Errorf("'%s' is not a string", name)
 }
 
+// GetInt retrieves an integer variable from the Rune environment.
 func (r *RuneVM) GetInt(name string) (int, error) {
 	value := r.get(name)
 	switch v := value.(type) {
@@ -138,6 +149,7 @@ func (r *RuneVM) GetInt(name string) (int, error) {
 	return 0, fmt.Errorf("'%s' is not an int", name)
 }
 
+// Retrieves a float variable from the Rune environment.
 func (r *RuneVM) GetFloat(name string) (float64, error) {
 	value := r.get(name)
 	switch v := value.(type) {
@@ -153,6 +165,7 @@ func (r *RuneVM) GetFloat(name string) (float64, error) {
 	return 0, fmt.Errorf("'%s' is not a float", name)
 }
 
+// Retrieves an array variable from the Rune environment.
 func (r *RuneVM) GetArray(name string) ([]interface{}, error) {
 	val := r.get(name)
 	if arr, ok := val.([]interface{}); ok {
@@ -161,6 +174,7 @@ func (r *RuneVM) GetArray(name string) ([]interface{}, error) {
 	return nil, fmt.Errorf("variable '%s' is not an array", name)
 }
 
+// Retrieves a table (map) variable from the Rune environment.
 func (r *RuneVM) GetTable(name string) (map[string]interface{}, error) {
 	val := r.get(name)
 	if arr, ok := val.(map[string]interface{}); ok {
@@ -169,6 +183,7 @@ func (r *RuneVM) GetTable(name string) (map[string]interface{}, error) {
 	return nil, fmt.Errorf("variable '%s' is not a table", name)
 }
 
+// Retrieves a function from the Rune environment.
 func (r *RuneVM) GetFun(name string) (func(...interface{}) interface{}, error) {
 	fn, ok := r.get(name).(func(...interface{}) interface{})
 	if !ok {
@@ -177,6 +192,7 @@ func (r *RuneVM) GetFun(name string) (func(...interface{}) interface{}, error) {
 	return fn, nil
 }
 
+// Retrieves a function from a table (map) in the Rune environment.
 func (r *RuneVM) GetTableFun(tableName string, funName string) (map[string]interface{}, func(...interface{}) interface{}, error) {
 	table, err := r.GetTable(tableName)
 	if err != nil {
