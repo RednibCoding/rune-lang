@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-const Version = "v0.1.47"
+const Version = "v0.1.48"
 
 type RuneVM struct {
 	filepath string
