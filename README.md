@@ -859,6 +859,21 @@ if RuneIsAwesome {
 - **Description**: Creates (and overwrites) a file to the given path and writes the given string into is.
 - **Example**: `writefile("example.txt", "Hello World!")`
 
+### fileexists
+- **Syntax**: `fileexists(<path>)`
+- **Description**: Returns true if the given file exists, otherwise false.
+- **Example**: `exists = fileexists("example.txt")`
+
+### direxists
+- **Syntax**: `direxists(<path>)`
+- **Description**: Returns true if the given directory exists, otherwise false.
+- **Example**: `exists = direxists("example.txt")`
+
+### isfileordir
+- **Syntax**: `isfileordir(<path>)`
+- **Description**: Checks if a given path is a file or directory. Returns `0` if the path does not exist, `1` when it is a file, `2` when it is a directory
+- **Example**: `type = isfileordir("example.txt")`
+
 ### strsplit
 - **Syntax**: `strsplit(<str>, <delimiter>)`
 - **Description**: Splits a string into an array of substrings based on a specified delimiter. Returns an array of strings.

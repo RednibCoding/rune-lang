@@ -118,6 +118,79 @@ func builtin_WriteFileStr(args ...interface{}) interface{} {
 	return nil
 }
 
+// Returns true if the given file exists, otherwise false
+func builtin_FileExists(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("fileexists requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	filename, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	// Check if the file exists
+	_, err := os.Stat(filename)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return fmt.Errorf("failed to check file: %v", err)
+}
+
+// Returns true if the given directory exists, otherwise false
+func builtin_DirExists(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("direxists requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	dirname, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	// Check if the directory exists
+	info, err := os.Stat(dirname)
+	if err == nil {
+		return info.IsDir()
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return fmt.Errorf("failed to check directory: %v", err)
+}
+
+// Checks if a given path is a file or directory. Returns 0 if the path does not exist, 1 when it is a file, 2 when it is a directory
+func builtin_IsFileOrDir(args ...interface{}) interface{} {
+	if len(args) != 1 {
+		return fmt.Errorf("isfileordir requires exactly 1 argument")
+	}
+
+	// Using type assertions to check if the argument is of type string
+	path, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("argument must be of type string, got: %T", args[0])
+	}
+
+	// Check if the path is a file or directory
+	info, err := os.Stat(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return 0 // Path does not exist
+		}
+		return fmt.Errorf("failed to check path: %v", err)
+	}
+
+	if info.IsDir() {
+		return 2 // Path is a directory
+	}
+	return 1 // Path is a file
+}
+
 // Split a string into a slice of substrings based on a specified delimiter
 func builtin_StrSplit(args ...interface{}) interface{} {
 	if len(args) != 2 {
