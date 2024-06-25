@@ -1,8 +1,10 @@
 package runevm
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 	"unicode"
@@ -277,6 +279,40 @@ func builtin_Contains(args ...interface{}) interface{} {
 	return strings.Contains(str, substr)
 }
 
+// Check if a string starts with a specified substring
+func builtin_HasPrefix(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("hasprefix requires exactly 2 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	str, ok1 := args[0].(string)
+	substr, ok2 := args[1].(string)
+	if !ok1 || !ok2 {
+		return fmt.Errorf("arguments must be of type string, got: %T and %T", args[0], args[1])
+	}
+
+	// Check if the string contains the substring
+	return strings.HasPrefix(str, substr)
+}
+
+// Check if a string ends with a specified substring
+func builtin_HasSuffix(args ...interface{}) interface{} {
+	if len(args) != 2 {
+		return fmt.Errorf("hassuffix requires exactly 2 arguments")
+	}
+
+	// Using type assertions to check if the arguments are of type string
+	str, ok1 := args[0].(string)
+	substr, ok2 := args[1].(string)
+	if !ok1 || !ok2 {
+		return fmt.Errorf("arguments must be of type string, got: %T and %T", args[0], args[1])
+	}
+
+	// Check if the string contains the substring
+	return strings.HasSuffix(str, substr)
+}
+
 // Returns the type name as string of the given argument.
 func builtin_TypeOf(args ...interface{}) interface{} {
 	if len(args) != 1 {
@@ -548,6 +584,44 @@ func builtin_New(args ...interface{}) interface{} {
 	default:
 		return fmt.Errorf("new can only create copies of arrays or tables, got %T", args[0])
 	}
+}
+
+// Executes the given shell command, optionaly takes the current working directory as second argument. Returns the output of the command.
+func builtin_Exec(args ...interface{}) interface{} {
+	if len(args) < 1 {
+		return fmt.Errorf("exec requires at least one argument")
+	}
+	if len(args) > 2 {
+		return fmt.Errorf("exec requires at most two arguments")
+	}
+
+	command, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("first argument must be of type string, got: %T", args[0])
+	}
+	workingDir := ""
+	if len(args) == 2 {
+		workingDir, ok = args[1].(string)
+		if !ok {
+			return fmt.Errorf("second argument must be of type string, got: %T", args[0])
+		}
+	}
+
+	cmd := exec.Command(command)
+	if workingDir != "" {
+		cmd.Dir = workingDir
+	}
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+
+	err := cmd.Run()
+
+	if err != nil {
+		return fmt.Sprintf("error: %s", err.Error())
+	}
+
+	return fmt.Sprintf("ok: %s", out.String())
 }
 
 // Assert that a condition is true, errors with given message if the assert fails

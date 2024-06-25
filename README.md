@@ -904,6 +904,16 @@ if RuneIsAwesome {
 - **Description**: Returns true if the substring is found within the string, and false otherwise.
 - **Example**: `doesContain = strcontains(myFileContents, "Hello World")`
 
+### strhasprefix
+- **Syntax**: `strhasprefix(<string>, <substr>)`
+- **Description**: Returns true if a string starts with the given substring, otherwise false
+- **Example**: `doesContain = strhasprefix(myFileContents, "Hello World")`
+
+### strhassuffix
+- **Syntax**: `strhassuffix(<string>, <substr>)`
+- **Description**: Returns true if a string ends with the given substring, otherwise false
+- **Example**: `doesContain = strhassuffix(myFileContents, "Hello World")`
+
 ### typeof
 - **Syntax**: `typeof(<arg>)`
 - **Description**: Returns the type name as string of the given argument. Possible types are: `int`, `float`, `string`, `bool`, `array`, `table` and `unknown`.
@@ -948,6 +958,11 @@ if RuneIsAwesome {
 - **Syntax**: `new(<array|table>)`
 - **Description**: Returns a deep copy of the given array or table.
 - **Example**: `table2 = new(table1)`
+
+### exec
+- **Syntax**: `exec(<"command">, ["work/path"])`
+- **Description**: Executes the given shell command, optionaly takes a working directory as second argument. Returns the output of the command with prefix `err: ` when it is an error and `ok: ` when it was a success.
+- **Example**: `message = exec("git checkout dev", "c:/users/user/documents")`
 
 ### assert
 - **Syntax**: `assert(<condition>, <message>)`

@@ -31,6 +31,8 @@ func NewRuneVM() *RuneVM {
 	vm.set("iswhite", builtin_IsWhite)
 	vm.set("strreplace", builtin_Replace)
 	vm.set("strcontains", builtin_Contains)
+	vm.set("strhasprefix", builtin_HasPrefix)
+	vm.set("strhassuffix", builtin_HasSuffix())
 	vm.set("typeof", builtin_TypeOf)
 	vm.set("append", builtin_append)
 	vm.set("remove", builtin_remove)
@@ -40,6 +42,7 @@ func NewRuneVM() *RuneVM {
 	vm.set("sliceright", builtin_sliceRight)
 	vm.set("len", builtin_Len)
 	vm.set("new", builtin_New)
+	vm.set("exec", builtin_Exec)
 	vm.set("assert", builtin_Assert)
 
 	return vm
