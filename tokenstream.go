@@ -22,7 +22,7 @@ type TokenStream struct {
 	keywords map[string]bool
 }
 
-func NewTokenStream(input *InputStream) *TokenStream {
+func newTokenStream(input *InputStream) *TokenStream {
 	keywords := map[string]bool{
 		"if": true, "then": true, "elif": true, "else": true, "while": true, "break": true, "continue": true, "fun": true, "return": true,
 		"true": true, "false": true, "array": true, "table": true, "import": true, "not": true,
@@ -61,8 +61,8 @@ func (ts *TokenStream) isWhitespace(ch byte) bool {
 func (ts *TokenStream) readWhile(predicate func(byte) bool) (string, int) {
 	var str strings.Builder
 	startPos := ts.input.Pos
-	for !ts.input.Eof() && predicate(ts.input.Peek()) {
-		str.WriteByte(ts.input.Next())
+	for !ts.input.eof() && predicate(ts.input.peek()) {
+		str.WriteByte(ts.input.next())
 	}
 	return str.String(), ts.input.Pos - startPos
 }
@@ -89,9 +89,9 @@ func (ts *TokenStream) readEscaped(end byte) (string, int) {
 	var escaped bool
 	var str strings.Builder
 	startPos := ts.input.Pos
-	ts.input.Next() // Consume initial quote
-	for !ts.input.Eof() {
-		ch := ts.input.Next()
+	ts.input.next() // Consume initial quote
+	for !ts.input.eof() {
+		ch := ts.input.next()
 		if escaped {
 			str.WriteByte(ch)
 			escaped = false
@@ -113,16 +113,16 @@ func (ts *TokenStream) readString() *Token {
 
 func (ts *TokenStream) skipComment() {
 	ts.readWhile(func(ch byte) bool { return ch != '\n' })
-	ts.input.Next()
+	ts.input.next()
 }
 
 func (ts *TokenStream) readNext() *Token {
 	ts.readWhile(ts.isWhitespace)
 
-	if ts.input.Eof() {
+	if ts.input.eof() {
 		return nil
 	}
-	ch := ts.input.Peek()
+	ch := ts.input.peek()
 
 	switch {
 	case ch == '#':
@@ -136,29 +136,25 @@ func (ts *TokenStream) readNext() *Token {
 		return ts.readIdent()
 	case ts.isPunc(ch):
 		length := 1
-		return &Token{Type: "punc", Value: string(ts.input.Next()), File: ts.input.filepath, Line: ts.input.line, Col: ts.input.Col - length, Length: length}
+		return &Token{Type: "punc", Value: string(ts.input.next()), File: ts.input.filepath, Line: ts.input.line, Col: ts.input.Col - length, Length: length}
 	case ts.isOpChar(ch):
 		op, length := ts.readWhile(ts.isOpChar)
 		return &Token{Type: "op", Value: op, File: ts.input.filepath, Line: ts.input.line, Col: ts.input.Col - length, Length: length}
 	default:
 		errTok := &Token{Type: "", Value: "", File: ts.input.filepath, Line: ts.input.line, Col: ts.input.Col, Length: 0}
-		ts.input.Error(errTok, fmt.Sprintf("invalid character: %c", ch))
+		ts.input.error(errTok, fmt.Sprintf("invalid character: %c", ch))
 		return nil
 	}
 }
 
-func (ts *TokenStream) Peek() *Token {
+func (ts *TokenStream) peek() *Token {
 	if ts.current == nil {
 		ts.current = ts.readNext()
 	}
 	return ts.current
 }
 
-func (ts *TokenStream) Last() *Token {
-	return ts.last
-}
-
-func (ts *TokenStream) Next() *Token {
+func (ts *TokenStream) next() *Token {
 	tok := ts.current
 	ts.current = nil
 	if tok == nil {
@@ -168,12 +164,12 @@ func (ts *TokenStream) Next() *Token {
 	return tok
 }
 
-func (ts *TokenStream) Eof() bool {
-	return ts.Peek() == nil
+func (ts *TokenStream) eof() bool {
+	return ts.peek() == nil
 }
 
-func (ts *TokenStream) Error(tok *Token, msg string) {
-	ts.input.Error(tok, msg)
+func (ts *TokenStream) error(tok *Token, msg string) {
+	ts.input.error(tok, msg)
 }
 
 func (ts *TokenStream) copyToken(tok *Token) *Token {

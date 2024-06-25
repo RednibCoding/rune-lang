@@ -13,7 +13,7 @@ type InputStream struct {
 	Col      int
 }
 
-func NewInputStream(source string, filepath string) *InputStream {
+func newInputStream(source string, filepath string) *InputStream {
 	p := &InputStream{
 		filepath: filepath,
 		source:   source,
@@ -24,7 +24,7 @@ func NewInputStream(source string, filepath string) *InputStream {
 	return p
 }
 
-func (p *InputStream) Next() byte {
+func (p *InputStream) next() byte {
 	if p.Pos >= len(p.source) {
 		return 0
 	}
@@ -39,20 +39,20 @@ func (p *InputStream) Next() byte {
 	return ch
 }
 
-func (p *InputStream) Peek() byte {
+func (p *InputStream) peek() byte {
 	if p.Pos >= len(p.source) {
 		return 0
 	}
 	return p.source[p.Pos]
 }
 
-func (p *InputStream) Eof() bool {
-	ch := p.Peek()
+func (p *InputStream) eof() bool {
+	ch := p.peek()
 	eof := ch == 0
 	return eof
 }
 
-func (p *InputStream) Error(tok *Token, msg string) {
+func (p *InputStream) error(tok *Token, msg string) {
 	fmt.Printf("error [%s:%d:%d]: %s\n", tok.File, tok.Line, tok.Col, msg)
 	os.Exit(0)
 }

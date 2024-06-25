@@ -16,7 +16,7 @@ type RuneVM struct {
 func NewRuneVM() *RuneVM {
 	vm := &RuneVM{}
 
-	vm.env = NewEnvironment(nil)
+	vm.env = newEnvironment(nil)
 	vm.set("version", builtin_VmVersion)
 	vm.set("print", builtin_Print)
 	vm.set("println", builtin_Println)
@@ -62,21 +62,21 @@ func (r *RuneVM) Run(source string, filepath string) {
 	r.filepath = filepath
 	r.source = source
 
-	stream := NewInputStream(string(source), filepath)
-	tokenStream := NewTokenStream(stream)
-	parser := NewParser(tokenStream)
+	stream := newInputStream(string(source), filepath)
+	tokenStream := newTokenStream(stream)
+	parser := newParser(tokenStream)
 	ast := parser.parseProgram()
-	evaluator := NewEvaluator()
+	evaluator := newEvaluator()
 
 	evaluator.evaluate(ast, r.env)
 }
 
 func (r *RuneVM) set(name string, value interface{}) {
-	r.env.Def(name, value)
+	r.env.def(name, value)
 }
 
 func (r *RuneVM) get(name string) interface{} {
-	return r.env.Get(name, nil)
+	return r.env.get(name, nil)
 }
 
 func (r *RuneVM) SetFun(name string, value func(...interface{}) interface{}) {

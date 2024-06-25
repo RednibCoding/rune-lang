@@ -3,7 +3,6 @@ a = 10
 b = 10.0000
 c = a + b
 println(typeof(c))
-exit()
 
 foo = "bar"
 
@@ -14,7 +13,6 @@ testFun = fun() {
 
 testFun()
 
-exit()
 fibonacci = fun(n) {
     if n <= 0 then return = 0
     elif n == 1 then return = 1

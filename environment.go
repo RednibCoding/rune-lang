@@ -5,16 +5,16 @@ type Environment struct {
 	parent *Environment
 }
 
-func NewEnvironment(parent *Environment) *Environment {
+func newEnvironment(parent *Environment) *Environment {
 	vars := make(map[string]interface{})
 	return &Environment{vars: vars, parent: parent}
 }
 
-func (env *Environment) Extend() *Environment {
-	return NewEnvironment(env)
+func (env *Environment) extend() *Environment {
+	return newEnvironment(env)
 }
 
-func (env *Environment) Lookup(name string) *Environment {
+func (env *Environment) lookup(name string) *Environment {
 	for scope := env; scope != nil; scope = scope.parent {
 		if _, found := scope.vars[name]; found {
 			return scope
@@ -23,19 +23,20 @@ func (env *Environment) Lookup(name string) *Environment {
 	return nil
 }
 
-func (env *Environment) Get(name string, exp *Expr) interface{} {
+func (env *Environment) get(name string, exp *expression) interface{} {
 	if value, found := env.vars[name]; found {
 		return value
 	}
 	if env.parent != nil {
-		return env.parent.Get(name, exp)
+		return env.parent.get(name, exp)
 	}
 	Error(exp, "Undefined variable '%s'", name)
 	return nil
 }
 
-func (env *Environment) Set(name string, value interface{}, exp *Expr) interface{} {
-	scope := env.Lookup(name)
+// func (env *Environment) set(name string, value interface{}, exp *Expr) interface{} {
+func (env *Environment) set(name string, value interface{}) interface{} {
+	scope := env.lookup(name)
 	// if scope == nil && env.parent != nil {
 	// 	Error(exp, "Undefined variable '%s'", name)
 	// }
@@ -47,7 +48,7 @@ func (env *Environment) Set(name string, value interface{}, exp *Expr) interface
 	return value
 }
 
-func (env *Environment) Def(name string, value interface{}) interface{} {
+func (env *Environment) def(name string, value interface{}) interface{} {
 	env.vars[name] = value
 	return value
 }

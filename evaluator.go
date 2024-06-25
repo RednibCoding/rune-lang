@@ -16,7 +16,7 @@ type Evaluator struct {
 	recursionDepth int
 }
 
-func NewEvaluator() *Evaluator {
+func newEvaluator() *Evaluator {
 	e := &Evaluator{importedPaths: make(map[string]bool), recursionDepth: 0}
 	return e
 }
@@ -33,7 +33,7 @@ type ContinueValue struct {
 	Value bool
 }
 
-func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
+func (e *Evaluator) evaluate(exp *expression, env *Environment) interface{} {
 	if exp == nil {
 		Error(exp, "Null expression error, this is a bug and should never happen!. Please file a bug!")
 		return nil
@@ -47,14 +47,14 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	}
 
 	switch exp.Type {
-	case Num:
+	case numExpr:
 		return parseNumber(exp.Value.(string), exp)
 
-	case Str, Bool:
+	case strExpr, boolExpr:
 		return exp.Value
 
-	case Var:
-		value := env.Get(exp.Value.(string), exp)
+	case varExpr:
+		value := env.get(exp.Value.(string), exp)
 		if exp.Index != nil {
 			switch v := value.(type) {
 			case []interface{}:
@@ -77,8 +77,8 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 
 		return value
 
-	case Assign:
-		if exp.Left.Type == Var && exp.Left.Index != nil {
+	case assignExpr:
+		if exp.Left.Type == varExpr && exp.Left.Index != nil {
 			arrayOrTable := e.evaluate(exp.Left.Left, env)
 			if arrayOrTable == nil {
 				Error(exp, "Cannot assign to an index on a null expression")
@@ -112,7 +112,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 				Error(exp, "Cannot index into type %T", arrayOrTable)
 				return nil
 			}
-		} else if exp.Left.Type == Var && exp.Left.Value != nil {
+		} else if exp.Left.Type == varExpr && exp.Left.Value != nil {
 			if exp.Left.Left != nil {
 				// Handle field assignment
 				obj := e.evaluate(exp.Left.Left, env)
@@ -127,15 +127,15 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 				}
 			}
 			// Handle variable assignment
-			return env.Set(exp.Left.Value.(string), e.evaluate(exp.Right, env), exp)
+			return env.set(exp.Left.Value.(string), e.evaluate(exp.Right, env))
 		}
 
-		if exp.Left.Type != Var {
+		if exp.Left.Type != varExpr {
 			Error(exp, "Cannot assign to %v", exp.Left)
 		}
-		return env.Set(exp.Left.Value.(string), e.evaluate(exp.Right, env), exp)
+		return env.set(exp.Left.Value.(string), e.evaluate(exp.Right, env))
 
-	case Binary:
+	case binaryExpr:
 		a := e.evaluate(exp.Left, env)
 		b := e.evaluate(exp.Right, env)
 		if a_, ok := a.(ReturnValue); ok {
@@ -147,22 +147,22 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		result := applyBinaryOp(exp.Operator, a, b, exp)
 		return result
 
-	case Unary:
+	case unaryExpr:
 		return applyUnaryOp(exp.Operator,
 			e.evaluate(exp.Right, env), exp)
 
-	case Fun:
+	case funExpr:
 		return e.makeFun(env, exp)
 
-	case If:
+	case ifExpr:
 		cond := e.evaluate(exp.Cond, env)
 		if cond != false {
 			return e.evaluate(exp.Then, env)
 		}
 		if exp.Else != nil {
-			if exp.Else.Type == Block {
+			if exp.Else.Type == blockExpr {
 				for _, elif := range exp.Else.Block {
-					if elif.Type == If {
+					if elif.Type == ifExpr {
 						elifCond := e.evaluate(elif.Cond, env)
 						if elifCond != false {
 							return e.evaluate(elif.Then, env)
@@ -177,7 +177,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		return false
 
-	case While:
+	case whileExpr:
 		for {
 			cond := e.evaluate(exp.Cond, env)
 			if !cond.(bool) {
@@ -200,14 +200,14 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		return false
 
-	case Array:
+	case arrayExpr:
 		var arr []interface{}
 		for _, element := range exp.Block {
 			arr = append(arr, e.evaluate(element, env))
 		}
 		return arr
 
-	case Table:
+	case tableExpr:
 		m := make(map[string]interface{})
 		for _, pair := range exp.Block {
 			key := e.evaluate(pair.Left, env)
@@ -216,7 +216,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		return m
 
-	case Block:
+	case blockExpr:
 		var val interface{} = false
 		for _, ex := range exp.Block {
 			result := e.evaluate(ex, env)
@@ -227,7 +227,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		return val
 
-	case Call:
+	case callExpr:
 		fn, ok := e.evaluate(exp.Func, env).(func(args ...interface{}) interface{})
 		if !ok {
 			Error(exp, "'%s' is not a function", exp.Func.Value)
@@ -237,7 +237,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 
 		// Check if caller is a go-map/rune-table ...
 		callerName := exp.Func.Value
-		caller, ok := env.Get(callerName.(string), exp).(map[string]interface{})
+		caller, ok := env.get(callerName.(string), exp).(map[string]interface{})
 		// if so:
 		if ok {
 			// inject its reference as the first argument (similar to pythons 'self' argument on methods)
@@ -254,16 +254,16 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 		}
 		return ret
 
-	case Return:
+	case returnExpr:
 		return ReturnValue{Value: e.evaluate(exp.Right, env)}
 
-	case Break:
+	case breakExpr:
 		return BreakValue{Value: false}
 
-	case Continue:
+	case continueExpr:
 		return ContinueValue{Value: false}
 
-	case Import:
+	case importExpr:
 		path := e.evaluate(exp.Left, env).(string) + ".rune"
 		if _, alreadyImported := e.importedPaths[path]; alreadyImported {
 			Error(exp, "Duplicate import detected: '%s' was already imported", path)
@@ -276,9 +276,9 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 			Error(exp, "Failed to import file '%s': %v", path, err)
 		}
 
-		importStream := NewInputStream(string(importedSource), path)
-		importTokenStream := NewTokenStream(importStream)
-		importParser := NewParser(importTokenStream)
+		importStream := newInputStream(string(importedSource), path)
+		importTokenStream := newTokenStream(importStream)
+		importParser := newParser(importTokenStream)
 		importAST := importParser.parseProgram()
 
 		e.evaluate(importAST, env)
@@ -290,7 +290,7 @@ func (e *Evaluator) evaluate(exp *Expr, env *Environment) interface{} {
 	}
 }
 
-func parseNumber(val string, exp *Expr) interface{} {
+func parseNumber(val string, exp *expression) interface{} {
 	if strings.Contains(val, ".") {
 		f, err := strconv.ParseFloat(val, 64)
 		if err != nil {
@@ -305,7 +305,7 @@ func parseNumber(val string, exp *Expr) interface{} {
 	return i
 }
 
-func applyUnaryOp(op string, a interface{}, exp *Expr) interface{} {
+func applyUnaryOp(op string, a interface{}, exp *expression) interface{} {
 	boolVal := func(x interface{}) bool {
 		switch v := x.(type) {
 		case bool:
@@ -336,12 +336,16 @@ func applyUnaryOp(op string, a interface{}, exp *Expr) interface{} {
 	}
 }
 
-func applyBinaryOp(op string, a, b interface{}, exp *Expr) interface{} {
+func applyBinaryOp(op string, a, b interface{}, exp *expression) interface{} {
 	num := func(x interface{}) float64 {
 		switch v := x.(type) {
 		case string:
 			return parseNumber(v, exp).(float64)
 		case int:
+			return float64(v)
+		case int32:
+			return float64(v)
+		case int64:
 			return float64(v)
 		case float32:
 			return float64(v)
@@ -415,15 +419,15 @@ func applyBinaryOp(op string, a, b interface{}, exp *Expr) interface{} {
 	}
 }
 
-func (e *Evaluator) makeFun(env *Environment, exp *Expr) func(args ...interface{}) interface{} {
+func (e *Evaluator) makeFun(env *Environment, exp *expression) func(args ...interface{}) interface{} {
 	return func(args ...interface{}) interface{} {
-		scope := env.Extend()
+		scope := env.extend()
 		// Collect and define all param names in the current scope/environment so they are known within the function
 		for i, name := range exp.Params {
 			if i < len(args) {
-				scope.Def(name, args[i])
+				scope.def(name, args[i])
 			} else {
-				scope.Def(name, false)
+				scope.def(name, false)
 			}
 		}
 
@@ -431,7 +435,7 @@ func (e *Evaluator) makeFun(env *Environment, exp *Expr) func(args ...interface{
 	}
 }
 
-func Error(exp *Expr, format string, a ...interface{}) {
+func Error(exp *expression, format string, a ...interface{}) {
 	msg := fmt.Sprintf(format, a...)
 	if exp != nil {
 		fmt.Printf("error (%s:%d:%d): %s\n", exp.File, exp.Line, exp.Col, msg)

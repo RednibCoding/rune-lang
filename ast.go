@@ -1,62 +1,62 @@
 package runevm
 
-type ExprType string
+type exprType string
 
 const (
-	Num      ExprType = "num"
-	Str      ExprType = "str"
-	Bool     ExprType = "bool"
-	Var      ExprType = "var"
-	Assign   ExprType = "assign"
-	Binary   ExprType = "binary"
-	Unary    ExprType = "unary"
-	Fun      ExprType = "fun"
-	If       ExprType = "if"
-	Block    ExprType = "block"
-	Call     ExprType = "call"
-	Return   ExprType = "return"
-	While    ExprType = "while"
-	Break    ExprType = "break"
-	Continue ExprType = "continue"
-	Array    ExprType = "array"
-	Table    ExprType = "table"
-	Pair     ExprType = "pair"
-	Index    ExprType = "Index"
-	Import   ExprType = "import"
+	numExpr      exprType = "num"
+	strExpr      exprType = "str"
+	boolExpr     exprType = "bool"
+	varExpr      exprType = "var"
+	assignExpr   exprType = "assign"
+	binaryExpr   exprType = "binary"
+	unaryExpr    exprType = "unary"
+	funExpr      exprType = "fun"
+	ifExpr       exprType = "if"
+	blockExpr    exprType = "block"
+	callExpr     exprType = "call"
+	returnExpr   exprType = "return"
+	whileExpr    exprType = "while"
+	breakExpr    exprType = "break"
+	continueExpr exprType = "continue"
+	arrayExpr    exprType = "array"
+	tableExpr    exprType = "table"
+	pairExpr     exprType = "pair"
+	indexExpr    exprType = "Index"
+	importExpr   exprType = "import"
 )
 
-type Expr struct {
-	Type ExprType
+type expression struct {
+	Type exprType
 	// Multipurpose field for storing a value
 	Value interface{}
 
-	Left  *Expr
-	Right *Expr
+	Left  *expression
+	Right *expression
 
 	// Operator of binary expressions
 	Operator string
 
 	// If/While
-	Cond *Expr
-	Then *Expr
-	Else *Expr
+	Cond *expression
+	Then *expression
+	Else *expression
 
 	// Function decl
-	Func *Expr
+	Func *expression
 	// Function decl param names
 	Params []string
 
 	// Entire block
-	Block []*Expr
+	Block []*expression
 
 	// Function call arguments
-	Args []*Expr
+	Args []*expression
 
 	// Function / while bodies
-	Body *Expr
+	Body *expression
 
 	// Index access / Field access
-	Index *Expr
+	Index *expression
 
 	// Token infos
 	File   string
