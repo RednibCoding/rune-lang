@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const MaxRecursionDepth = 3000 // Between 1000 and 2000 is considered to be a reasonable recursion depth for recursive functions
+const MaxRecursionDepth = 3000
 
 type Evaluator struct {
 	// Keep track of file path that have been imported by the import statement.
